@@ -1,5 +1,5 @@
 import { createFileRoute, Link, notFound } from "@tanstack/react-router";
-import { ALL_ALLERGENS, getRecipeById } from "@/data/recipes";
+import { ALL_ALLERGENS, getRecipeById, type Recipe } from "@/data/recipes";
 
 export const Route = createFileRoute("/recipes/$id")({
   loader: ({ params }) => {
@@ -59,7 +59,7 @@ function NotFoundRecipe() {
 }
 
 function RecipePage() {
-  const { recipe } = Route.useLoaderData();
+  const { recipe } = Route.useLoaderData() as { recipe: Recipe };
 
   const hours = Math.floor(recipe.timeMinutes / 60);
   const mins = recipe.timeMinutes % 60;
