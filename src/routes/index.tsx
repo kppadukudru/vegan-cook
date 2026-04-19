@@ -240,26 +240,29 @@ function Index() {
             ) : (
               <ul className="grid grid-cols-1 sm:grid-cols-2 gap-px bg-steel border border-steel">
                 {filtered.map((r) => (
-                  <li
-                    key={r.id}
-                    className="bg-paper p-6 flex flex-col gap-4 group hover:bg-secondary transition-colors cursor-pointer"
-                  >
-                    <div className="flex items-start justify-between gap-4">
-                      <h3 className="font-serif text-xl leading-tight tracking-tight text-balance group-hover:text-leaf transition-colors">
-                        {r.title}
-                      </h3>
-                      <span className="text-[9px] uppercase tracking-[0.1em] text-mute shrink-0 mt-1">
-                        {r.skill}
-                      </span>
-                    </div>
-                    <div className="flex items-center justify-between text-[10px] uppercase tracking-[0.15em] text-mute mt-auto pt-4 border-t border-steel">
-                      <span className="tabular-nums">{r.timeMinutes} min</span>
-                      <span>
-                        {r.contains.length === 0
-                          ? "Allergen-free"
-                          : `Contains ${r.contains.join(", ")}`}
-                      </span>
-                    </div>
+                  <li key={r.id} className="bg-paper">
+                    <Link
+                      to="/recipes/$id"
+                      params={{ id: r.id }}
+                      className="block p-6 h-full flex flex-col gap-4 group hover:bg-secondary transition-colors"
+                    >
+                      <div className="flex items-start justify-between gap-4">
+                        <h3 className="font-serif text-xl leading-tight tracking-tight text-balance group-hover:text-leaf transition-colors">
+                          {r.title}
+                        </h3>
+                        <span className="text-[9px] uppercase tracking-[0.1em] text-mute shrink-0 mt-1">
+                          {r.skill}
+                        </span>
+                      </div>
+                      <div className="flex items-center justify-between text-[10px] uppercase tracking-[0.15em] text-mute mt-auto pt-4 border-t border-steel">
+                        <span className="tabular-nums">{r.timeMinutes} min</span>
+                        <span>
+                          {r.contains.length === 0
+                            ? "Allergen-free"
+                            : `Contains ${r.contains.join(", ")}`}
+                        </span>
+                      </div>
+                    </Link>
                   </li>
                 ))}
               </ul>
