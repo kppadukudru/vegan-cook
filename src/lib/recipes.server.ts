@@ -52,5 +52,9 @@ export function rowToRecipe(row: Partial<RecipeRow>): Recipe {
     author: row.author ?? "Vegan Cook",
     publishedAt: (row.published_at ?? "").slice(0, 10),
     status: (row.status as "published" | "draft") ?? "published",
+    ...(row.cuisine ? { cuisine: row.cuisine as Cuisine } : {}),
+    ...(row.spice_level ? { spiceLevel: row.spice_level as SpiceLevel } : {}),
+    mealTypes: (row.meal_types ?? []) as MealType[],
+    ...(row.calories != null ? { calories: row.calories } : {}),
   };
 }
