@@ -1,29 +1,34 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
+import { useServerFn } from "@tanstack/react-start";
 import { useMemo, useState } from "react";
 import {
   ALL_ALLERGENS,
+  dayIndex,
+  formatDate,
+  formatTime,
   pickRecipeOfTheDay,
   recipes,
   type Allergen,
   type Skill,
 } from "@/data/recipes";
+import { subscribeToDaily } from "@/lib/newsletter.functions";
 
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
-      { title: "Novera — Plant-Based Recipes, Edited Daily" },
+      { title: "Vegan Cook — A New Plant-Based Recipe Every Day" },
       {
         name: "description",
         content:
-          "A curated archive of vegan recipes. Filter by skill level and dietary constraints. A new recipe of the day, every day.",
+          "Vegan cooking for allergies and lifestyle choices alike. Filter by skill level and allergens, get a new recipe daily, and submit your own.",
       },
-      { property: "og:title", content: "Novera — Plant-Based Recipes" },
+      { property: "og:title", content: "Vegan Cook — A New Plant-Based Recipe Every Day" },
       {
         property: "og:description",
-        content:
-          "A curated archive of vegan recipes, filtered by skill and allergen.",
+        content: "Vegan food doesn't have to be boring, and it isn't just salad.",
       },
       { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary" },
     ],
   }),
   component: Index,
@@ -43,147 +48,138 @@ function Index() {
     });
   }, [skill, avoid]);
 
-  const featured = useMemo(() => pickRecipeOfTheDay(filtered), [filtered]);
+  // Rotates once per day across the whole catalogue.
+  const featured = useMemo(() => pickRecipeOfTheDay(recipes), []);
+  const todayLabel = useMemo(
+    () => formatDate(new Date(dayIndex() * 86_400_000).toISOString().slice(0, 10)),
+    [],
+  );
 
   const toggleAllergen = (a: Allergen) => {
     setAvoid((prev) => {
       const next = new Set(prev);
-      next.has(a) ? next.delete(a) : next.add(a);
+      if (next.has(a)) next.delete(a);
+      else next.add(a);
       return next;
     });
   };
 
-  const hours = Math.floor(featured.timeMinutes / 60);
-  const mins = featured.timeMinutes % 60;
-  const timeLabel =
-    hours > 0
-      ? `${hours}.${Math.round((mins / 60) * 10)} Hours`
-      : `${mins} Min`;
-
   return (
     <div className="bg-paper text-ink min-h-dvh antialiased selection:bg-ink selection:text-paper">
       <header className="border-b border-steel px-6 md:px-8 py-5 flex items-center justify-between uppercase text-[10px] tracking-[0.15em] font-medium">
-        <div className="flex gap-12 items-center">
-          <span className="font-serif text-xl tracking-tight capitalize">
-            Novera
-          </span>
+        <div className="flex gap-8 md:gap-12 items-center">
+          <span className="font-serif text-xl tracking-tight normal-case">Vegan Cook</span>
           <nav className="hidden md:flex gap-8 text-mute">
             <a href="#archive" className="hover:text-ink transition-colors">
-              Archive
+              Recipes
             </a>
-            <a href="#" className="hover:text-ink transition-colors">
-              Techniques
-            </a>
-            <a href="#" className="hover:text-ink transition-colors">
-              Provisions
+            <Link to="/submit" className="hover:text-ink transition-colors">
+              Submit a recipe
+            </Link>
+            <a href="#daily" className="hover:text-ink transition-colors">
+              Daily email
             </a>
           </nav>
         </div>
-        <div className="flex items-center gap-4 md:gap-6">
-          <button className="hover:text-mute transition-colors">Sign In</button>
-          <button className="bg-ink text-paper px-4 py-2 hover:bg-mute transition-colors">
-            Subscribe
-          </button>
-        </div>
+        <a
+          href="#daily"
+          className="bg-ink text-paper px-4 py-2 hover:bg-leaf transition-colors"
+        >
+          Get the daily recipe
+        </a>
       </header>
 
+      {/* Mission statement — top of page */}
+      <section className="border-b border-steel px-6 md:px-8 py-12 md:py-16 max-w-[1440px] mx-auto">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12">
+          <p className="lg:col-span-3 text-[10px] uppercase tracking-[0.15em] text-mute">
+            What this is
+          </p>
+          <div className="lg:col-span-9 space-y-6">
+            <h1 className="font-serif text-3xl md:text-5xl leading-[1.1] tracking-tight text-balance max-w-[38ch]">
+              Cooking for people with different dietary needs — by allergy, or by choice.
+            </h1>
+            <p className="text-mute text-base leading-relaxed max-w-[62ch] text-pretty">
+              Vegan food does not have to be boring, and it is not just salad. Everything here is
+              fully plant-based, written out properly, and tagged so you can screen out the
+              allergens you need to avoid — sulphites, peanuts, soy, gluten, tree nuts. Pick a
+              skill level, pick what you can eat, and cook something you actually want to eat.
+            </p>
+          </div>
+        </div>
+      </section>
+
       <main className="max-w-[1440px] mx-auto">
-        <section className="grid grid-cols-1 lg:grid-cols-12 lg:min-h-[85vh] border-b border-steel">
-          <div className="lg:col-span-5 flex flex-col justify-between border-b lg:border-b-0 lg:border-r border-steel p-8 lg:p-12 lg:pr-16">
-            <div className="space-y-10 lg:space-y-12 mt-4 lg:mt-8">
-              <div className="flex items-center gap-4 text-[10px] uppercase tracking-[0.15em] text-mute">
-                <span className="inline-block size-1.5 bg-ink" />
-                <span>Feature — Recipe of the Day</span>
-              </div>
-
-              <h1 className="font-serif text-5xl md:text-6xl leading-[1.05] tracking-tight text-balance">
-                {featured.title}.
-              </h1>
-
-              <p className="text-mute max-w-[45ch] text-sm leading-relaxed text-pretty">
-                {featured.blurb}
-              </p>
+        {/* Recipe of the day */}
+        <section className="grid grid-cols-1 lg:grid-cols-12 border-b border-steel">
+          <div className="lg:col-span-7 border-b lg:border-b-0 lg:border-r border-steel p-8 lg:p-12 space-y-10">
+            <div className="flex flex-wrap items-center gap-4 text-[10px] uppercase tracking-[0.15em] text-mute">
+              <span className="inline-block size-1.5 bg-leaf" />
+              <span>Recipe of the day</span>
+              <span className="text-steel">/</span>
+              <span className="tabular-nums">{todayLabel}</span>
             </div>
 
-            <div className="mt-12 lg:mt-16 grid grid-cols-2 gap-px bg-steel border border-steel">
-              <div className="bg-paper p-5 flex flex-col gap-1">
-                <span className="text-[9px] uppercase tracking-[0.1em] text-mute">
-                  Time Req.
-                </span>
-                <span className="text-sm font-medium tabular-nums">
-                  {timeLabel}
-                </span>
-              </div>
-              <div className="bg-paper p-5 flex flex-col gap-1">
-                <span className="text-[9px] uppercase tracking-[0.1em] text-mute">
-                  Skill Level
-                </span>
-                <span className="text-sm font-medium">{featured.skill}</span>
-              </div>
-              <div className="bg-paper p-5 col-span-2 flex flex-col gap-2">
-                <span className="text-[9px] uppercase tracking-[0.1em] text-mute">
-                  Allergen Profile
-                </span>
-                <div className="flex flex-wrap gap-3 text-xs">
-                  {ALL_ALLERGENS.filter(
-                    (a) => !featured.contains.includes(a),
-                  ).map((a) => (
-                    <span key={a} className="line-through text-mute">
-                      {a}
-                    </span>
-                  ))}
-                  {featured.contains.length > 0 && (
-                    <span>Contains: {featured.contains.join(", ")}</span>
-                  )}
-                </div>
-              </div>
-            </div>
+            <h2 className="font-serif text-4xl md:text-6xl leading-[1.05] tracking-tight text-balance">
+              {featured.title}
+            </h2>
+
+            <p className="text-mute max-w-[52ch] text-base leading-relaxed text-pretty">
+              {featured.blurb}
+            </p>
+
+            <Link
+              to="/recipes/$id"
+              params={{ id: featured.id }}
+              className="inline-block bg-ink text-paper px-5 py-3 text-[10px] uppercase tracking-[0.15em] hover:bg-leaf transition-colors"
+            >
+              Read the full recipe
+            </Link>
           </div>
 
-          <div className="lg:col-span-7 bg-steel relative p-6 md:p-8 min-h-[60vh] lg:min-h-0">
-            <img
-              src={featured.image}
-              alt={featured.title}
-              width={1024}
-              height={1024}
-              className="w-full h-full object-cover"
-              style={{ outline: "1px solid rgba(0,0,0,0.05)", outlineOffset: -1 }}
-            />
+          <div className="lg:col-span-5 p-8 lg:p-12 flex flex-col justify-between gap-8">
+            <div className="grid grid-cols-2 gap-px bg-steel border border-steel">
+              <Cell label="Time" value={formatTime(featured.timeMinutes)} />
+              <Cell label="Skill" value={featured.skill} />
+              <Cell label="Serves" value={String(featured.servings)} />
+              <Cell
+                label="Contains"
+                value={
+                  featured.contains.length === 0 ? "None declared" : featured.contains.join(", ")
+                }
+              />
+            </div>
+            <p className="text-xs text-mute leading-relaxed">
+              A different recipe is featured every day, drawn in rotation from the whole
+              collection. Today's is {featured.skill.toLowerCase()} level and takes about{" "}
+              {formatTime(featured.timeMinutes)}.
+            </p>
           </div>
         </section>
 
+        {/* Filters */}
         <section
           id="archive"
-          className="px-6 md:px-8 py-16 grid grid-cols-1 lg:grid-cols-12 gap-12"
+          className="px-6 md:px-8 py-16 grid grid-cols-1 lg:grid-cols-12 gap-12 scroll-mt-8"
         >
           <div className="lg:col-span-3">
-            <h2 className="font-serif text-2xl tracking-tight">
-              Archive Parameters
-            </h2>
+            <h2 className="font-serif text-2xl tracking-tight">Find something to cook</h2>
             <p className="text-xs text-mute mt-2 max-w-[30ch]">
-              Filter the collection to match your kitchen's capability and
-              dietary constraints.
+              Filter by how confident you feel in the kitchen, and by what you need to avoid.
             </p>
           </div>
 
           <div className="lg:col-span-9 grid grid-cols-1 md:grid-cols-2 gap-12">
             <div className="space-y-4">
               <span className="text-[10px] uppercase tracking-[0.15em] text-mute border-b border-steel pb-2 block w-full">
-                Proficiency
+                Cooking skill
               </span>
               <div className="flex flex-wrap gap-2">
-                <FilterChip
-                  active={skill === "All"}
-                  onClick={() => setSkill("All")}
-                >
+                <FilterChip active={skill === "All"} onClick={() => setSkill("All")}>
                   All
                 </FilterChip>
                 {SKILLS.map((s) => (
-                  <FilterChip
-                    key={s}
-                    active={skill === s}
-                    onClick={() => setSkill(s)}
-                  >
+                  <FilterChip key={s} active={skill === s} onClick={() => setSkill(s)}>
                     {s}
                   </FilterChip>
                 ))}
@@ -192,7 +188,7 @@ function Index() {
 
             <div className="space-y-4">
               <span className="text-[10px] uppercase tracking-[0.15em] text-mute border-b border-steel pb-2 block w-full">
-                Strictly Avoid
+                Avoid these allergens
               </span>
               <div className="flex flex-wrap gap-2">
                 {ALL_ALLERGENS.map((a) => {
@@ -201,6 +197,7 @@ function Index() {
                     <button
                       key={a}
                       onClick={() => toggleAllergen(a)}
+                      aria-pressed={active}
                       className={`px-4 py-2 text-xs flex items-center gap-2 transition-colors ${
                         active
                           ? "border border-ink bg-ink text-paper"
@@ -208,9 +205,7 @@ function Index() {
                       }`}
                     >
                       <span
-                        className={`block size-1.5 ${
-                          active ? "bg-paper" : "border border-mute"
-                        }`}
+                        className={`block size-1.5 ${active ? "bg-paper" : "border border-mute"}`}
                       />
                       {a}
                     </button>
@@ -221,21 +216,19 @@ function Index() {
           </div>
         </section>
 
+        {/* Collection */}
         <section className="px-6 md:px-8 pb-24 grid grid-cols-1 lg:grid-cols-12 gap-12">
           <div className="lg:col-span-3">
-            <h2 className="font-serif text-2xl tracking-tight">
-              The Collection
-            </h2>
+            <h2 className="font-serif text-2xl tracking-tight">The collection</h2>
             <p className="text-xs text-mute mt-2 max-w-[30ch]">
-              {filtered.length} {filtered.length === 1 ? "recipe" : "recipes"}{" "}
-              matching your filters.
+              {filtered.length} {filtered.length === 1 ? "recipe" : "recipes"} match your filters.
             </p>
           </div>
 
           <div className="lg:col-span-9">
             {filtered.length === 0 ? (
               <div className="border border-dashed border-steel p-12 text-center text-sm text-mute">
-                No recipes match these constraints. Try loosening a filter.
+                Nothing matches those constraints. Try loosening a filter.
               </div>
             ) : (
               <ul className="grid grid-cols-1 sm:grid-cols-2 gap-px bg-steel border border-steel">
@@ -244,7 +237,7 @@ function Index() {
                     <Link
                       to="/recipes/$id"
                       params={{ id: r.id }}
-                      className="block p-6 h-full flex flex-col gap-4 group hover:bg-secondary transition-colors"
+                      className="p-6 h-full flex flex-col gap-4 group hover:bg-secondary transition-colors"
                     >
                       <div className="flex items-start justify-between gap-4">
                         <h3 className="font-serif text-xl leading-tight tracking-tight text-balance group-hover:text-leaf transition-colors">
@@ -254,11 +247,12 @@ function Index() {
                           {r.skill}
                         </span>
                       </div>
+                      <p className="text-xs text-mute leading-relaxed line-clamp-3">{r.blurb}</p>
                       <div className="flex items-center justify-between text-[10px] uppercase tracking-[0.15em] text-mute mt-auto pt-4 border-t border-steel">
-                        <span className="tabular-nums">{r.timeMinutes} min</span>
+                        <span className="tabular-nums">{formatTime(r.timeMinutes)}</span>
                         <span>
                           {r.contains.length === 0
-                            ? "Allergen-free"
+                            ? "No declared allergens"
                             : `Contains ${r.contains.join(", ")}`}
                         </span>
                       </div>
@@ -269,12 +263,125 @@ function Index() {
             )}
           </div>
         </section>
+
+        {/* Daily email */}
+        <section
+          id="daily"
+          className="border-t border-steel px-6 md:px-8 py-16 grid grid-cols-1 lg:grid-cols-12 gap-12 scroll-mt-8"
+        >
+          <div className="lg:col-span-3">
+            <h2 className="font-serif text-2xl tracking-tight">A recipe a day</h2>
+            <p className="text-xs text-mute mt-2 max-w-[30ch]">
+              One plant-based recipe in your inbox each morning. No offers, no digests.
+            </p>
+          </div>
+          <div className="lg:col-span-9">
+            <SubscribeForm />
+          </div>
+        </section>
+
+        {/* Submit CTA */}
+        <section className="border-t border-steel px-6 md:px-8 py-16 grid grid-cols-1 lg:grid-cols-12 gap-12">
+          <div className="lg:col-span-3">
+            <h2 className="font-serif text-2xl tracking-tight">Submit your own recipe</h2>
+            <p className="text-xs text-mute mt-2 max-w-[30ch]">
+              Cooked something worth sharing? Send it in and we'll review it before it joins the
+              collection.
+            </p>
+          </div>
+          <div className="lg:col-span-9 flex flex-col md:flex-row md:items-end justify-between gap-6 border border-steel p-8">
+            <p className="text-sm text-mute max-w-[52ch] leading-relaxed">
+              Ingredients, method, cookware and allergens — the form checks every line and will
+              reject anything that isn't fully plant-based.
+            </p>
+            <Link
+              to="/submit"
+              className="shrink-0 bg-ink text-paper px-5 py-3 text-[10px] uppercase tracking-[0.15em] hover:bg-leaf transition-colors"
+            >
+              Open the form
+            </Link>
+          </div>
+        </section>
       </main>
 
       <footer className="border-t border-steel px-6 md:px-8 py-8 flex flex-col md:flex-row items-start md:items-center justify-between gap-4 text-[10px] uppercase tracking-[0.15em] text-mute">
-        <span>© Novera. A plant-based archive.</span>
-        <span>Vol. 01 — Issue 04</span>
+        <span>Vegan Cook — plant-based cooking, every day.</span>
+        <span className="tabular-nums">{recipes.length} recipes in the collection</span>
       </footer>
+    </div>
+  );
+}
+
+function SubscribeForm() {
+  const subscribe = useServerFn(subscribeToDaily);
+  const [email, setEmail] = useState("");
+  const [state, setState] = useState<"idle" | "sending" | "done" | "error">("idle");
+  const [message, setMessage] = useState("");
+
+  const onSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (state === "sending") return;
+    setState("sending");
+    setMessage("");
+    try {
+      const res = await subscribe({ data: { email } });
+      if (res.ok) {
+        setState("done");
+        setEmail("");
+      } else {
+        setState("error");
+      }
+      setMessage(res.message);
+    } catch {
+      setState("error");
+      setMessage("Something went wrong. Please check the address and try again.");
+    }
+  };
+
+  return (
+    <div className="border border-steel p-8 space-y-4">
+      <form onSubmit={onSubmit} className="flex flex-col sm:flex-row gap-px bg-steel">
+        <label htmlFor="daily-email" className="sr-only">
+          Email address
+        </label>
+        <input
+          id="daily-email"
+          type="email"
+          required
+          maxLength={255}
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+          placeholder="you@example.com"
+          className="flex-1 bg-paper px-4 py-3 text-sm outline-none focus:ring-1 focus:ring-ink"
+        />
+        <button
+          type="submit"
+          disabled={state === "sending"}
+          className="bg-ink text-paper px-6 py-3 text-[10px] uppercase tracking-[0.15em] hover:bg-leaf transition-colors disabled:opacity-60"
+        >
+          {state === "sending" ? "Signing up…" : "Send me a recipe daily"}
+        </button>
+      </form>
+      {message && (
+        <p
+          role="status"
+          className={`text-xs leading-relaxed ${state === "error" ? "text-destructive" : "text-leaf"}`}
+        >
+          {message}
+        </p>
+      )}
+      <p className="text-[10px] uppercase tracking-[0.15em] text-mute">
+        One email a day. Unsubscribe whenever.
+      </p>
+    </div>
+  );
+}
+
+function Cell({ label, value }: { label: string; value: string }) {
+  return (
+    <div className="bg-paper p-5 flex flex-col gap-1">
+      <span className="text-[9px] uppercase tracking-[0.1em] text-mute">{label}</span>
+      <span className="text-sm font-medium">{value}</span>
     </div>
   );
 }
@@ -291,6 +398,7 @@ function FilterChip({
   return (
     <button
       onClick={onClick}
+      aria-pressed={active}
       className={`px-4 py-2 text-xs transition-colors ${
         active
           ? "border border-ink bg-ink text-paper"
