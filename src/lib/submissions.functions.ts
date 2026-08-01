@@ -51,6 +51,10 @@ export const submitRecipe = createServerFn({ method: "POST" })
       method: data.method,
       allergens: data.allergens,
       allergen_notes: data.allergenNotes || null,
+      cuisine: data.cuisine ?? null,
+      spice_level: data.spiceLevel ?? null,
+      meal_types: data.mealTypes ?? [],
+      calories: data.calories ?? null,
     });
 
     if (error) {
