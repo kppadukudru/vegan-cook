@@ -7,11 +7,12 @@ import {
   formatDate,
   formatTime,
   pickRecipeOfTheDay,
-  recipes,
   type Allergen,
   type Skill,
 } from "@/data/recipes";
+import { listPublishedRecipes } from "@/lib/recipes.functions";
 import { subscribeToDaily } from "@/lib/newsletter.functions";
+
 
 export const Route = createFileRoute("/")({
   head: () => ({
