@@ -193,12 +193,19 @@ function Index() {
                 <Cell label="Time" value={formatTime(featured.timeMinutes)} />
                 <Cell label="Skill" value={featured.skill} />
                 <Cell label="Serves" value={String(featured.servings)} />
+                <Cell label="Cuisine" value={featured.cuisine ?? "—"} />
+                <Cell label="Spice" value={featured.spiceLevel ?? "—"} />
+                <Cell
+                  label="Calories"
+                  value={featured.calories != null ? `${featured.calories} / serving` : "—"}
+                />
                 <Cell
                   label="Contains"
                   value={
                     featured.contains.length === 0 ? "None declared" : featured.contains.join(", ")
                   }
                 />
+
               </div>
               <p className="text-xs text-mute leading-relaxed">
                 A different recipe is featured every day, drawn in rotation from the whole
