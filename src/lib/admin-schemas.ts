@@ -35,6 +35,13 @@ export const recipeInput = z.object({
   spiceLevel: spiceEnum.nullish(),
   mealTypes: z.array(mealTypeEnum).max(5).default([]),
   calories: z.coerce.number().int().min(0).max(10000).nullish(),
+  imageUrl: z
+    .string()
+    .trim()
+    .max(600)
+    .refine((v) => v === "" || /^https?:\/\//i.test(v), "Image link must start with http:// or https://")
+    .default(""),
+  imageAlt: z.string().trim().max(200).default(""),
 });
 
 

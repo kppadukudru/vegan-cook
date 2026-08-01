@@ -23,7 +23,13 @@ export const Route = createFileRoute("/recipes/$id")({
         { property: "og:description", content: recipe.blurb },
         { property: "og:type", content: "article" },
         { property: "og:url", content: url },
-        { name: "twitter:card", content: "summary" },
+        { name: "twitter:card", content: recipe.imageUrl ? "summary_large_image" : "summary" },
+        ...(recipe.imageUrl
+          ? [
+              { property: "og:image", content: recipe.imageUrl },
+              { name: "twitter:image", content: recipe.imageUrl },
+            ]
+          : []),
       ],
       links: [{ rel: "canonical", href: url }],
       scripts: [
@@ -39,6 +45,7 @@ export const Route = createFileRoute("/recipes/$id")({
             datePublished: recipe.publishedAt,
             recipeYield: `${recipe.servings} servings`,
             totalTime: `PT${recipe.timeMinutes}M`,
+            ...(recipe.imageUrl ? { image: recipe.imageUrl } : {}),
             ...(recipe.cuisine ? { recipeCuisine: recipe.cuisine } : {}),
             recipeCategory:
               recipe.mealTypes && recipe.mealTypes.length > 0
@@ -169,6 +176,15 @@ function RecipePage() {
             <p className="text-mute max-w-[52ch] text-base leading-relaxed text-pretty">
               {recipe.blurb}
             </p>
+
+            {recipe.imageUrl && (
+              <img
+                src={recipe.imageUrl}
+                alt={recipe.imageAlt || recipe.title}
+                loading="lazy"
+                className="w-full aspect-[3/2] object-cover border border-steel"
+              />
+            )}
 
             <p className="text-[10px] uppercase tracking-[0.15em] text-mute">
               By {recipe.author} — published {formatDate(recipe.publishedAt)}

@@ -43,6 +43,8 @@ export async function saveRecipe(data: RecipeInput): Promise<Result> {
       spice_level: data.spiceLevel ?? null,
       meal_types: data.mealTypes ?? [],
       calories: data.calories ?? null,
+      image_url: data.imageUrl || null,
+      image_alt: data.imageAlt || null,
     },
     { onConflict: "id" },
   );
@@ -125,6 +127,7 @@ export async function publishSubmission(id: string, asDraft: boolean): Promise<R
       spice_level: sub.spice_level,
       meal_types: sub.meal_types ?? [],
       calories: sub.calories,
+      image_url: sub.image_url ?? null,
     },
     { onConflict: "id" },
   );
@@ -218,6 +221,8 @@ export async function importRecipes(
       spice_level: data.spiceLevel ?? null,
       meal_types: data.mealTypes ?? [],
       calories: data.calories ?? null,
+      image_url: data.imageUrl || null,
+      image_alt: data.imageAlt || null,
     });
     results.push({
       id,
