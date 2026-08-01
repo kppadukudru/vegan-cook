@@ -52,8 +52,20 @@ export const Route = createFileRoute("/")({
       },
     ],
   }),
+  loader: () => listPublishedRecipes(),
+  errorComponent: () => (
+    <div className="bg-paper text-ink min-h-dvh grid place-items-center px-6">
+      <div className="max-w-md space-y-3 text-center">
+        <h1 className="font-serif text-3xl tracking-tight">The kitchen is briefly closed</h1>
+        <p className="text-sm text-mute">
+          We couldn't load the recipe collection just now. Please refresh in a moment.
+        </p>
+      </div>
+    </div>
+  ),
   component: Index,
 });
+
 
 
 const SKILLS: Skill[] = ["Beginner", "Intermediate", "Expert"];
