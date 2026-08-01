@@ -38,8 +38,11 @@ export async function saveRecipe(data: RecipeInput): Promise<Result> {
       author: data.author,
       published_at: data.publishedAt,
       status: data.status,
-    },
-    { onConflict: "id" },
+      cuisine: data.cuisine ?? null,
+      spice_level: data.spiceLevel ?? null,
+      meal_types: data.mealTypes ?? [],
+      calories: data.calories ?? null,
+
   );
 
   if (error) {
