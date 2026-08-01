@@ -8,6 +8,7 @@ import {
   slugify,
 } from "@/lib/recipe-format";
 import type { RecipeInput } from "@/lib/admin-schemas";
+import type { ImportRowResult } from "@/lib/csv-import";
 
 type Result = { ok: boolean; message: string; id?: string };
 
