@@ -1,5 +1,19 @@
 export type Skill = "Beginner" | "Intermediate" | "Expert";
 export type Allergen = "Sulphite" | "Peanut" | "Soy" | "Gluten" | "Tree Nuts";
+export type Cuisine =
+  | "Indian"
+  | "Middle Eastern"
+  | "Japanese"
+  | "Italian"
+  | "Continental"
+  | "Mexican"
+  | "Thai"
+  | "Chinese"
+  | "Mediterranean"
+  | "American"
+  | "Other";
+export type SpiceLevel = "None" | "Mild" | "Medium" | "Spicy" | "Fiery";
+export type MealType = "Breakfast" | "Lunch" | "Dinner" | "Snack" | "Dessert";
 
 export interface Ingredient {
   qty: string;
@@ -26,6 +40,10 @@ export interface Recipe {
   author: string;
   publishedAt: string; // ISO date
   status?: "published" | "draft";
+  cuisine?: Cuisine;
+  spiceLevel?: SpiceLevel;
+  mealTypes: MealType[];
+  calories?: number;
 }
 
 export const ALL_ALLERGENS: Allergen[] = [
@@ -37,6 +55,31 @@ export const ALL_ALLERGENS: Allergen[] = [
 ];
 
 export const ALL_SKILLS: Skill[] = ["Beginner", "Intermediate", "Expert"];
+
+export const ALL_CUISINES: Cuisine[] = [
+  "Indian",
+  "Middle Eastern",
+  "Japanese",
+  "Italian",
+  "Continental",
+  "Mexican",
+  "Thai",
+  "Chinese",
+  "Mediterranean",
+  "American",
+  "Other",
+];
+
+export const ALL_SPICE_LEVELS: SpiceLevel[] = ["None", "Mild", "Medium", "Spicy", "Fiery"];
+
+export const ALL_MEAL_TYPES: MealType[] = [
+  "Breakfast",
+  "Lunch",
+  "Dinner",
+  "Snack",
+  "Dessert",
+];
+
 
 /** Stable per-UTC-day index so SSR and client agree and the feature rotates daily. */
 export function dayIndex(now: number = Date.now()): number {
