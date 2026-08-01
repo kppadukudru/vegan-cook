@@ -147,7 +147,20 @@ function RecipePage() {
               <span>{formatTime(recipe.timeMinutes)}</span>
               <span className="text-steel">/</span>
               <span>Serves {recipe.servings}</span>
+              {recipe.cuisine && (
+                <>
+                  <span className="text-steel">/</span>
+                  <span>{recipe.cuisine}</span>
+                </>
+              )}
+              {recipe.spiceLevel && (
+                <>
+                  <span className="text-steel">/</span>
+                  <span>{recipe.spiceLevel} spice</span>
+                </>
+              )}
             </div>
+
 
             <h1 className="font-serif text-4xl md:text-6xl leading-[1.05] tracking-tight text-balance">
               {recipe.title}
