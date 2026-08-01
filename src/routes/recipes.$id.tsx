@@ -39,9 +39,26 @@ export const Route = createFileRoute("/recipes/$id")({
             datePublished: recipe.publishedAt,
             recipeYield: `${recipe.servings} servings`,
             totalTime: `PT${recipe.timeMinutes}M`,
-            recipeCategory: "Vegan",
+            ...(recipe.cuisine ? { recipeCuisine: recipe.cuisine } : {}),
+            recipeCategory:
+              recipe.mealTypes && recipe.mealTypes.length > 0
+                ? recipe.mealTypes.join(", ")
+                : "Vegan",
+            ...(recipe.calories != null
+              ? {
+                  nutrition: {
+                    "@type": "NutritionInformation",
+                    calories: `${recipe.calories} calories`,
+                  },
+                }
+              : {}),
             suitableForDiet: "https://schema.org/VeganDiet",
-            keywords: ["vegan", recipe.skill.toLowerCase()].join(", "),
+            keywords: [
+              "vegan",
+              recipe.skill.toLowerCase(),
+              ...(recipe.cuisine ? [recipe.cuisine.toLowerCase()] : []),
+              ...(recipe.spiceLevel ? [`${recipe.spiceLevel.toLowerCase()} spice`] : []),
+            ].join(", "),
             recipeIngredient: recipe.ingredients.map((i) =>
               [i.qty, i.item].filter(Boolean).join(" ").trim(),
             ),
