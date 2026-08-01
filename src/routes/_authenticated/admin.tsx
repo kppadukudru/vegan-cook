@@ -98,6 +98,8 @@ const emptyForm = (): FormState => ({
   spiceLevel: "",
   mealTypes: [],
   calories: "",
+  imageUrl: "",
+  imageAlt: "",
 });
 
 const formFromRecipe = (r: Recipe): FormState => ({
