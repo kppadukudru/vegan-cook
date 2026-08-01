@@ -113,6 +113,7 @@ export type Database = {
           cuisine: Database["public"]["Enums"]["recipe_cuisine"] | null
           email: string
           id: string
+          image_url: string | null
           ingredients: string
           meal_types: Database["public"]["Enums"]["meal_type"][]
           method: string
@@ -138,6 +139,7 @@ export type Database = {
           cuisine?: Database["public"]["Enums"]["recipe_cuisine"] | null
           email: string
           id?: string
+          image_url?: string | null
           ingredients: string
           meal_types?: Database["public"]["Enums"]["meal_type"][]
           method: string
@@ -163,6 +165,7 @@ export type Database = {
           cuisine?: Database["public"]["Enums"]["recipe_cuisine"] | null
           email?: string
           id?: string
+          image_url?: string | null
           ingredients?: string
           meal_types?: Database["public"]["Enums"]["meal_type"][]
           method?: string
@@ -198,6 +201,8 @@ export type Database = {
           created_at: string
           cuisine: Database["public"]["Enums"]["recipe_cuisine"] | null
           id: string
+          image_alt: string | null
+          image_url: string | null
           ingredients: Json
           meal_types: Database["public"]["Enums"]["meal_type"][]
           method: Json
@@ -221,6 +226,8 @@ export type Database = {
           created_at?: string
           cuisine?: Database["public"]["Enums"]["recipe_cuisine"] | null
           id: string
+          image_alt?: string | null
+          image_url?: string | null
           ingredients?: Json
           meal_types?: Database["public"]["Enums"]["meal_type"][]
           method?: Json
@@ -244,6 +251,8 @@ export type Database = {
           created_at?: string
           cuisine?: Database["public"]["Enums"]["recipe_cuisine"] | null
           id?: string
+          image_alt?: string | null
+          image_url?: string | null
           ingredients?: Json
           meal_types?: Database["public"]["Enums"]["meal_type"][]
           method?: Json
