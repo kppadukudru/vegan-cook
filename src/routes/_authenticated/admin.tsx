@@ -122,6 +122,8 @@ const formFromRecipe = (r: Recipe): FormState => ({
   spiceLevel: r.spiceLevel ?? "",
   mealTypes: r.mealTypes ?? [],
   calories: r.calories != null ? String(r.calories) : "",
+  imageUrl: r.imageUrl ?? "",
+  imageAlt: r.imageAlt ?? "",
 });
 
 
