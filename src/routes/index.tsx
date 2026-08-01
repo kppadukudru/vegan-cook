@@ -281,7 +281,74 @@ function Index() {
                 })}
               </div>
             </div>
+
+            <div className="space-y-4">
+              <span className="text-[10px] uppercase tracking-[0.15em] text-mute border-b border-steel pb-2 block w-full">
+                Cuisine
+              </span>
+              <div className="flex flex-wrap gap-2">
+                {(["All", ...ALL_CUISINES] as (Cuisine | "All")[]).map((c) => (
+                  <button
+                    key={c}
+                    onClick={() => setCuisine(c)}
+                    aria-pressed={cuisine === c}
+                    className={`px-4 py-2 text-xs transition-colors ${
+                      cuisine === c
+                        ? "border border-ink bg-ink text-paper"
+                        : "border border-steel text-mute hover:border-ink hover:text-ink"
+                    }`}
+                  >
+                    {c}
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            <div className="space-y-4">
+              <span className="text-[10px] uppercase tracking-[0.15em] text-mute border-b border-steel pb-2 block w-full">
+                Spice level
+              </span>
+              <div className="flex flex-wrap gap-2">
+                {(["All", ...ALL_SPICE_LEVELS] as (SpiceLevel | "All")[]).map((s) => (
+                  <button
+                    key={s}
+                    onClick={() => setSpice(s)}
+                    aria-pressed={spice === s}
+                    className={`px-4 py-2 text-xs transition-colors ${
+                      spice === s
+                        ? "border border-ink bg-ink text-paper"
+                        : "border border-steel text-mute hover:border-ink hover:text-ink"
+                    }`}
+                  >
+                    {s}
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            <div className="space-y-4">
+              <span className="text-[10px] uppercase tracking-[0.15em] text-mute border-b border-steel pb-2 block w-full">
+                Meal
+              </span>
+              <div className="flex flex-wrap gap-2">
+                {(["All", ...ALL_MEAL_TYPES] as (MealType | "All")[]).map((m) => (
+                  <button
+                    key={m}
+                    onClick={() => setMeal(m)}
+                    aria-pressed={meal === m}
+                    className={`px-4 py-2 text-xs transition-colors ${
+                      meal === m
+                        ? "border border-ink bg-ink text-paper"
+                        : "border border-steel text-mute hover:border-ink hover:text-ink"
+                    }`}
+                  >
+                    {m}
+                  </button>
+                ))}
+              </div>
+            </div>
           </div>
+
         </section>
 
         {/* Collection */}
