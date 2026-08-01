@@ -1,11 +1,21 @@
 import { createClient } from "@supabase/supabase-js";
 import type { Database } from "@/integrations/supabase/types";
-import type { Allergen, Ingredient, MethodStep, Recipe, Skill } from "@/data/recipes";
+import type {
+  Allergen,
+  Cuisine,
+  Ingredient,
+  MealType,
+  MethodStep,
+  Recipe,
+  Skill,
+  SpiceLevel,
+} from "@/data/recipes";
 
 type RecipeRow = Database["public"]["Tables"]["recipes"]["Row"];
 
 export const RECIPE_COLUMNS =
-  "id, title, blurb, time_minutes, servings, skill, contains, ingredients, cookware, method, allergen_notes, author, published_at, status";
+  "id, title, blurb, time_minutes, servings, skill, contains, ingredients, cookware, method, allergen_notes, author, published_at, status, cuisine, spice_level, meal_types, calories";
+
 
 /** Server-side publishable client for public reads (RLS applies as anon). */
 export function createPublicClient() {
