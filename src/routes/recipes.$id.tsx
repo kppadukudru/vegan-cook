@@ -1,5 +1,11 @@
 import { createFileRoute, Link, notFound } from "@tanstack/react-router";
-import { ALL_ALLERGENS, getRecipeById, type Recipe } from "@/data/recipes";
+import {
+  ALL_ALLERGENS,
+  formatDate,
+  formatTime,
+  getRecipeById,
+  type Recipe,
+} from "@/data/recipes";
 
 export const Route = createFileRoute("/recipes/$id")({
   loader: ({ params }) => {
@@ -10,16 +16,16 @@ export const Route = createFileRoute("/recipes/$id")({
   head: ({ loaderData }) => {
     const recipe = loaderData?.recipe;
     if (!recipe) {
-      return { meta: [{ title: "Recipe not found — Novera" }] };
+      return { meta: [{ title: "Recipe not found — Vegan Cook" }] };
     }
     return {
       meta: [
-        { title: `${recipe.title} — Novera` },
+        { title: `${recipe.title} — Vegan Cook` },
         { name: "description", content: recipe.blurb },
-        { property: "og:title", content: `${recipe.title} — Novera` },
+        { property: "og:title", content: `${recipe.title} — Vegan Cook` },
         { property: "og:description", content: recipe.blurb },
-        { property: "og:image", content: recipe.image },
-        { name: "twitter:image", content: recipe.image },
+        { property: "og:type", content: "article" },
+        { name: "twitter:card", content: "summary" },
       ],
     };
   },
@@ -60,26 +66,21 @@ function NotFoundRecipe() {
 
 function RecipePage() {
   const { recipe } = Route.useLoaderData() as { recipe: Recipe };
-
-  const hours = Math.floor(recipe.timeMinutes / 60);
-  const mins = recipe.timeMinutes % 60;
-  const timeLabel =
-    hours > 0
-      ? `${hours}.${Math.round((mins / 60) * 10)} Hours`
-      : `${mins} Min`;
-
   const free = ALL_ALLERGENS.filter((a) => !recipe.contains.includes(a));
 
   return (
     <div className="bg-paper text-ink min-h-dvh antialiased selection:bg-ink selection:text-paper">
       <header className="border-b border-steel px-6 md:px-8 py-5 flex items-center justify-between uppercase text-[10px] tracking-[0.15em] font-medium">
-        <div className="flex gap-12 items-center">
-          <Link to="/" className="font-serif text-xl tracking-tight capitalize normal-case">
-            Novera
+        <div className="flex gap-8 md:gap-12 items-center">
+          <Link to="/" className="font-serif text-xl tracking-tight normal-case">
+            Vegan Cook
           </Link>
           <nav className="hidden md:flex gap-8 text-mute">
-            <Link to="/" className="hover:text-ink transition-colors">
-              Archive
+            <Link to="/" hash="archive" className="hover:text-ink transition-colors">
+              Recipes
+            </Link>
+            <Link to="/submit" className="hover:text-ink transition-colors">
+              Submit a recipe
             </Link>
           </nav>
         </div>
@@ -94,38 +95,39 @@ function RecipePage() {
       <main className="max-w-[1440px] mx-auto">
         {/* Hero */}
         <section className="grid grid-cols-1 lg:grid-cols-12 border-b border-steel">
-          <div className="lg:col-span-5 flex flex-col justify-between border-b lg:border-b-0 lg:border-r border-steel p-8 lg:p-12 lg:pr-16">
-            <div className="space-y-10 lg:space-y-12 mt-4 lg:mt-8">
-              <div className="flex items-center gap-4 text-[10px] uppercase tracking-[0.15em] text-mute">
-                <span className="inline-block size-1.5 bg-ink" />
-                <span>Recipe — {recipe.skill}</span>
-              </div>
-
-              <h1 className="font-serif text-5xl md:text-6xl leading-[1.05] tracking-tight text-balance">
-                {recipe.title}.
-              </h1>
-
-              <p className="text-mute max-w-[45ch] text-sm leading-relaxed text-pretty">
-                {recipe.blurb}
-              </p>
+          <div className="lg:col-span-7 border-b lg:border-b-0 lg:border-r border-steel p-8 lg:p-12 space-y-10">
+            <div className="flex flex-wrap items-center gap-4 text-[10px] uppercase tracking-[0.15em] text-mute">
+              <span className="inline-block size-1.5 bg-leaf" />
+              <span>{recipe.skill}</span>
+              <span className="text-steel">/</span>
+              <span>{formatTime(recipe.timeMinutes)}</span>
+              <span className="text-steel">/</span>
+              <span>Serves {recipe.servings}</span>
             </div>
 
-            <div className="mt-12 lg:mt-16 grid grid-cols-3 gap-px bg-steel border border-steel">
-              <SpecCell label="Time Req." value={timeLabel} />
-              <SpecCell label="Servings" value={String(recipe.servings)} />
-              <SpecCell label="Skill" value={recipe.skill} />
-            </div>
+            <h1 className="font-serif text-4xl md:text-6xl leading-[1.05] tracking-tight text-balance">
+              {recipe.title}
+            </h1>
+
+            <p className="text-mute max-w-[52ch] text-base leading-relaxed text-pretty">
+              {recipe.blurb}
+            </p>
+
+            <p className="text-[10px] uppercase tracking-[0.15em] text-mute">
+              By {recipe.author} — published {formatDate(recipe.publishedAt)}
+            </p>
           </div>
 
-          <div className="lg:col-span-7 bg-steel relative p-6 md:p-8 min-h-[60vh] lg:min-h-0">
-            <img
-              src={recipe.image}
-              alt={recipe.title}
-              width={1024}
-              height={1024}
-              className="w-full h-full object-cover"
-              style={{ outline: "1px solid rgba(0,0,0,0.05)", outlineOffset: -1 }}
-            />
+          <div className="lg:col-span-5 p-8 lg:p-12 flex flex-col justify-end gap-px bg-steel">
+            <div className="grid grid-cols-2 gap-px">
+              <SpecCell label="Time" value={formatTime(recipe.timeMinutes)} />
+              <SpecCell label="Servings" value={String(recipe.servings)} />
+              <SpecCell label="Skill" value={recipe.skill} />
+              <SpecCell
+                label="Allergens"
+                value={recipe.contains.length === 0 ? "None declared" : recipe.contains.join(", ")}
+              />
+            </div>
           </div>
         </section>
 
@@ -138,10 +140,7 @@ function RecipePage() {
           <div className="lg:col-span-5">
             <ul className="divide-y divide-steel border-y border-steel">
               {recipe.ingredients.map((ing, i) => (
-                <li
-                  key={i}
-                  className="grid grid-cols-[140px_1fr] gap-6 py-3 text-sm"
-                >
+                <li key={i} className="grid grid-cols-[120px_1fr] gap-6 py-3 text-sm">
                   <span className="text-[10px] uppercase tracking-[0.15em] text-mute pt-1 tabular-nums">
                     {ing.qty}
                   </span>
@@ -157,7 +156,7 @@ function RecipePage() {
             <ul className="space-y-2 text-sm">
               {recipe.cookware.map((c) => (
                 <li key={c} className="flex items-center gap-3">
-                  <span className="inline-block size-1 bg-ink" />
+                  <span className="inline-block size-1 bg-leaf" />
                   {c}
                 </li>
               ))}
@@ -183,12 +182,8 @@ function RecipePage() {
                   {String(i + 1).padStart(2, "0")}
                 </span>
                 <div className="space-y-3">
-                  <h3 className="font-serif text-xl leading-tight">
-                    {step.title}
-                  </h3>
-                  <p className="text-sm text-mute leading-relaxed text-pretty">
-                    {step.body}
-                  </p>
+                  <h3 className="font-serif text-xl leading-tight">{step.title}</h3>
+                  <p className="text-sm text-mute leading-relaxed text-pretty">{step.body}</p>
                 </div>
               </li>
             ))}
@@ -198,28 +193,22 @@ function RecipePage() {
         {/* Allergen profile */}
         <section className="px-6 md:px-8 py-16 grid grid-cols-1 lg:grid-cols-12 gap-12">
           <div className="lg:col-span-3">
-            <h2 className="font-serif text-2xl tracking-tight">
-              Allergen Profile
-            </h2>
+            <h2 className="font-serif text-2xl tracking-tight">Allergen profile</h2>
             <p className="text-xs text-mute mt-2 max-w-[30ch]">
-              Cross-contamination risk depends on your kitchen — check all packaging.
+              Every recipe here is fully plant-based. Cross-contamination risk depends on your
+              kitchen — check all packaging.
             </p>
           </div>
           <div className="lg:col-span-9 space-y-8">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-px bg-steel border border-steel">
               <div className="bg-paper p-6 space-y-3">
-                <span className="text-[10px] uppercase tracking-[0.15em] text-mute">
-                  Free From
-                </span>
+                <span className="text-[10px] uppercase tracking-[0.15em] text-mute">Free from</span>
                 <div className="flex flex-wrap gap-2">
                   {free.length === 0 ? (
                     <span className="text-sm text-mute">—</span>
                   ) : (
                     free.map((a) => (
-                      <span
-                        key={a}
-                        className="px-3 py-1 text-xs border border-steel text-mute"
-                      >
+                      <span key={a} className="px-3 py-1 text-xs border border-steel text-mute">
                         {a}
                       </span>
                     ))
@@ -227,9 +216,7 @@ function RecipePage() {
                 </div>
               </div>
               <div className="bg-paper p-6 space-y-3">
-                <span className="text-[10px] uppercase tracking-[0.15em] text-mute">
-                  Contains
-                </span>
+                <span className="text-[10px] uppercase tracking-[0.15em] text-mute">Contains</span>
                 <div className="flex flex-wrap gap-2">
                   {recipe.contains.length === 0 ? (
                     <span className="text-sm">No declared allergens.</span>
@@ -248,13 +235,11 @@ function RecipePage() {
             </div>
 
             {recipe.allergenNotes && (
-              <div className="border-l-2 border-ink pl-6 py-2">
+              <div className="border-l-2 border-leaf pl-6 py-2">
                 <p className="text-[10px] uppercase tracking-[0.15em] text-mute mb-2">
-                  Editor's Note
+                  Swap note
                 </p>
-                <p className="text-sm leading-relaxed text-pretty">
-                  {recipe.allergenNotes}
-                </p>
+                <p className="text-sm leading-relaxed text-pretty">{recipe.allergenNotes}</p>
               </div>
             )}
           </div>
@@ -262,9 +247,9 @@ function RecipePage() {
       </main>
 
       <footer className="border-t border-steel px-6 md:px-8 py-8 flex flex-col md:flex-row items-start md:items-center justify-between gap-4 text-[10px] uppercase tracking-[0.15em] text-mute">
-        <span>© Novera. A plant-based archive.</span>
+        <span>Vegan Cook — plant-based cooking, every day.</span>
         <Link to="/" className="hover:text-ink transition-colors">
-          ← Return to archive
+          ← All recipes
         </Link>
       </footer>
     </div>
@@ -274,10 +259,8 @@ function RecipePage() {
 function SpecCell({ label, value }: { label: string; value: string }) {
   return (
     <div className="bg-paper p-5 flex flex-col gap-1">
-      <span className="text-[9px] uppercase tracking-[0.1em] text-mute">
-        {label}
-      </span>
-      <span className="text-sm font-medium tabular-nums">{value}</span>
+      <span className="text-[9px] uppercase tracking-[0.1em] text-mute">{label}</span>
+      <span className="text-sm font-medium">{value}</span>
     </div>
   );
 }
