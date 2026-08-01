@@ -217,6 +217,10 @@ function AdminPage() {
       author: form.author,
       publishedAt: form.publishedAt,
       status: form.status,
+      cuisine: form.cuisine || null,
+      spiceLevel: form.spiceLevel || null,
+      mealTypes: form.mealTypes,
+      calories: form.calories.trim() === "" ? null : Number(form.calories),
     };
     await runAction(async () => {
       const result = await saveRecipe({ data: payload });
