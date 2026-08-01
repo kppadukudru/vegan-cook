@@ -180,6 +180,16 @@ function RecipePage() {
               <SpecCell label="Time" value={formatTime(recipe.timeMinutes)} />
               <SpecCell label="Servings" value={String(recipe.servings)} />
               <SpecCell label="Skill" value={recipe.skill} />
+              <SpecCell label="Cuisine" value={recipe.cuisine ?? "—"} />
+              <SpecCell label="Spice" value={recipe.spiceLevel ?? "—"} />
+              <SpecCell
+                label="Best for"
+                value={recipe.mealTypes.length === 0 ? "—" : recipe.mealTypes.join(", ")}
+              />
+              <SpecCell
+                label="Calories / serving"
+                value={recipe.calories != null ? String(recipe.calories) : "—"}
+              />
               <SpecCell
                 label="Allergens"
                 value={recipe.contains.length === 0 ? "None declared" : recipe.contains.join(", ")}
