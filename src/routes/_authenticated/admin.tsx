@@ -32,6 +32,7 @@ import {
   getAdminStatus,
 } from "@/lib/admin.functions";
 import { claimFirstEditorRole } from "@/lib/bootstrap.functions";
+import { CsvImport } from "@/components/admin/CsvImport";
 
 
 
@@ -135,7 +136,7 @@ function AdminPage() {
   const rejectSubmission = useServerFn(adminRejectSubmission);
 
   const [isAdmin, setIsAdmin] = useState<boolean | null>(null);
-  const [tab, setTab] = useState<"recipes" | "submissions">("recipes");
+  const [tab, setTab] = useState<"recipes" | "submissions" | "import">("recipes");
   const [recipes, setRecipes] = useState<Recipe[]>([]);
   const [submissions, setSubmissions] = useState<Submission[]>([]);
   const [form, setForm] = useState<FormState | null>(null);
@@ -307,6 +308,9 @@ function AdminPage() {
           <TabButton active={tab === "submissions"} onClick={() => setTab("submissions")}>
             Submissions ({pending.length} pending)
           </TabButton>
+          <TabButton active={tab === "import"} onClick={() => setTab("import")}>
+            Import CSV
+          </TabButton>
         </div>
 
         {notice && (
@@ -434,6 +438,8 @@ function AdminPage() {
             )}
           </section>
         )}
+
+        {tab === "import" && <CsvImport onImported={refresh} />}
       </div>
     </Shell>
   );

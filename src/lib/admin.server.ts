@@ -8,6 +8,7 @@ import {
   slugify,
 } from "@/lib/recipe-format";
 import type { RecipeInput } from "@/lib/admin-schemas";
+import type { ImportRowResult } from "@/lib/csv-import";
 
 type Result = { ok: boolean; message: string; id?: string };
 
@@ -161,4 +162,88 @@ export async function rejectSubmission(id: string, notes: string): Promise<Resul
     .eq("id", id);
   if (error) return { ok: false, message: "Could not update that submission." };
   return { ok: true, message: "Marked as rejected." };
+}
+
+/**
+ * Bulk import from CSV. Rows are validated client-side and again by the server
+ * function's schema; here we only vegan-check and upsert.
+ */
+export async function importRecipes(
+  rows: RecipeInput[],
+  publish: boolean,
+): Promise<{ ok: boolean; message: string; results: ImportRowResult[] }> {
+  const results: ImportRowResult[] = [];
+  const ids = rows.map((r) => r.id?.trim() || slugify(r.title)).filter(Boolean);
+
+  const { data: existing } = await supabaseAdmin
+    .from("recipes")
+    .select("id")
+    .in("id", ids.length > 0 ? ids : ["__none__"]);
+  const known = new Set((existing ?? []).map((r) => r.id));
+
+  const payloads: Record<string, unknown>[] = [];
+
+  for (const data of rows) {
+    const id = data.id?.trim() || slugify(data.title);
+    if (!id) {
+      results.push({ id: "", title: data.title, outcome: "skipped", message: "No valid address could be derived from the title." });
+      continue;
+    }
+    const hits = findNonVeganTerms([
+      ...data.ingredientsText.split("\n"),
+      ...data.methodText.split("\n"),
+      data.title,
+    ]);
+    if (hits.length > 0) {
+      results.push({ id, title: data.title, outcome: "skipped", message: describeNonVeganHits(hits) });
+      continue;
+    }
+
+    payloads.push({
+      id,
+      title: data.title,
+      blurb: data.blurb,
+      time_minutes: data.timeMinutes,
+      servings: data.servings,
+      skill: data.skill,
+      contains: normalizeAllergens(data.contains),
+      ingredients: parseIngredients(data.ingredientsText),
+      cookware: parseList(data.cookwareText),
+      method: parseMethod(data.methodText),
+      allergen_notes: data.allergenNotes || null,
+      author: data.author,
+      published_at: data.publishedAt,
+      status: publish ? "published" : "draft",
+      cuisine: data.cuisine ?? null,
+      spice_level: data.spiceLevel ?? null,
+      meal_types: data.mealTypes ?? [],
+      calories: data.calories ?? null,
+    });
+    results.push({
+      id,
+      title: data.title,
+      outcome: known.has(id) ? "updated" : "created",
+    });
+  }
+
+  if (payloads.length === 0) {
+    return { ok: false, message: "Nothing was imported — every row was skipped.", results };
+  }
+
+  const { error } = await supabaseAdmin
+    .from("recipes")
+    .upsert(payloads as never, { onConflict: "id" });
+  if (error) {
+    console.error("importRecipes failed:", error.message);
+    return { ok: false, message: "Could not write the imported recipes.", results: [] };
+  }
+
+  const created = results.filter((r) => r.outcome === "created").length;
+  const updated = results.filter((r) => r.outcome === "updated").length;
+  const skipped = results.filter((r) => r.outcome === "skipped").length;
+  return {
+    ok: true,
+    message: `Imported ${created} new and updated ${updated} recipe${updated === 1 ? "" : "s"} as ${publish ? "published" : "drafts"}${skipped > 0 ? `, skipped ${skipped}` : ""}.`,
+    results,
+  };
 }

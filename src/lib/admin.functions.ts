@@ -7,6 +7,7 @@ import {
   recipeInput,
   rejectInput,
 } from "@/lib/admin-schemas";
+import { importInput } from "@/lib/csv-import";
 import type { Recipe } from "@/data/recipes";
 
 /** Who am I, and am I allowed into the editor? */
@@ -79,4 +80,14 @@ export const adminRejectSubmission = createServerFn({ method: "POST" })
     await assertAdmin(context);
     const { rejectSubmission } = await import("@/lib/admin.server");
     return rejectSubmission(data.id, data.notes);
+  });
+
+/** Bulk CSV import; rows land as drafts unless the editor asks to publish. */
+export const adminImportRecipes = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((data: unknown) => importInput.parse(data))
+  .handler(async ({ data, context }) => {
+    await assertAdmin(context);
+    const { importRecipes } = await import("@/lib/admin.server");
+    return importRecipes(data.rows, data.publish);
   });
