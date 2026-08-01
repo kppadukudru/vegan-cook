@@ -390,6 +390,12 @@ function Index() {
                         </span>
                       </div>
                       <p className="text-xs text-mute leading-relaxed line-clamp-3">{r.blurb}</p>
+                      <div className="flex flex-wrap gap-x-3 gap-y-1 text-[9px] uppercase tracking-[0.1em] text-mute">
+                        {r.cuisine && <span>{r.cuisine}</span>}
+                        {r.spiceLevel && <span>{r.spiceLevel} spice</span>}
+                        {r.mealTypes.length > 0 && <span>{r.mealTypes.join(" / ")}</span>}
+                        {r.calories != null && <span className="tabular-nums">{r.calories} kcal</span>}
+                      </div>
                       <div className="flex items-center justify-between text-[10px] uppercase tracking-[0.15em] text-mute mt-auto pt-4 border-t border-steel">
                         <span className="tabular-nums">{formatTime(r.timeMinutes)}</span>
                         <span>
@@ -398,6 +404,7 @@ function Index() {
                             : `Contains ${r.contains.join(", ")}`}
                         </span>
                       </div>
+
                     </Link>
                   </li>
                 ))}
