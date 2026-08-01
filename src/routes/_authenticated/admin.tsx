@@ -27,7 +27,7 @@ import {
 } from "@/lib/admin.functions";
 import { claimFirstEditorRole } from "@/lib/bootstrap.functions";
 
-} from "@/lib/admin.functions";
+
 
 export const Route = createFileRoute("/_authenticated/admin")({
   head: () => ({
