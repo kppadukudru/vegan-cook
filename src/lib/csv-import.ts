@@ -25,6 +25,8 @@ export const CSV_OPTIONAL = [
   "meal_types",
   "calories",
   "status",
+  "image_url",
+  "image_alt",
 ] as const;
 
 export const CSV_COLUMNS = [...CSV_REQUIRED, ...CSV_OPTIONAL];

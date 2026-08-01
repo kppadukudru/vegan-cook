@@ -14,7 +14,7 @@ import type {
 type RecipeRow = Database["public"]["Tables"]["recipes"]["Row"];
 
 export const RECIPE_COLUMNS =
-  "id, title, blurb, time_minutes, servings, skill, contains, ingredients, cookware, method, allergen_notes, author, published_at, status, cuisine, spice_level, meal_types, calories";
+  "id, title, blurb, time_minutes, servings, skill, contains, ingredients, cookware, method, allergen_notes, author, published_at, status, cuisine, spice_level, meal_types, calories, image_url, image_alt";
 
 
 /** Server-side publishable client for public reads (RLS applies as anon). */
@@ -56,5 +56,7 @@ export function rowToRecipe(row: Partial<RecipeRow>): Recipe {
     ...(row.spice_level ? { spiceLevel: row.spice_level as SpiceLevel } : {}),
     mealTypes: (row.meal_types ?? []) as MealType[],
     ...(row.calories != null ? { calories: row.calories } : {}),
+    ...(row.image_url ? { imageUrl: row.image_url } : {}),
+    ...(row.image_alt ? { imageAlt: row.image_alt } : {}),
   };
 }
