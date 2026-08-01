@@ -245,6 +245,78 @@ function SubmitPage() {
             </Field>
           </div>
 
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <Field label="Cuisine">
+              <select
+                value={form.cuisine}
+                onChange={(e) => set("cuisine", e.target.value as Cuisine | "")}
+                className={inputClass}
+              >
+                <option value="">Not specified</option>
+                {ALL_CUISINES.map((c) => (
+                  <option key={c} value={c}>
+                    {c}
+                  </option>
+                ))}
+              </select>
+            </Field>
+            <Field label="Spice level">
+              <select
+                value={form.spiceLevel}
+                onChange={(e) => set("spiceLevel", e.target.value as SpiceLevel | "")}
+                className={inputClass}
+              >
+                <option value="">Not specified</option>
+                {ALL_SPICE_LEVELS.map((s) => (
+                  <option key={s} value={s}>
+                    {s}
+                  </option>
+                ))}
+              </select>
+            </Field>
+            <Field label="Calories per serving" hint="Optional.">
+              <input
+                type="number"
+                min={0}
+                max={10000}
+                value={form.calories}
+                onChange={(e) => set("calories", e.target.value)}
+                placeholder="e.g. 420"
+                className={inputClass}
+              />
+            </Field>
+          </div>
+
+          <fieldset className="space-y-4">
+            <legend className="text-[10px] uppercase tracking-[0.15em] text-mute border-b border-steel pb-2 block w-full">
+              When would you eat it?
+            </legend>
+            <div className="flex flex-wrap gap-2">
+              {ALL_MEAL_TYPES.map((m) => {
+                const active = mealTypes.has(m);
+                return (
+                  <button
+                    key={m}
+                    type="button"
+                    onClick={() => toggleMealType(m)}
+                    aria-pressed={active}
+                    className={`px-4 py-2 text-xs flex items-center gap-2 transition-colors ${
+                      active
+                        ? "border border-ink bg-ink text-paper"
+                        : "border border-steel text-mute hover:border-ink hover:text-ink"
+                    }`}
+                  >
+                    <span
+                      className={`block size-1.5 ${active ? "bg-paper" : "border border-mute"}`}
+                    />
+                    {m}
+                  </button>
+                );
+              })}
+            </div>
+          </fieldset>
+
+
           <Field label="Short description" hint="A couple of sentences on what it tastes like.">
             <textarea
               required
