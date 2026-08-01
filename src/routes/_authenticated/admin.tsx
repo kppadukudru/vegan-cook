@@ -307,6 +307,9 @@ function AdminPage() {
           <TabButton active={tab === "submissions"} onClick={() => setTab("submissions")}>
             Submissions ({pending.length} pending)
           </TabButton>
+          <TabButton active={tab === "import"} onClick={() => setTab("import")}>
+            Import CSV
+          </TabButton>
         </div>
 
         {notice && (
