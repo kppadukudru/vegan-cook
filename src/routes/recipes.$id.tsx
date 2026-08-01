@@ -177,6 +177,15 @@ function RecipePage() {
               {recipe.blurb}
             </p>
 
+            {recipe.imageUrl && (
+              <img
+                src={recipe.imageUrl}
+                alt={recipe.imageAlt || recipe.title}
+                loading="lazy"
+                className="w-full aspect-[3/2] object-cover border border-steel"
+              />
+            )}
+
             <p className="text-[10px] uppercase tracking-[0.15em] text-mute">
               By {recipe.author} — published {formatDate(recipe.publishedAt)}
             </p>
