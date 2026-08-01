@@ -29,16 +29,28 @@ export const Route = createRootRoute({
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "Lovable App" },
-      { name: "description", content: "Lovable Generated Project" },
-      { name: "author", content: "Lovable" },
-      { property: "og:title", content: "Lovable App" },
-      { property: "og:description", content: "Lovable Generated Project" },
+      { title: "Vegan Cook — Plant-Based Cooking, Every Day" },
+      {
+        name: "description",
+        content:
+          "Vegan food that isn't boring and isn't just salad. Recipes filtered by skill level and allergens, with a new one featured every day.",
+      },
+      { name: "author", content: "Vegan Cook" },
+      { property: "og:title", content: "Vegan Cook — Plant-Based Cooking, Every Day" },
+      {
+        property: "og:description",
+        content: "Vegan food that isn't boring and isn't just salad.",
+      },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary" },
-      { name: "twitter:site", content: "@Lovable" },
     ],
     links: [
+      { rel: "preconnect", href: "https://fonts.googleapis.com" },
+      { rel: "preconnect", href: "https://fonts.gstatic.com", crossOrigin: "anonymous" },
+      {
+        rel: "stylesheet",
+        href: "https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;1,6..72,400&family=Instrument+Sans:wght@400;500;600&display=swap",
+      },
       {
         rel: "stylesheet",
         href: appCss,
@@ -49,6 +61,7 @@ export const Route = createRootRoute({
   component: RootComponent,
   notFoundComponent: NotFoundComponent,
 });
+
 
 function RootShell({ children }: { children: React.ReactNode }) {
   return (
