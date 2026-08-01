@@ -103,6 +103,8 @@ type Submission = Awaited<ReturnType<typeof adminListSubmissions>>[number];
 function AdminPage() {
   const navigate = useNavigate();
   const status = useServerFn(getAdminStatus);
+  const claimRole = useServerFn(claimFirstEditorRole);
+
   const listRecipes = useServerFn(adminListRecipes);
   const listSubmissions = useServerFn(adminListSubmissions);
   const saveRecipe = useServerFn(adminSaveRecipe);
