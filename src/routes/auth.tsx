@@ -24,8 +24,10 @@ function AuthPage() {
   const navigate = useNavigate();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [mode, setMode] = useState<"signin" | "signup">("signin");
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState("");
+  const [notice, setNotice] = useState("");
 
   useEffect(() => {
     supabase.auth.getSession().then(({ data }) => {
@@ -37,6 +39,35 @@ function AuthPage() {
     e.preventDefault();
     setBusy(true);
     setError("");
+    setNotice("");
+
+    if (mode === "signup") {
+      if (!/^(?=.*[A-Za-z])(?=.*\d)(?=.*[^A-Za-z0-9]).{10,}$/.test(password)) {
+        setBusy(false);
+        setError(
+          "Use at least 10 characters with letters, numbers and at least one symbol.",
+        );
+        return;
+      }
+      const { data, error: signUpError } = await supabase.auth.signUp({
+        email,
+        password,
+        options: { emailRedirectTo: `${window.location.origin}/auth` },
+      });
+      setBusy(false);
+      if (signUpError) {
+        setError(signUpError.message);
+        return;
+      }
+      if (!data.session) {
+        setNotice("Check your inbox to confirm the address, then sign in.");
+        setMode("signin");
+        return;
+      }
+      navigate({ to: "/admin", replace: true });
+      return;
+    }
+
     const { error: signInError } = await supabase.auth.signInWithPassword({ email, password });
     setBusy(false);
     if (signInError) {
@@ -45,6 +76,7 @@ function AuthPage() {
     }
     navigate({ to: "/admin", replace: true });
   };
+
 
   return (
     <div className="bg-paper text-ink min-h-dvh antialiased">
