@@ -69,6 +69,10 @@ interface FormState {
   author: string;
   publishedAt: string;
   status: "published" | "draft";
+  cuisine: Cuisine | "";
+  spiceLevel: SpiceLevel | "";
+  mealTypes: MealType[];
+  calories: string;
 }
 
 const emptyForm = (): FormState => ({
@@ -87,6 +91,10 @@ const emptyForm = (): FormState => ({
   author: "Vegan Cook",
   publishedAt: new Date().toISOString().slice(0, 10),
   status: "published",
+  cuisine: "",
+  spiceLevel: "",
+  mealTypes: [],
+  calories: "",
 });
 
 const formFromRecipe = (r: Recipe): FormState => ({
@@ -105,7 +113,12 @@ const formFromRecipe = (r: Recipe): FormState => ({
   author: r.author,
   publishedAt: r.publishedAt,
   status: r.status ?? "published",
+  cuisine: r.cuisine ?? "",
+  spiceLevel: r.spiceLevel ?? "",
+  mealTypes: r.mealTypes ?? [],
+  calories: r.calories != null ? String(r.calories) : "",
 });
+
 
 type Submission = Awaited<ReturnType<typeof adminListSubmissions>>[number];
 
