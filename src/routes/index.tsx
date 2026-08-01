@@ -28,11 +28,32 @@ export const Route = createFileRoute("/")({
         content: "Vegan food doesn't have to be boring, and it isn't just salad.",
       },
       { property: "og:type", content: "website" },
+      { property: "og:url", content: "https://www.vegancook.live/" },
       { name: "twitter:card", content: "summary" },
+    ],
+    links: [{ rel: "canonical", href: "https://www.vegancook.live/" }],
+    scripts: [
+      {
+        type: "application/ld+json",
+        children: JSON.stringify({
+          "@context": "https://schema.org",
+          "@type": "WebSite",
+          name: "Vegan Cook",
+          url: "https://www.vegancook.live/",
+          description:
+            "Vegan cooking for allergies and lifestyle choices alike. Filter by skill level and allergens, get a new recipe daily, and submit your own.",
+          publisher: {
+            "@type": "Organization",
+            name: "Vegan Cook",
+            url: "https://www.vegancook.live/",
+          },
+        }),
+      },
     ],
   }),
   component: Index,
 });
+
 
 const SKILLS: Skill[] = ["Beginner", "Intermediate", "Expert"];
 

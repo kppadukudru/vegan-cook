@@ -20,9 +20,12 @@ export const Route = createFileRoute("/submit")({
         content: "Send in your own fully plant-based recipe for review.",
       },
       { property: "og:type", content: "website" },
+      { property: "og:url", content: "https://www.vegancook.live/submit" },
       { name: "twitter:card", content: "summary" },
     ],
+    links: [{ rel: "canonical", href: "https://www.vegancook.live/submit" }],
   }),
+
   component: SubmitPage,
 });
 
