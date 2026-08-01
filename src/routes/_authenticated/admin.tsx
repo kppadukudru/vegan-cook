@@ -714,6 +714,38 @@ function RecipeForm({
         </div>
       </Field>
 
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <Field
+          label="Photo link"
+          hint="Optional. Paste an https:// image address — leave blank for a text-only recipe."
+        >
+          <input
+            type="url"
+            value={form.imageUrl}
+            onChange={(e) => set("imageUrl", e.target.value)}
+            placeholder="https://…"
+            className={inputClass}
+          />
+        </Field>
+        <Field label="Photo description" hint="Optional. Describes the photo for screen readers.">
+          <input
+            value={form.imageAlt}
+            onChange={(e) => set("imageAlt", e.target.value)}
+            className={inputClass}
+          />
+        </Field>
+      </div>
+
+      {form.imageUrl.trim() !== "" && (
+        <img
+          src={form.imageUrl.trim()}
+          alt={form.imageAlt || form.title}
+          className="w-full max-w-sm aspect-[4/3] object-cover border border-steel"
+        />
+      )}
+
+
+
 
       <Field
         label="Ingredients"
