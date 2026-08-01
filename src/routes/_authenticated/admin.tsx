@@ -4,11 +4,17 @@ import { useCallback, useEffect, useMemo, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import {
   ALL_ALLERGENS,
+  ALL_CUISINES,
+  ALL_MEAL_TYPES,
   ALL_SKILLS,
+  ALL_SPICE_LEVELS,
   formatDate,
   type Allergen,
+  type Cuisine,
+  type MealType,
   type Recipe,
   type Skill,
+  type SpiceLevel,
 } from "@/data/recipes";
 import {
   ingredientsToText,
