@@ -1,7 +1,17 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useServerFn } from "@tanstack/react-start";
 import { useState } from "react";
-import { ALL_ALLERGENS, type Allergen, type Skill } from "@/data/recipes";
+import {
+  ALL_ALLERGENS,
+  ALL_CUISINES,
+  ALL_MEAL_TYPES,
+  ALL_SPICE_LEVELS,
+  type Allergen,
+  type Cuisine,
+  type MealType,
+  type Skill,
+  type SpiceLevel,
+} from "@/data/recipes";
 import { describeNonVeganHits, findNonVeganTerms } from "@/lib/vegan-check";
 import { submitRecipe } from "@/lib/submissions.functions";
 
