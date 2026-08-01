@@ -14,7 +14,84 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      recipe_submissions: {
+        Row: {
+          allergen_notes: string | null
+          allergens: string[]
+          author_name: string
+          blurb: string
+          cookware: string
+          created_at: string
+          email: string
+          id: string
+          ingredients: string
+          method: string
+          servings: number
+          skill: Database["public"]["Enums"]["recipe_skill"]
+          status: Database["public"]["Enums"]["submission_status"]
+          time_minutes: number
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          allergen_notes?: string | null
+          allergens?: string[]
+          author_name: string
+          blurb: string
+          cookware: string
+          created_at?: string
+          email: string
+          id?: string
+          ingredients: string
+          method: string
+          servings: number
+          skill: Database["public"]["Enums"]["recipe_skill"]
+          status?: Database["public"]["Enums"]["submission_status"]
+          time_minutes: number
+          title: string
+          updated_at?: string
+        }
+        Update: {
+          allergen_notes?: string | null
+          allergens?: string[]
+          author_name?: string
+          blurb?: string
+          cookware?: string
+          created_at?: string
+          email?: string
+          id?: string
+          ingredients?: string
+          method?: string
+          servings?: number
+          skill?: Database["public"]["Enums"]["recipe_skill"]
+          status?: Database["public"]["Enums"]["submission_status"]
+          time_minutes?: number
+          title?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      subscribers: {
+        Row: {
+          created_at: string
+          email: string
+          id: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          email: string
+          id?: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          email?: string
+          id?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
@@ -23,7 +100,8 @@ export type Database = {
       [_ in never]: never
     }
     Enums: {
-      [_ in never]: never
+      recipe_skill: "Beginner" | "Intermediate" | "Expert"
+      submission_status: "pending" | "approved" | "rejected"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -150,6 +228,9 @@ export type CompositeTypes<
 
 export const Constants = {
   public: {
-    Enums: {},
+    Enums: {
+      recipe_skill: ["Beginner", "Intermediate", "Expert"],
+      submission_status: ["pending", "approved", "rejected"],
+    },
   },
 } as const
