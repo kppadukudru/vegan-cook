@@ -71,19 +71,21 @@ export const Route = createFileRoute("/")({
 const SKILLS: Skill[] = ["Beginner", "Intermediate", "Expert"];
 
 function Index() {
+  const allRecipes = Route.useLoaderData();
   const [skill, setSkill] = useState<Skill | "All">("All");
   const [avoid, setAvoid] = useState<Set<Allergen>>(new Set());
 
   const filtered = useMemo(() => {
-    return recipes.filter((r) => {
+    return allRecipes.filter((r) => {
       if (skill !== "All" && r.skill !== skill) return false;
       for (const a of avoid) if (r.contains.includes(a)) return false;
       return true;
     });
-  }, [skill, avoid]);
+  }, [allRecipes, skill, avoid]);
 
   // Rotates once per day across the whole catalogue.
-  const featured = useMemo(() => pickRecipeOfTheDay(recipes), []);
+  const featured = useMemo(() => pickRecipeOfTheDay(allRecipes), [allRecipes]);
+
   const todayLabel = useMemo(
     () => formatDate(new Date(dayIndex() * 86_400_000).toISOString().slice(0, 10)),
     [],
