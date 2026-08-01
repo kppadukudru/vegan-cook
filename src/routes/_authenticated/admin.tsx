@@ -437,6 +437,8 @@ function AdminPage() {
             )}
           </section>
         )}
+
+        {tab === "import" && <CsvImport onImported={refresh} />}
       </div>
     </Shell>
   );
