@@ -13,11 +13,12 @@ export const Route = createFileRoute("/recipes/$id")({
     if (!recipe) throw notFound();
     return { recipe };
   },
-  head: ({ loaderData }) => {
+  head: ({ params, loaderData }) => {
     const recipe = loaderData?.recipe;
     if (!recipe) {
       return { meta: [{ title: "Recipe not found — Vegan Cook" }] };
     }
+    const url = `https://www.vegancook.live/recipes/${params.id}`;
     return {
       meta: [
         { title: `${recipe.title} — Vegan Cook` },
@@ -25,10 +26,40 @@ export const Route = createFileRoute("/recipes/$id")({
         { property: "og:title", content: `${recipe.title} — Vegan Cook` },
         { property: "og:description", content: recipe.blurb },
         { property: "og:type", content: "article" },
+        { property: "og:url", content: url },
         { name: "twitter:card", content: "summary" },
+      ],
+      links: [{ rel: "canonical", href: url }],
+      scripts: [
+        {
+          type: "application/ld+json",
+          children: JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "Recipe",
+            name: recipe.title,
+            description: recipe.blurb,
+            url,
+            author: { "@type": "Person", name: recipe.author },
+            datePublished: recipe.publishedAt,
+            recipeYield: `${recipe.servings} servings`,
+            totalTime: `PT${recipe.timeMinutes}M`,
+            recipeCategory: "Vegan",
+            suitableForDiet: "https://schema.org/VeganDiet",
+            keywords: ["vegan", recipe.skill.toLowerCase()].join(", "),
+            recipeIngredient: recipe.ingredients.map((i) =>
+              [i.qty, i.item].filter(Boolean).join(" ").trim(),
+            ),
+            recipeInstructions: recipe.method.map((step) => ({
+              "@type": "HowToStep",
+              name: step.title,
+              text: step.body,
+            })),
+          }),
+        },
       ],
     };
   },
+
   notFoundComponent: NotFoundRecipe,
   errorComponent: ({ error, reset }) => (
     <div className="bg-paper text-ink min-h-dvh flex items-center justify-center px-6">
