@@ -63,6 +63,7 @@ function SubmitPage() {
   const submit = useServerFn(submitRecipe);
   const [form, setForm] = useState(initialForm);
   const [allergens, setAllergens] = useState<Set<Allergen>>(new Set());
+  const [mealTypes, setMealTypes] = useState<Set<MealType>>(new Set());
   const [state, setState] = useState<"idle" | "sending" | "done" | "error">("idle");
   const [message, setMessage] = useState("");
 
@@ -76,6 +77,15 @@ function SubmitPage() {
       else next.add(a);
       return next;
     });
+
+  const toggleMealType = (m: MealType) =>
+    setMealTypes((prev) => {
+      const next = new Set(prev);
+      if (next.has(m)) next.delete(m);
+      else next.add(m);
+      return next;
+    });
+
 
   const onSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
