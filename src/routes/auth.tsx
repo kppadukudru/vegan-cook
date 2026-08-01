@@ -89,7 +89,9 @@ function AuthPage() {
       <main className="max-w-md mx-auto px-6 py-20 space-y-8">
         <div className="space-y-3">
           <p className="text-[10px] uppercase tracking-[0.15em] text-mute">Editing desk</p>
-          <h1 className="font-serif text-3xl tracking-tight">Sign in</h1>
+          <h1 className="font-serif text-3xl tracking-tight">
+            {mode === "signin" ? "Sign in" : "Create an editor account"}
+          </h1>
           <p className="text-sm text-mute leading-relaxed">
             This is for the people who maintain the recipe table and review submissions. Readers
             do not need an account.
@@ -113,23 +115,46 @@ function AuthPage() {
             <input
               type="password"
               required
-              autoComplete="current-password"
+              autoComplete={mode === "signin" ? "current-password" : "new-password"}
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               className="w-full border border-steel bg-paper px-3 py-2.5 text-sm focus:border-ink outline-none"
             />
+            {mode === "signup" && (
+              <span className="block text-xs text-mute">
+                At least 10 characters, mixing letters, numbers and a symbol.
+              </span>
+            )}
           </label>
 
           {error && <p className="text-xs text-destructive">{error}</p>}
+          {notice && <p className="text-xs text-leaf">{notice}</p>}
 
           <button
             type="submit"
             disabled={busy}
             className="w-full bg-ink text-paper px-5 py-3 text-[10px] uppercase tracking-[0.15em] hover:bg-leaf transition-colors disabled:opacity-50"
           >
-            {busy ? "Signing in…" : "Sign in"}
+            {busy
+              ? "Working…"
+              : mode === "signin"
+                ? "Sign in"
+                : "Create account"}
+          </button>
+
+          <button
+            type="button"
+            onClick={() => {
+              setMode(mode === "signin" ? "signup" : "signin");
+              setError("");
+              setNotice("");
+            }}
+            className="w-full text-[10px] uppercase tracking-[0.15em] text-mute hover:text-ink transition-colors"
+          >
+            {mode === "signin" ? "Need an editor account?" : "Already have one? Sign in"}
           </button>
         </form>
+
       </main>
     </div>
   );
