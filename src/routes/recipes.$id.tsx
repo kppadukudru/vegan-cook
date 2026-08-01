@@ -23,7 +23,13 @@ export const Route = createFileRoute("/recipes/$id")({
         { property: "og:description", content: recipe.blurb },
         { property: "og:type", content: "article" },
         { property: "og:url", content: url },
-        { name: "twitter:card", content: "summary" },
+        { name: "twitter:card", content: recipe.imageUrl ? "summary_large_image" : "summary" },
+        ...(recipe.imageUrl
+          ? [
+              { property: "og:image", content: recipe.imageUrl },
+              { name: "twitter:image", content: recipe.imageUrl },
+            ]
+          : []),
       ],
       links: [{ rel: "canonical", href: url }],
       scripts: [
