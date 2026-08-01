@@ -53,7 +53,11 @@ const initialForm = {
   cookware: "",
   method: "",
   allergenNotes: "",
+  cuisine: "" as Cuisine | "",
+  spiceLevel: "" as SpiceLevel | "",
+  calories: "",
 };
+
 
 function SubmitPage() {
   const submit = useServerFn(submitRecipe);
