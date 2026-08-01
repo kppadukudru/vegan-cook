@@ -81,14 +81,21 @@ function Index() {
   const allRecipes = Route.useLoaderData() as Recipe[];
   const [skill, setSkill] = useState<Skill | "All">("All");
   const [avoid, setAvoid] = useState<Set<Allergen>>(new Set());
+  const [cuisine, setCuisine] = useState<Cuisine | "All">("All");
+  const [spice, setSpice] = useState<SpiceLevel | "All">("All");
+  const [meal, setMeal] = useState<MealType | "All">("All");
 
   const filtered = useMemo(() => {
     return allRecipes.filter((r) => {
       if (skill !== "All" && r.skill !== skill) return false;
+      if (cuisine !== "All" && r.cuisine !== cuisine) return false;
+      if (spice !== "All" && r.spiceLevel !== spice) return false;
+      if (meal !== "All" && !r.mealTypes.includes(meal)) return false;
       for (const a of avoid) if (r.contains.includes(a)) return false;
       return true;
     });
-  }, [allRecipes, skill, avoid]);
+  }, [allRecipes, skill, avoid, cuisine, spice, meal]);
+
 
   // Rotates once per day across the whole catalogue.
   const featured = useMemo(() => pickRecipeOfTheDay(allRecipes), [allRecipes]);
