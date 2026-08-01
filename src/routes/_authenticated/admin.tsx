@@ -631,6 +631,76 @@ function RecipeForm({
         </div>
       </Field>
 
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <Field label="Cuisine">
+          <select
+            value={form.cuisine}
+            onChange={(e) => set("cuisine", e.target.value as Cuisine | "")}
+            className={inputClass}
+          >
+            <option value="">Not specified</option>
+            {ALL_CUISINES.map((c) => (
+              <option key={c} value={c}>
+                {c}
+              </option>
+            ))}
+          </select>
+        </Field>
+        <Field label="Spice level">
+          <select
+            value={form.spiceLevel}
+            onChange={(e) => set("spiceLevel", e.target.value as SpiceLevel | "")}
+            className={inputClass}
+          >
+            <option value="">Not specified</option>
+            {ALL_SPICE_LEVELS.map((s) => (
+              <option key={s} value={s}>
+                {s}
+              </option>
+            ))}
+          </select>
+        </Field>
+        <Field label="Calories per serving" hint="Optional.">
+          <input
+            type="number"
+            min={0}
+            max={10000}
+            value={form.calories}
+            onChange={(e) => set("calories", e.target.value)}
+            className={inputClass}
+          />
+        </Field>
+      </div>
+
+      <Field label="Meal types">
+        <div className="flex flex-wrap gap-2 pt-1">
+          {ALL_MEAL_TYPES.map((m) => {
+            const active = form.mealTypes.includes(m);
+            return (
+              <button
+                key={m}
+                type="button"
+                aria-pressed={active}
+                onClick={() =>
+                  set(
+                    "mealTypes",
+                    active ? form.mealTypes.filter((x) => x !== m) : [...form.mealTypes, m],
+                  )
+                }
+                className={`px-3 py-2 text-xs transition-colors ${
+                  active
+                    ? "border border-ink bg-ink text-paper"
+                    : "border border-steel text-mute hover:border-ink hover:text-ink"
+                }`}
+              >
+                {m}
+              </button>
+            );
+          })}
+        </div>
+      </Field>
+
+
       <Field
         label="Ingredients"
         hint='One per line. Either "250 g plain flour" or "250 g | plain flour".'
