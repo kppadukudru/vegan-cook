@@ -389,6 +389,14 @@ function Index() {
                       params={{ id: r.id }}
                       className="p-6 h-full flex flex-col gap-4 group hover:bg-secondary transition-colors"
                     >
+                      {r.imageUrl && (
+                        <img
+                          src={r.imageUrl}
+                          alt={r.imageAlt || r.title}
+                          loading="lazy"
+                          className="w-full aspect-[3/2] object-cover border border-steel"
+                        />
+                      )}
                       <div className="flex items-start justify-between gap-4">
                         <h3 className="font-serif text-xl leading-tight tracking-tight text-balance group-hover:text-leaf transition-colors">
                           {r.title}
