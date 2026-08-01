@@ -179,6 +179,14 @@ function Index() {
                 {featured.blurb}
               </p>
 
+              {featured.imageUrl && (
+                <img
+                  src={featured.imageUrl}
+                  alt={featured.imageAlt || featured.title}
+                  className="w-full aspect-[3/2] object-cover border border-steel"
+                />
+              )}
+
               <Link
                 to="/recipes/$id"
                 params={{ id: featured.id }}
