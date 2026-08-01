@@ -135,7 +135,7 @@ function AdminPage() {
   const rejectSubmission = useServerFn(adminRejectSubmission);
 
   const [isAdmin, setIsAdmin] = useState<boolean | null>(null);
-  const [tab, setTab] = useState<"recipes" | "submissions">("recipes");
+  const [tab, setTab] = useState<"recipes" | "submissions" | "import">("recipes");
   const [recipes, setRecipes] = useState<Recipe[]>([]);
   const [submissions, setSubmissions] = useState<Submission[]>([]);
   const [form, setForm] = useState<FormState | null>(null);
