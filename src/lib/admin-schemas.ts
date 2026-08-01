@@ -1,5 +1,21 @@
 import { z } from "zod";
 
+export const cuisineEnum = z.enum([
+  "Indian",
+  "Middle Eastern",
+  "Japanese",
+  "Italian",
+  "Continental",
+  "Mexican",
+  "Thai",
+  "Chinese",
+  "Mediterranean",
+  "American",
+  "Other",
+]);
+export const spiceEnum = z.enum(["None", "Mild", "Medium", "Spicy", "Fiery"]);
+export const mealTypeEnum = z.enum(["Breakfast", "Lunch", "Dinner", "Snack", "Dessert"]);
+
 export const recipeInput = z.object({
   id: z.string().trim().max(80).optional(),
   title: z.string().trim().min(4).max(160),
@@ -15,7 +31,12 @@ export const recipeInput = z.object({
   author: z.string().trim().min(2).max(120).default("Vegan Cook"),
   publishedAt: z.string().trim().regex(/^\d{4}-\d{2}-\d{2}$/),
   status: z.enum(["published", "draft"]),
+  cuisine: cuisineEnum.nullish(),
+  spiceLevel: spiceEnum.nullish(),
+  mealTypes: z.array(mealTypeEnum).max(5).default([]),
+  calories: z.coerce.number().int().min(0).max(10000).nullish(),
 });
+
 
 export type RecipeInput = z.infer<typeof recipeInput>;
 

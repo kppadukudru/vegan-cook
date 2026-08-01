@@ -4,11 +4,17 @@ import { useCallback, useEffect, useMemo, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import {
   ALL_ALLERGENS,
+  ALL_CUISINES,
+  ALL_MEAL_TYPES,
   ALL_SKILLS,
+  ALL_SPICE_LEVELS,
   formatDate,
   type Allergen,
+  type Cuisine,
+  type MealType,
   type Recipe,
   type Skill,
+  type SpiceLevel,
 } from "@/data/recipes";
 import {
   ingredientsToText,
@@ -63,6 +69,10 @@ interface FormState {
   author: string;
   publishedAt: string;
   status: "published" | "draft";
+  cuisine: Cuisine | "";
+  spiceLevel: SpiceLevel | "";
+  mealTypes: MealType[];
+  calories: string;
 }
 
 const emptyForm = (): FormState => ({
@@ -81,6 +91,10 @@ const emptyForm = (): FormState => ({
   author: "Vegan Cook",
   publishedAt: new Date().toISOString().slice(0, 10),
   status: "published",
+  cuisine: "",
+  spiceLevel: "",
+  mealTypes: [],
+  calories: "",
 });
 
 const formFromRecipe = (r: Recipe): FormState => ({
@@ -99,7 +113,12 @@ const formFromRecipe = (r: Recipe): FormState => ({
   author: r.author,
   publishedAt: r.publishedAt,
   status: r.status ?? "published",
+  cuisine: r.cuisine ?? "",
+  spiceLevel: r.spiceLevel ?? "",
+  mealTypes: r.mealTypes ?? [],
+  calories: r.calories != null ? String(r.calories) : "",
 });
+
 
 type Submission = Awaited<ReturnType<typeof adminListSubmissions>>[number];
 
@@ -198,6 +217,10 @@ function AdminPage() {
       author: form.author,
       publishedAt: form.publishedAt,
       status: form.status,
+      cuisine: form.cuisine || null,
+      spiceLevel: form.spiceLevel || null,
+      mealTypes: form.mealTypes,
+      calories: form.calories.trim() === "" ? null : Number(form.calories),
     };
     await runAction(async () => {
       const result = await saveRecipe({ data: payload });
@@ -607,6 +630,76 @@ function RecipeForm({
           })}
         </div>
       </Field>
+
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <Field label="Cuisine">
+          <select
+            value={form.cuisine}
+            onChange={(e) => set("cuisine", e.target.value as Cuisine | "")}
+            className={inputClass}
+          >
+            <option value="">Not specified</option>
+            {ALL_CUISINES.map((c) => (
+              <option key={c} value={c}>
+                {c}
+              </option>
+            ))}
+          </select>
+        </Field>
+        <Field label="Spice level">
+          <select
+            value={form.spiceLevel}
+            onChange={(e) => set("spiceLevel", e.target.value as SpiceLevel | "")}
+            className={inputClass}
+          >
+            <option value="">Not specified</option>
+            {ALL_SPICE_LEVELS.map((s) => (
+              <option key={s} value={s}>
+                {s}
+              </option>
+            ))}
+          </select>
+        </Field>
+        <Field label="Calories per serving" hint="Optional.">
+          <input
+            type="number"
+            min={0}
+            max={10000}
+            value={form.calories}
+            onChange={(e) => set("calories", e.target.value)}
+            className={inputClass}
+          />
+        </Field>
+      </div>
+
+      <Field label="Meal types">
+        <div className="flex flex-wrap gap-2 pt-1">
+          {ALL_MEAL_TYPES.map((m) => {
+            const active = form.mealTypes.includes(m);
+            return (
+              <button
+                key={m}
+                type="button"
+                aria-pressed={active}
+                onClick={() =>
+                  set(
+                    "mealTypes",
+                    active ? form.mealTypes.filter((x) => x !== m) : [...form.mealTypes, m],
+                  )
+                }
+                className={`px-3 py-2 text-xs transition-colors ${
+                  active
+                    ? "border border-ink bg-ink text-paper"
+                    : "border border-steel text-mute hover:border-ink hover:text-ink"
+                }`}
+              >
+                {m}
+              </button>
+            );
+          })}
+        </div>
+      </Field>
+
 
       <Field
         label="Ingredients"

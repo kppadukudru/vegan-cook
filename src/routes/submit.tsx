@@ -1,7 +1,17 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useServerFn } from "@tanstack/react-start";
 import { useState } from "react";
-import { ALL_ALLERGENS, type Allergen, type Skill } from "@/data/recipes";
+import {
+  ALL_ALLERGENS,
+  ALL_CUISINES,
+  ALL_MEAL_TYPES,
+  ALL_SPICE_LEVELS,
+  type Allergen,
+  type Cuisine,
+  type MealType,
+  type Skill,
+  type SpiceLevel,
+} from "@/data/recipes";
 import { describeNonVeganHits, findNonVeganTerms } from "@/lib/vegan-check";
 import { submitRecipe } from "@/lib/submissions.functions";
 
@@ -43,12 +53,17 @@ const initialForm = {
   cookware: "",
   method: "",
   allergenNotes: "",
+  cuisine: "" as Cuisine | "",
+  spiceLevel: "" as SpiceLevel | "",
+  calories: "",
 };
+
 
 function SubmitPage() {
   const submit = useServerFn(submitRecipe);
   const [form, setForm] = useState(initialForm);
   const [allergens, setAllergens] = useState<Set<Allergen>>(new Set());
+  const [mealTypes, setMealTypes] = useState<Set<MealType>>(new Set());
   const [state, setState] = useState<"idle" | "sending" | "done" | "error">("idle");
   const [message, setMessage] = useState("");
 
@@ -62,6 +77,15 @@ function SubmitPage() {
       else next.add(a);
       return next;
     });
+
+  const toggleMealType = (m: MealType) =>
+    setMealTypes((prev) => {
+      const next = new Set(prev);
+      if (next.has(m)) next.delete(m);
+      else next.add(m);
+      return next;
+    });
+
 
   const onSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -88,6 +112,10 @@ function SubmitPage() {
           timeMinutes: Number(form.timeMinutes),
           servings: Number(form.servings),
           allergens: [...allergens],
+          cuisine: form.cuisine || null,
+          spiceLevel: form.spiceLevel || null,
+          mealTypes: [...mealTypes],
+          calories: form.calories.trim() === "" ? null : Number(form.calories),
         },
       });
       if (res.ok) {
@@ -95,6 +123,7 @@ function SubmitPage() {
         setMessage(res.message);
         setForm(initialForm);
         setAllergens(new Set());
+        setMealTypes(new Set());
       } else {
         setState("error");
         setMessage(res.message);
@@ -215,6 +244,78 @@ function SubmitPage() {
               />
             </Field>
           </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <Field label="Cuisine">
+              <select
+                value={form.cuisine}
+                onChange={(e) => set("cuisine", e.target.value as Cuisine | "")}
+                className={inputClass}
+              >
+                <option value="">Not specified</option>
+                {ALL_CUISINES.map((c) => (
+                  <option key={c} value={c}>
+                    {c}
+                  </option>
+                ))}
+              </select>
+            </Field>
+            <Field label="Spice level">
+              <select
+                value={form.spiceLevel}
+                onChange={(e) => set("spiceLevel", e.target.value as SpiceLevel | "")}
+                className={inputClass}
+              >
+                <option value="">Not specified</option>
+                {ALL_SPICE_LEVELS.map((s) => (
+                  <option key={s} value={s}>
+                    {s}
+                  </option>
+                ))}
+              </select>
+            </Field>
+            <Field label="Calories per serving" hint="Optional.">
+              <input
+                type="number"
+                min={0}
+                max={10000}
+                value={form.calories}
+                onChange={(e) => set("calories", e.target.value)}
+                placeholder="e.g. 420"
+                className={inputClass}
+              />
+            </Field>
+          </div>
+
+          <fieldset className="space-y-4">
+            <legend className="text-[10px] uppercase tracking-[0.15em] text-mute border-b border-steel pb-2 block w-full">
+              When would you eat it?
+            </legend>
+            <div className="flex flex-wrap gap-2">
+              {ALL_MEAL_TYPES.map((m) => {
+                const active = mealTypes.has(m);
+                return (
+                  <button
+                    key={m}
+                    type="button"
+                    onClick={() => toggleMealType(m)}
+                    aria-pressed={active}
+                    className={`px-4 py-2 text-xs flex items-center gap-2 transition-colors ${
+                      active
+                        ? "border border-ink bg-ink text-paper"
+                        : "border border-steel text-mute hover:border-ink hover:text-ink"
+                    }`}
+                  >
+                    <span
+                      className={`block size-1.5 ${active ? "bg-paper" : "border border-mute"}`}
+                    />
+                    {m}
+                  </button>
+                );
+              })}
+            </div>
+          </fieldset>
+
 
           <Field label="Short description" hint="A couple of sentences on what it tastes like.">
             <textarea

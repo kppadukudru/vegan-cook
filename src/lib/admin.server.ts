@@ -38,6 +38,10 @@ export async function saveRecipe(data: RecipeInput): Promise<Result> {
       author: data.author,
       published_at: data.publishedAt,
       status: data.status,
+      cuisine: data.cuisine ?? null,
+      spice_level: data.spiceLevel ?? null,
+      meal_types: data.mealTypes ?? [],
+      calories: data.calories ?? null,
     },
     { onConflict: "id" },
   );
@@ -116,6 +120,10 @@ export async function publishSubmission(id: string, asDraft: boolean): Promise<R
       published_at: new Date().toISOString().slice(0, 10),
       status: asDraft ? "draft" : "published",
       source_submission_id: sub.id,
+      cuisine: sub.cuisine,
+      spice_level: sub.spice_level,
+      meal_types: sub.meal_types ?? [],
+      calories: sub.calories,
     },
     { onConflict: "id" },
   );

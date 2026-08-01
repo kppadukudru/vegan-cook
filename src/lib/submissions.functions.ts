@@ -1,6 +1,7 @@
 import { createServerFn } from "@tanstack/react-start";
 import { z } from "zod";
 import { describeNonVeganHits, findNonVeganTerms } from "@/lib/vegan-check";
+import { cuisineEnum, mealTypeEnum, spiceEnum } from "@/lib/admin-schemas";
 
 const submissionSchema = z.object({
   title: z.string().trim().min(4, "Give the recipe a title.").max(160),
@@ -15,7 +16,12 @@ const submissionSchema = z.object({
   method: z.string().trim().min(20, "Describe the method.").max(8000),
   allergens: z.array(z.string().max(40)).max(20).default([]),
   allergenNotes: z.string().trim().max(1000).default(""),
+  cuisine: cuisineEnum.nullish(),
+  spiceLevel: spiceEnum.nullish(),
+  mealTypes: z.array(mealTypeEnum).max(5).default([]),
+  calories: z.coerce.number().int().min(0).max(10000).nullish(),
 });
+
 
 export const submitRecipe = createServerFn({ method: "POST" })
   .inputValidator((data: unknown) => submissionSchema.parse(data))
@@ -45,6 +51,10 @@ export const submitRecipe = createServerFn({ method: "POST" })
       method: data.method,
       allergens: data.allergens,
       allergen_notes: data.allergenNotes || null,
+      cuisine: data.cuisine ?? null,
+      spice_level: data.spiceLevel ?? null,
+      meal_types: data.mealTypes ?? [],
+      calories: data.calories ?? null,
     });
 
     if (error) {

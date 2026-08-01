@@ -3,14 +3,19 @@ import { useServerFn } from "@tanstack/react-start";
 import { useMemo, useState } from "react";
 import {
   ALL_ALLERGENS,
+  ALL_CUISINES,
+  ALL_MEAL_TYPES,
+  ALL_SPICE_LEVELS,
   dayIndex,
   formatDate,
   formatTime,
   pickRecipeOfTheDay,
   type Allergen,
+  type Cuisine,
+  type MealType,
   type Recipe,
   type Skill,
-
+  type SpiceLevel,
 } from "@/data/recipes";
 import { listPublishedRecipes } from "@/lib/recipes.functions";
 import { subscribeToDaily } from "@/lib/newsletter.functions";
@@ -76,14 +81,21 @@ function Index() {
   const allRecipes = Route.useLoaderData() as Recipe[];
   const [skill, setSkill] = useState<Skill | "All">("All");
   const [avoid, setAvoid] = useState<Set<Allergen>>(new Set());
+  const [cuisine, setCuisine] = useState<Cuisine | "All">("All");
+  const [spice, setSpice] = useState<SpiceLevel | "All">("All");
+  const [meal, setMeal] = useState<MealType | "All">("All");
 
   const filtered = useMemo(() => {
     return allRecipes.filter((r) => {
       if (skill !== "All" && r.skill !== skill) return false;
+      if (cuisine !== "All" && r.cuisine !== cuisine) return false;
+      if (spice !== "All" && r.spiceLevel !== spice) return false;
+      if (meal !== "All" && !r.mealTypes.includes(meal)) return false;
       for (const a of avoid) if (r.contains.includes(a)) return false;
       return true;
     });
-  }, [allRecipes, skill, avoid]);
+  }, [allRecipes, skill, avoid, cuisine, spice, meal]);
+
 
   // Rotates once per day across the whole catalogue.
   const featured = useMemo(() => pickRecipeOfTheDay(allRecipes), [allRecipes]);
@@ -181,12 +193,19 @@ function Index() {
                 <Cell label="Time" value={formatTime(featured.timeMinutes)} />
                 <Cell label="Skill" value={featured.skill} />
                 <Cell label="Serves" value={String(featured.servings)} />
+                <Cell label="Cuisine" value={featured.cuisine ?? "—"} />
+                <Cell label="Spice" value={featured.spiceLevel ?? "—"} />
+                <Cell
+                  label="Calories"
+                  value={featured.calories != null ? `${featured.calories} / serving` : "—"}
+                />
                 <Cell
                   label="Contains"
                   value={
                     featured.contains.length === 0 ? "None declared" : featured.contains.join(", ")
                   }
                 />
+
               </div>
               <p className="text-xs text-mute leading-relaxed">
                 A different recipe is featured every day, drawn in rotation from the whole
@@ -269,7 +288,74 @@ function Index() {
                 })}
               </div>
             </div>
+
+            <div className="space-y-4">
+              <span className="text-[10px] uppercase tracking-[0.15em] text-mute border-b border-steel pb-2 block w-full">
+                Cuisine
+              </span>
+              <div className="flex flex-wrap gap-2">
+                {(["All", ...ALL_CUISINES] as (Cuisine | "All")[]).map((c) => (
+                  <button
+                    key={c}
+                    onClick={() => setCuisine(c)}
+                    aria-pressed={cuisine === c}
+                    className={`px-4 py-2 text-xs transition-colors ${
+                      cuisine === c
+                        ? "border border-ink bg-ink text-paper"
+                        : "border border-steel text-mute hover:border-ink hover:text-ink"
+                    }`}
+                  >
+                    {c}
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            <div className="space-y-4">
+              <span className="text-[10px] uppercase tracking-[0.15em] text-mute border-b border-steel pb-2 block w-full">
+                Spice level
+              </span>
+              <div className="flex flex-wrap gap-2">
+                {(["All", ...ALL_SPICE_LEVELS] as (SpiceLevel | "All")[]).map((s) => (
+                  <button
+                    key={s}
+                    onClick={() => setSpice(s)}
+                    aria-pressed={spice === s}
+                    className={`px-4 py-2 text-xs transition-colors ${
+                      spice === s
+                        ? "border border-ink bg-ink text-paper"
+                        : "border border-steel text-mute hover:border-ink hover:text-ink"
+                    }`}
+                  >
+                    {s}
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            <div className="space-y-4">
+              <span className="text-[10px] uppercase tracking-[0.15em] text-mute border-b border-steel pb-2 block w-full">
+                Meal
+              </span>
+              <div className="flex flex-wrap gap-2">
+                {(["All", ...ALL_MEAL_TYPES] as (MealType | "All")[]).map((m) => (
+                  <button
+                    key={m}
+                    onClick={() => setMeal(m)}
+                    aria-pressed={meal === m}
+                    className={`px-4 py-2 text-xs transition-colors ${
+                      meal === m
+                        ? "border border-ink bg-ink text-paper"
+                        : "border border-steel text-mute hover:border-ink hover:text-ink"
+                    }`}
+                  >
+                    {m}
+                  </button>
+                ))}
+              </div>
+            </div>
           </div>
+
         </section>
 
         {/* Collection */}
@@ -304,6 +390,12 @@ function Index() {
                         </span>
                       </div>
                       <p className="text-xs text-mute leading-relaxed line-clamp-3">{r.blurb}</p>
+                      <div className="flex flex-wrap gap-x-3 gap-y-1 text-[9px] uppercase tracking-[0.1em] text-mute">
+                        {r.cuisine && <span>{r.cuisine}</span>}
+                        {r.spiceLevel && <span>{r.spiceLevel} spice</span>}
+                        {r.mealTypes.length > 0 && <span>{r.mealTypes.join(" / ")}</span>}
+                        {r.calories != null && <span className="tabular-nums">{r.calories} kcal</span>}
+                      </div>
                       <div className="flex items-center justify-between text-[10px] uppercase tracking-[0.15em] text-mute mt-auto pt-4 border-t border-steel">
                         <span className="tabular-nums">{formatTime(r.timeMinutes)}</span>
                         <span>
@@ -312,6 +404,7 @@ function Index() {
                             : `Contains ${r.contains.join(", ")}`}
                         </span>
                       </div>
+
                     </Link>
                   </li>
                 ))}

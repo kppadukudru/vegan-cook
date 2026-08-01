@@ -39,9 +39,26 @@ export const Route = createFileRoute("/recipes/$id")({
             datePublished: recipe.publishedAt,
             recipeYield: `${recipe.servings} servings`,
             totalTime: `PT${recipe.timeMinutes}M`,
-            recipeCategory: "Vegan",
+            ...(recipe.cuisine ? { recipeCuisine: recipe.cuisine } : {}),
+            recipeCategory:
+              recipe.mealTypes && recipe.mealTypes.length > 0
+                ? recipe.mealTypes.join(", ")
+                : "Vegan",
+            ...(recipe.calories != null
+              ? {
+                  nutrition: {
+                    "@type": "NutritionInformation",
+                    calories: `${recipe.calories} calories`,
+                  },
+                }
+              : {}),
             suitableForDiet: "https://schema.org/VeganDiet",
-            keywords: ["vegan", recipe.skill.toLowerCase()].join(", "),
+            keywords: [
+              "vegan",
+              recipe.skill.toLowerCase(),
+              ...(recipe.cuisine ? [recipe.cuisine.toLowerCase()] : []),
+              ...(recipe.spiceLevel ? [`${recipe.spiceLevel.toLowerCase()} spice`] : []),
+            ].join(", "),
             recipeIngredient: recipe.ingredients.map((i) =>
               [i.qty, i.item].filter(Boolean).join(" ").trim(),
             ),
@@ -130,7 +147,20 @@ function RecipePage() {
               <span>{formatTime(recipe.timeMinutes)}</span>
               <span className="text-steel">/</span>
               <span>Serves {recipe.servings}</span>
+              {recipe.cuisine && (
+                <>
+                  <span className="text-steel">/</span>
+                  <span>{recipe.cuisine}</span>
+                </>
+              )}
+              {recipe.spiceLevel && (
+                <>
+                  <span className="text-steel">/</span>
+                  <span>{recipe.spiceLevel} spice</span>
+                </>
+              )}
             </div>
+
 
             <h1 className="font-serif text-4xl md:text-6xl leading-[1.05] tracking-tight text-balance">
               {recipe.title}
@@ -150,6 +180,16 @@ function RecipePage() {
               <SpecCell label="Time" value={formatTime(recipe.timeMinutes)} />
               <SpecCell label="Servings" value={String(recipe.servings)} />
               <SpecCell label="Skill" value={recipe.skill} />
+              <SpecCell label="Cuisine" value={recipe.cuisine ?? "—"} />
+              <SpecCell label="Spice" value={recipe.spiceLevel ?? "—"} />
+              <SpecCell
+                label="Best for"
+                value={recipe.mealTypes.length === 0 ? "—" : recipe.mealTypes.join(", ")}
+              />
+              <SpecCell
+                label="Calories / serving"
+                value={recipe.calories != null ? String(recipe.calories) : "—"}
+              />
               <SpecCell
                 label="Allergens"
                 value={recipe.contains.length === 0 ? "None declared" : recipe.contains.join(", ")}

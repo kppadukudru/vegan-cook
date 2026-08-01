@@ -107,17 +107,21 @@ export type Database = {
           allergens: string[]
           author_name: string
           blurb: string
+          calories: number | null
           cookware: string
           created_at: string
+          cuisine: Database["public"]["Enums"]["recipe_cuisine"] | null
           email: string
           id: string
           ingredients: string
+          meal_types: Database["public"]["Enums"]["meal_type"][]
           method: string
           published_recipe_id: string | null
           review_notes: string | null
           reviewed_at: string | null
           servings: number
           skill: Database["public"]["Enums"]["recipe_skill"]
+          spice_level: Database["public"]["Enums"]["spice_level"] | null
           status: Database["public"]["Enums"]["submission_status"]
           time_minutes: number
           title: string
@@ -128,17 +132,21 @@ export type Database = {
           allergens?: string[]
           author_name: string
           blurb: string
+          calories?: number | null
           cookware: string
           created_at?: string
+          cuisine?: Database["public"]["Enums"]["recipe_cuisine"] | null
           email: string
           id?: string
           ingredients: string
+          meal_types?: Database["public"]["Enums"]["meal_type"][]
           method: string
           published_recipe_id?: string | null
           review_notes?: string | null
           reviewed_at?: string | null
           servings: number
           skill: Database["public"]["Enums"]["recipe_skill"]
+          spice_level?: Database["public"]["Enums"]["spice_level"] | null
           status?: Database["public"]["Enums"]["submission_status"]
           time_minutes: number
           title: string
@@ -149,17 +157,21 @@ export type Database = {
           allergens?: string[]
           author_name?: string
           blurb?: string
+          calories?: number | null
           cookware?: string
           created_at?: string
+          cuisine?: Database["public"]["Enums"]["recipe_cuisine"] | null
           email?: string
           id?: string
           ingredients?: string
+          meal_types?: Database["public"]["Enums"]["meal_type"][]
           method?: string
           published_recipe_id?: string | null
           review_notes?: string | null
           reviewed_at?: string | null
           servings?: number
           skill?: Database["public"]["Enums"]["recipe_skill"]
+          spice_level?: Database["public"]["Enums"]["spice_level"] | null
           status?: Database["public"]["Enums"]["submission_status"]
           time_minutes?: number
           title?: string
@@ -180,16 +192,20 @@ export type Database = {
           allergen_notes: string | null
           author: string
           blurb: string
+          calories: number | null
           contains: string[]
           cookware: string[]
           created_at: string
+          cuisine: Database["public"]["Enums"]["recipe_cuisine"] | null
           id: string
           ingredients: Json
+          meal_types: Database["public"]["Enums"]["meal_type"][]
           method: Json
           published_at: string
           servings: number
           skill: Database["public"]["Enums"]["recipe_skill"]
           source_submission_id: string | null
+          spice_level: Database["public"]["Enums"]["spice_level"] | null
           status: string
           time_minutes: number
           title: string
@@ -199,16 +215,20 @@ export type Database = {
           allergen_notes?: string | null
           author?: string
           blurb: string
+          calories?: number | null
           contains?: string[]
           cookware?: string[]
           created_at?: string
+          cuisine?: Database["public"]["Enums"]["recipe_cuisine"] | null
           id: string
           ingredients?: Json
+          meal_types?: Database["public"]["Enums"]["meal_type"][]
           method?: Json
           published_at?: string
           servings: number
           skill: Database["public"]["Enums"]["recipe_skill"]
           source_submission_id?: string | null
+          spice_level?: Database["public"]["Enums"]["spice_level"] | null
           status?: string
           time_minutes: number
           title: string
@@ -218,16 +238,20 @@ export type Database = {
           allergen_notes?: string | null
           author?: string
           blurb?: string
+          calories?: number | null
           contains?: string[]
           cookware?: string[]
           created_at?: string
+          cuisine?: Database["public"]["Enums"]["recipe_cuisine"] | null
           id?: string
           ingredients?: Json
+          meal_types?: Database["public"]["Enums"]["meal_type"][]
           method?: Json
           published_at?: string
           servings?: number
           skill?: Database["public"]["Enums"]["recipe_skill"]
           source_submission_id?: string | null
+          spice_level?: Database["public"]["Enums"]["spice_level"] | null
           status?: string
           time_minutes?: number
           title?: string
@@ -350,7 +374,21 @@ export type Database = {
     }
     Enums: {
       app_role: "admin" | "user"
+      meal_type: "Breakfast" | "Lunch" | "Dinner" | "Snack" | "Dessert"
+      recipe_cuisine:
+        | "Indian"
+        | "Middle Eastern"
+        | "Japanese"
+        | "Italian"
+        | "Continental"
+        | "Mexican"
+        | "Thai"
+        | "Chinese"
+        | "Mediterranean"
+        | "American"
+        | "Other"
       recipe_skill: "Beginner" | "Intermediate" | "Expert"
+      spice_level: "None" | "Mild" | "Medium" | "Spicy" | "Fiery"
       submission_status: "pending" | "approved" | "rejected"
     }
     CompositeTypes: {
@@ -480,7 +518,22 @@ export const Constants = {
   public: {
     Enums: {
       app_role: ["admin", "user"],
+      meal_type: ["Breakfast", "Lunch", "Dinner", "Snack", "Dessert"],
+      recipe_cuisine: [
+        "Indian",
+        "Middle Eastern",
+        "Japanese",
+        "Italian",
+        "Continental",
+        "Mexican",
+        "Thai",
+        "Chinese",
+        "Mediterranean",
+        "American",
+        "Other",
+      ],
       recipe_skill: ["Beginner", "Intermediate", "Expert"],
+      spice_level: ["None", "Mild", "Medium", "Spicy", "Fiery"],
       submission_status: ["pending", "approved", "rejected"],
     },
   },

@@ -1,11 +1,21 @@
 import { createClient } from "@supabase/supabase-js";
 import type { Database } from "@/integrations/supabase/types";
-import type { Allergen, Ingredient, MethodStep, Recipe, Skill } from "@/data/recipes";
+import type {
+  Allergen,
+  Cuisine,
+  Ingredient,
+  MealType,
+  MethodStep,
+  Recipe,
+  Skill,
+  SpiceLevel,
+} from "@/data/recipes";
 
 type RecipeRow = Database["public"]["Tables"]["recipes"]["Row"];
 
 export const RECIPE_COLUMNS =
-  "id, title, blurb, time_minutes, servings, skill, contains, ingredients, cookware, method, allergen_notes, author, published_at, status";
+  "id, title, blurb, time_minutes, servings, skill, contains, ingredients, cookware, method, allergen_notes, author, published_at, status, cuisine, spice_level, meal_types, calories";
+
 
 /** Server-side publishable client for public reads (RLS applies as anon). */
 export function createPublicClient() {
@@ -42,5 +52,9 @@ export function rowToRecipe(row: Partial<RecipeRow>): Recipe {
     author: row.author ?? "Vegan Cook",
     publishedAt: (row.published_at ?? "").slice(0, 10),
     status: (row.status as "published" | "draft") ?? "published",
+    ...(row.cuisine ? { cuisine: row.cuisine as Cuisine } : {}),
+    ...(row.spice_level ? { spiceLevel: row.spice_level as SpiceLevel } : {}),
+    mealTypes: (row.meal_types ?? []) as MealType[],
+    ...(row.calories != null ? { calories: row.calories } : {}),
   };
 }
