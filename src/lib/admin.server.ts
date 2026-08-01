@@ -42,7 +42,8 @@ export async function saveRecipe(data: RecipeInput): Promise<Result> {
       spice_level: data.spiceLevel ?? null,
       meal_types: data.mealTypes ?? [],
       calories: data.calories ?? null,
-
+    },
+    { onConflict: "id" },
   );
 
   if (error) {
