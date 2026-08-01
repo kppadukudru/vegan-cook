@@ -112,6 +112,10 @@ function SubmitPage() {
           timeMinutes: Number(form.timeMinutes),
           servings: Number(form.servings),
           allergens: [...allergens],
+          cuisine: form.cuisine || null,
+          spiceLevel: form.spiceLevel || null,
+          mealTypes: [...mealTypes],
+          calories: form.calories.trim() === "" ? null : Number(form.calories),
         },
       });
       if (res.ok) {
@@ -119,6 +123,7 @@ function SubmitPage() {
         setMessage(res.message);
         setForm(initialForm);
         setAllergens(new Set());
+        setMealTypes(new Set());
       } else {
         setState("error");
         setMessage(res.message);
