@@ -1,0 +1,82 @@
+import { createServerFn } from "@tanstack/react-start";
+import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
+import {
+  assertAdmin,
+  idInput,
+  publishInput,
+  recipeInput,
+  rejectInput,
+} from "@/lib/admin-schemas";
+import type { Recipe } from "@/data/recipes";
+
+/** Who am I, and am I allowed into the editor? */
+export const getAdminStatus = createServerFn({ method: "GET" })
+  .middleware([requireSupabaseAuth])
+  .handler(async ({ context }) => {
+    const { data } = await context.supabase.rpc("has_role", {
+      _user_id: context.userId,
+      _role: "admin",
+    });
+    return { isAdmin: data === true, userId: context.userId };
+  });
+
+/** Every recipe, drafts included. */
+export const adminListRecipes = createServerFn({ method: "GET" })
+  .middleware([requireSupabaseAuth])
+  .handler(async ({ context }): Promise<Recipe[]> => {
+    await assertAdmin(context);
+    const { rowToRecipe, RECIPE_COLUMNS } = await import("@/lib/recipes.server");
+    const { data, error } = await context.supabase
+      .from("recipes")
+      .select(RECIPE_COLUMNS)
+      .order("published_at", { ascending: false });
+    if (error) throw new Error(error.message);
+    return (data ?? []).map(rowToRecipe);
+  });
+
+/** Create or update a recipe; free text is parsed into the site's own format. */
+export const adminSaveRecipe = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((data: unknown) => recipeInput.parse(data))
+  .handler(async ({ data, context }) => {
+    await assertAdmin(context);
+    const { saveRecipe } = await import("@/lib/admin.server");
+    return saveRecipe(data);
+  });
+
+export const adminDeleteRecipe = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((data: unknown) => idInput.parse(data))
+  .handler(async ({ data, context }) => {
+    await assertAdmin(context);
+    const { deleteRecipe } = await import("@/lib/admin.server");
+    return deleteRecipe(data.id);
+  });
+
+/** The review queue. */
+export const adminListSubmissions = createServerFn({ method: "GET" })
+  .middleware([requireSupabaseAuth])
+  .handler(async ({ context }) => {
+    await assertAdmin(context);
+    const { listSubmissions } = await import("@/lib/admin.server");
+    return listSubmissions();
+  });
+
+/** Turn a submission into a live recipe in the site's standard format. */
+export const adminPublishSubmission = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((data: unknown) => publishInput.parse(data))
+  .handler(async ({ data, context }) => {
+    await assertAdmin(context);
+    const { publishSubmission } = await import("@/lib/admin.server");
+    return publishSubmission(data.id, data.asDraft);
+  });
+
+export const adminRejectSubmission = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((data: unknown) => rejectInput.parse(data))
+  .handler(async ({ data, context }) => {
+    await assertAdmin(context);
+    const { rejectSubmission } = await import("@/lib/admin.server");
+    return rejectSubmission(data.id, data.notes);
+  });

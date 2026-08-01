@@ -7,11 +7,14 @@ import {
   formatDate,
   formatTime,
   pickRecipeOfTheDay,
-  recipes,
   type Allergen,
+  type Recipe,
   type Skill,
+
 } from "@/data/recipes";
+import { listPublishedRecipes } from "@/lib/recipes.functions";
 import { subscribeToDaily } from "@/lib/newsletter.functions";
+
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -51,26 +54,40 @@ export const Route = createFileRoute("/")({
       },
     ],
   }),
+  loader: () => listPublishedRecipes(),
+  errorComponent: () => (
+    <div className="bg-paper text-ink min-h-dvh grid place-items-center px-6">
+      <div className="max-w-md space-y-3 text-center">
+        <h1 className="font-serif text-3xl tracking-tight">The kitchen is briefly closed</h1>
+        <p className="text-sm text-mute">
+          We couldn't load the recipe collection just now. Please refresh in a moment.
+        </p>
+      </div>
+    </div>
+  ),
   component: Index,
 });
+
 
 
 const SKILLS: Skill[] = ["Beginner", "Intermediate", "Expert"];
 
 function Index() {
+  const allRecipes = Route.useLoaderData() as Recipe[];
   const [skill, setSkill] = useState<Skill | "All">("All");
   const [avoid, setAvoid] = useState<Set<Allergen>>(new Set());
 
   const filtered = useMemo(() => {
-    return recipes.filter((r) => {
+    return allRecipes.filter((r) => {
       if (skill !== "All" && r.skill !== skill) return false;
       for (const a of avoid) if (r.contains.includes(a)) return false;
       return true;
     });
-  }, [skill, avoid]);
+  }, [allRecipes, skill, avoid]);
 
   // Rotates once per day across the whole catalogue.
-  const featured = useMemo(() => pickRecipeOfTheDay(recipes), []);
+  const featured = useMemo(() => pickRecipeOfTheDay(allRecipes), [allRecipes]);
+
   const todayLabel = useMemo(
     () => formatDate(new Date(dayIndex() * 86_400_000).toISOString().slice(0, 10)),
     [],
@@ -132,51 +149,69 @@ function Index() {
 
       <main className="max-w-[1440px] mx-auto">
         {/* Recipe of the day */}
-        <section className="grid grid-cols-1 lg:grid-cols-12 border-b border-steel">
-          <div className="lg:col-span-7 border-b lg:border-b-0 lg:border-r border-steel p-8 lg:p-12 space-y-10">
+        {featured ? (
+          <section className="grid grid-cols-1 lg:grid-cols-12 border-b border-steel">
+            <div className="lg:col-span-7 border-b lg:border-b-0 lg:border-r border-steel p-8 lg:p-12 space-y-10">
+              <div className="flex flex-wrap items-center gap-4 text-[10px] uppercase tracking-[0.15em] text-mute">
+                <span className="inline-block size-1.5 bg-leaf" />
+                <span>Recipe of the day</span>
+                <span className="text-steel">/</span>
+                <span className="tabular-nums">{todayLabel}</span>
+              </div>
+
+              <h2 className="font-serif text-4xl md:text-6xl leading-[1.05] tracking-tight text-balance">
+                {featured.title}
+              </h2>
+
+              <p className="text-mute max-w-[52ch] text-base leading-relaxed text-pretty">
+                {featured.blurb}
+              </p>
+
+              <Link
+                to="/recipes/$id"
+                params={{ id: featured.id }}
+                className="inline-block bg-ink text-paper px-5 py-3 text-[10px] uppercase tracking-[0.15em] hover:bg-leaf transition-colors"
+              >
+                Read the full recipe
+              </Link>
+            </div>
+
+            <div className="lg:col-span-5 p-8 lg:p-12 flex flex-col justify-between gap-8">
+              <div className="grid grid-cols-2 gap-px bg-steel border border-steel">
+                <Cell label="Time" value={formatTime(featured.timeMinutes)} />
+                <Cell label="Skill" value={featured.skill} />
+                <Cell label="Serves" value={String(featured.servings)} />
+                <Cell
+                  label="Contains"
+                  value={
+                    featured.contains.length === 0 ? "None declared" : featured.contains.join(", ")
+                  }
+                />
+              </div>
+              <p className="text-xs text-mute leading-relaxed">
+                A different recipe is featured every day, drawn in rotation from the whole
+                collection. Today's is {featured.skill.toLowerCase()} level and takes about{" "}
+                {formatTime(featured.timeMinutes)}.
+              </p>
+            </div>
+          </section>
+        ) : (
+          <section className="border-b border-steel p-8 lg:p-12 space-y-4">
             <div className="flex flex-wrap items-center gap-4 text-[10px] uppercase tracking-[0.15em] text-mute">
               <span className="inline-block size-1.5 bg-leaf" />
               <span>Recipe of the day</span>
               <span className="text-steel">/</span>
               <span className="tabular-nums">{todayLabel}</span>
             </div>
-
-            <h2 className="font-serif text-4xl md:text-6xl leading-[1.05] tracking-tight text-balance">
-              {featured.title}
+            <h2 className="font-serif text-3xl md:text-4xl tracking-tight">
+              The collection is being restocked.
             </h2>
-
-            <p className="text-mute max-w-[52ch] text-base leading-relaxed text-pretty">
-              {featured.blurb}
+            <p className="text-sm text-mute max-w-[52ch] leading-relaxed">
+              No recipes are published right now. Check back shortly — or send us yours.
             </p>
+          </section>
+        )}
 
-            <Link
-              to="/recipes/$id"
-              params={{ id: featured.id }}
-              className="inline-block bg-ink text-paper px-5 py-3 text-[10px] uppercase tracking-[0.15em] hover:bg-leaf transition-colors"
-            >
-              Read the full recipe
-            </Link>
-          </div>
-
-          <div className="lg:col-span-5 p-8 lg:p-12 flex flex-col justify-between gap-8">
-            <div className="grid grid-cols-2 gap-px bg-steel border border-steel">
-              <Cell label="Time" value={formatTime(featured.timeMinutes)} />
-              <Cell label="Skill" value={featured.skill} />
-              <Cell label="Serves" value={String(featured.servings)} />
-              <Cell
-                label="Contains"
-                value={
-                  featured.contains.length === 0 ? "None declared" : featured.contains.join(", ")
-                }
-              />
-            </div>
-            <p className="text-xs text-mute leading-relaxed">
-              A different recipe is featured every day, drawn in rotation from the whole
-              collection. Today's is {featured.skill.toLowerCase()} level and takes about{" "}
-              {formatTime(featured.timeMinutes)}.
-            </p>
-          </div>
-        </section>
 
         {/* Filters */}
         <section
@@ -327,7 +362,7 @@ function Index() {
 
       <footer className="border-t border-steel px-6 md:px-8 py-8 flex flex-col md:flex-row items-start md:items-center justify-between gap-4 text-[10px] uppercase tracking-[0.15em] text-mute">
         <span>Vegan Cook — plant-based cooking, every day.</span>
-        <span className="tabular-nums">{recipes.length} recipes in the collection</span>
+        <span className="tabular-nums">{allRecipes.length} recipes in the collection</span>
       </footer>
     </div>
   );

@@ -1,6 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import type {} from "@tanstack/react-start";
-import { recipes } from "@/data/recipes";
+import type { Recipe } from "@/data/recipes";
 
 const BASE_URL = "https://www.vegancook.live";
 
@@ -14,15 +14,23 @@ export const Route = createFileRoute("/sitemap.xml")({
   server: {
     handlers: {
       GET: async () => {
+        const { createPublicClient } = await import("@/lib/recipes.server");
+        const { data } = await createPublicClient()
+          .from("recipes")
+          .select("id")
+          .eq("status", "published");
+        const recipeIds = (data ?? []).map((row: Pick<Recipe, "id">) => row.id);
+
         const entries: SitemapEntry[] = [
           { path: "/", changefreq: "daily", priority: "1.0" },
           { path: "/submit", changefreq: "monthly", priority: "0.6" },
-          ...recipes.map((r) => ({
-            path: `/recipes/${r.id}`,
+          ...recipeIds.map((id) => ({
+            path: `/recipes/${id}`,
             changefreq: "monthly" as const,
             priority: "0.8",
           })),
         ];
+
 
         const urls = entries.map((e) =>
           [

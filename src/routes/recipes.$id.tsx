@@ -1,18 +1,14 @@
 import { createFileRoute, Link, notFound } from "@tanstack/react-router";
-import {
-  ALL_ALLERGENS,
-  formatDate,
-  formatTime,
-  getRecipeById,
-  type Recipe,
-} from "@/data/recipes";
+import { ALL_ALLERGENS, formatDate, formatTime, type Recipe } from "@/data/recipes";
+import { getPublishedRecipe } from "@/lib/recipes.functions";
 
 export const Route = createFileRoute("/recipes/$id")({
-  loader: ({ params }) => {
-    const recipe = getRecipeById(params.id);
+  loader: async ({ params }) => {
+    const recipe = await getPublishedRecipe({ data: { id: params.id } });
     if (!recipe) throw notFound();
     return { recipe };
   },
+
   head: ({ params, loaderData }) => {
     const recipe = loaderData?.recipe;
     if (!recipe) {
