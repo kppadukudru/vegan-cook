@@ -45,6 +45,7 @@ export const Route = createFileRoute("/recipes/$id")({
             datePublished: recipe.publishedAt,
             recipeYield: `${recipe.servings} servings`,
             totalTime: `PT${recipe.timeMinutes}M`,
+            ...(recipe.imageUrl ? { image: recipe.imageUrl } : {}),
             ...(recipe.cuisine ? { recipeCuisine: recipe.cuisine } : {}),
             recipeCategory:
               recipe.mealTypes && recipe.mealTypes.length > 0
