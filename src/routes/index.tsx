@@ -8,7 +8,9 @@ import {
   formatTime,
   pickRecipeOfTheDay,
   type Allergen,
+  type Recipe,
   type Skill,
+
 } from "@/data/recipes";
 import { listPublishedRecipes } from "@/lib/recipes.functions";
 import { subscribeToDaily } from "@/lib/newsletter.functions";
