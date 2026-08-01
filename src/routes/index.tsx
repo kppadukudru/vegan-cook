@@ -71,7 +71,7 @@ export const Route = createFileRoute("/")({
 const SKILLS: Skill[] = ["Beginner", "Intermediate", "Expert"];
 
 function Index() {
-  const allRecipes = Route.useLoaderData();
+  const allRecipes = Route.useLoaderData() as Recipe[];
   const [skill, setSkill] = useState<Skill | "All">("All");
   const [avoid, setAvoid] = useState<Set<Allergen>>(new Set());
 
