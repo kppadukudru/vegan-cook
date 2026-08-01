@@ -55,6 +55,8 @@ export function templateCsv(): string {
     meal_types: "Lunch, Dinner",
     calories: "410",
     status: "draft",
+    image_url: "https://example.com/photos/smoky-chickpea-stew.jpg",
+    image_alt: "A bowl of smoky chickpea stew with flatbread",
   };
   const escape = (v: string) => `"${v.replace(/"/g, '""')}"`;
   return `${CSV_COLUMNS.join(",")}\n${CSV_COLUMNS.map((c) => escape(example[c] ?? "")).join(",")}\n`;
@@ -144,6 +146,8 @@ export function normalizeCsvRow(raw: Record<string, string>, line: number): Pars
     spiceLevel,
     mealTypes,
     calories: caloriesRaw === "" ? null : caloriesRaw,
+    imageUrl: get("image_url"),
+    imageAlt: get("image_alt"),
   };
 
   const parsed = recipeInput.safeParse(candidate);

@@ -74,6 +74,8 @@ interface FormState {
   spiceLevel: SpiceLevel | "";
   mealTypes: MealType[];
   calories: string;
+  imageUrl: string;
+  imageAlt: string;
 }
 
 const emptyForm = (): FormState => ({
