@@ -1,0 +1,45 @@
+import { z } from "zod";
+
+export const recipeInput = z.object({
+  id: z.string().trim().max(80).optional(),
+  title: z.string().trim().min(4).max(160),
+  blurb: z.string().trim().min(10).max(1000),
+  timeMinutes: z.coerce.number().int().min(1).max(2880),
+  servings: z.coerce.number().int().min(1).max(50),
+  skill: z.enum(["Beginner", "Intermediate", "Expert"]),
+  contains: z.array(z.string().max(40)).max(20).default([]),
+  ingredientsText: z.string().trim().min(3).max(6000),
+  cookwareText: z.string().trim().max(2000).default(""),
+  methodText: z.string().trim().min(10).max(12000),
+  allergenNotes: z.string().trim().max(2000).default(""),
+  author: z.string().trim().min(2).max(120).default("Vegan Cook"),
+  publishedAt: z.string().trim().regex(/^\d{4}-\d{2}-\d{2}$/),
+  status: z.enum(["published", "draft"]),
+});
+
+export type RecipeInput = z.infer<typeof recipeInput>;
+
+export const idInput = z.object({ id: z.string().max(80) });
+
+export const publishInput = z.object({
+  id: z.string().uuid(),
+  asDraft: z.boolean().default(false),
+});
+
+export const rejectInput = z.object({
+  id: z.string().uuid(),
+  notes: z.string().trim().max(1000).default(""),
+});
+
+/** Throws unless the caller holds the admin role (checked as the user, not as admin). */
+export async function assertAdmin(context: {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  supabase: any;
+  userId: string;
+}) {
+  const { data, error } = await context.supabase.rpc("has_role", {
+    _user_id: context.userId,
+    _role: "admin",
+  });
+  if (error || data !== true) throw new Error("Forbidden: admin access required.");
+}

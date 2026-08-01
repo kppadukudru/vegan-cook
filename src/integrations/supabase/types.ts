@@ -113,6 +113,9 @@ export type Database = {
           id: string
           ingredients: string
           method: string
+          published_recipe_id: string | null
+          review_notes: string | null
+          reviewed_at: string | null
           servings: number
           skill: Database["public"]["Enums"]["recipe_skill"]
           status: Database["public"]["Enums"]["submission_status"]
@@ -131,6 +134,9 @@ export type Database = {
           id?: string
           ingredients: string
           method: string
+          published_recipe_id?: string | null
+          review_notes?: string | null
+          reviewed_at?: string | null
           servings: number
           skill: Database["public"]["Enums"]["recipe_skill"]
           status?: Database["public"]["Enums"]["submission_status"]
@@ -149,6 +155,9 @@ export type Database = {
           id?: string
           ingredients?: string
           method?: string
+          published_recipe_id?: string | null
+          review_notes?: string | null
+          reviewed_at?: string | null
           servings?: number
           skill?: Database["public"]["Enums"]["recipe_skill"]
           status?: Database["public"]["Enums"]["submission_status"]
@@ -156,7 +165,83 @@ export type Database = {
           title?: string
           updated_at?: string
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "recipe_submissions_published_recipe_id_fkey"
+            columns: ["published_recipe_id"]
+            isOneToOne: false
+            referencedRelation: "recipes"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      recipes: {
+        Row: {
+          allergen_notes: string | null
+          author: string
+          blurb: string
+          contains: string[]
+          cookware: string[]
+          created_at: string
+          id: string
+          ingredients: Json
+          method: Json
+          published_at: string
+          servings: number
+          skill: Database["public"]["Enums"]["recipe_skill"]
+          source_submission_id: string | null
+          status: string
+          time_minutes: number
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          allergen_notes?: string | null
+          author?: string
+          blurb: string
+          contains?: string[]
+          cookware?: string[]
+          created_at?: string
+          id: string
+          ingredients?: Json
+          method?: Json
+          published_at?: string
+          servings: number
+          skill: Database["public"]["Enums"]["recipe_skill"]
+          source_submission_id?: string | null
+          status?: string
+          time_minutes: number
+          title: string
+          updated_at?: string
+        }
+        Update: {
+          allergen_notes?: string | null
+          author?: string
+          blurb?: string
+          contains?: string[]
+          cookware?: string[]
+          created_at?: string
+          id?: string
+          ingredients?: Json
+          method?: Json
+          published_at?: string
+          servings?: number
+          skill?: Database["public"]["Enums"]["recipe_skill"]
+          source_submission_id?: string | null
+          status?: string
+          time_minutes?: number
+          title?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "recipes_source_submission_id_fkey"
+            columns: ["source_submission_id"]
+            isOneToOne: false
+            referencedRelation: "recipe_submissions"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       subscribers: {
         Row: {
@@ -203,6 +288,27 @@ export type Database = {
         }
         Relationships: []
       }
+      user_roles: {
+        Row: {
+          created_at: string
+          id: string
+          role: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          role: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          role?: Database["public"]["Enums"]["app_role"]
+          user_id?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
@@ -216,6 +322,13 @@ export type Database = {
       enqueue_email: {
         Args: { payload: Json; queue_name: string }
         Returns: number
+      }
+      has_role: {
+        Args: {
+          _role: Database["public"]["Enums"]["app_role"]
+          _user_id: string
+        }
+        Returns: boolean
       }
       move_to_dlq: {
         Args: {
@@ -236,6 +349,7 @@ export type Database = {
       }
     }
     Enums: {
+      app_role: "admin" | "user"
       recipe_skill: "Beginner" | "Intermediate" | "Expert"
       submission_status: "pending" | "approved" | "rejected"
     }
@@ -365,6 +479,7 @@ export type CompositeTypes<
 export const Constants = {
   public: {
     Enums: {
+      app_role: ["admin", "user"],
       recipe_skill: ["Beginner", "Intermediate", "Expert"],
       submission_status: ["pending", "approved", "rejected"],
     },
