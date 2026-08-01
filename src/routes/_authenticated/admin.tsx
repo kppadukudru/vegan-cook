@@ -228,6 +228,8 @@ function AdminPage() {
       spiceLevel: form.spiceLevel || null,
       mealTypes: form.mealTypes,
       calories: form.calories.trim() === "" ? null : Number(form.calories),
+      imageUrl: form.imageUrl.trim(),
+      imageAlt: form.imageAlt.trim(),
     };
     await runAction(async () => {
       const result = await saveRecipe({ data: payload });
