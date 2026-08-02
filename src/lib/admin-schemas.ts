@@ -59,15 +59,31 @@ export const rejectInput = z.object({
   notes: z.string().trim().max(1000).default(""),
 });
 
+/**
+ * Reads the caller's own admin row as the caller (RLS-scoped: users may only
+ * see their own roles), so no privileged helper is exposed to signed-in users.
+ */
+export async function isCallerAdmin(context: {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  supabase: any;
+  userId: string;
+}): Promise<boolean> {
+  const { data, error } = await context.supabase
+    .from("user_roles")
+    .select("role")
+    .eq("user_id", context.userId)
+    .eq("role", "admin")
+    .maybeSingle();
+  if (error) return false;
+  return data != null;
+}
+
 /** Throws unless the caller holds the admin role (checked as the user, not as admin). */
 export async function assertAdmin(context: {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   supabase: any;
   userId: string;
 }) {
-  const { data, error } = await context.supabase.rpc("has_role", {
-    _user_id: context.userId,
-    _role: "admin",
-  });
-  if (error || data !== true) throw new Error("Forbidden: admin access required.");
+  if (!(await isCallerAdmin(context))) throw new Error("Forbidden: admin access required.");
 }
+
