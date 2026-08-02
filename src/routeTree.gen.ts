@@ -16,6 +16,7 @@ import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
 import { Route as SubmitRouteImport } from './routes/submit'
 import { Route as AuthenticatedAdminRouteImport } from './routes/_authenticated/admin'
 import { Route as JournalIndexRouteImport } from './routes/journal.index'
+import { Route as JournalSlugRouteImport } from './routes/journal.$slug'
 import { Route as RecipesIdRouteImport } from './routes/recipes.$id'
 import { Route as LovableEmailQueueProcessRouteImport } from './routes/lovable/email/queue/process'
 
@@ -53,6 +54,11 @@ const JournalIndexRoute = JournalIndexRouteImport.update({
   path: '/journal/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const JournalSlugRoute = JournalSlugRouteImport.update({
+  id: '/journal/$slug',
+  path: '/journal/$slug',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const RecipesIdRoute = RecipesIdRouteImport.update({
   id: '/recipes/$id',
   path: '/recipes/$id',
@@ -71,6 +77,7 @@ export interface FileRoutesByFullPath {
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/submit': typeof SubmitRoute
   '/admin': typeof AuthenticatedAdminRoute
+  '/journal/$slug': typeof JournalSlugRoute
   '/recipes/$id': typeof RecipesIdRoute
   '/journal/': typeof JournalIndexRoute
   '/lovable/email/queue/process': typeof LovableEmailQueueProcessRoute
@@ -81,6 +88,7 @@ export interface FileRoutesByTo {
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/submit': typeof SubmitRoute
   '/admin': typeof AuthenticatedAdminRoute
+  '/journal/$slug': typeof JournalSlugRoute
   '/recipes/$id': typeof RecipesIdRoute
   '/journal': typeof JournalIndexRoute
   '/lovable/email/queue/process': typeof LovableEmailQueueProcessRoute
@@ -93,6 +101,7 @@ export interface FileRoutesById {
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/submit': typeof SubmitRoute
   '/_authenticated/admin': typeof AuthenticatedAdminRoute
+  '/journal/$slug': typeof JournalSlugRoute
   '/recipes/$id': typeof RecipesIdRoute
   '/journal/': typeof JournalIndexRoute
   '/lovable/email/queue/process': typeof LovableEmailQueueProcessRoute
@@ -105,6 +114,7 @@ export interface FileRouteTypes {
     | '/sitemap.xml'
     | '/submit'
     | '/admin'
+    | '/journal/$slug'
     | '/recipes/$id'
     | '/journal/'
     | '/lovable/email/queue/process'
@@ -115,6 +125,7 @@ export interface FileRouteTypes {
     | '/sitemap.xml'
     | '/submit'
     | '/admin'
+    | '/journal/$slug'
     | '/recipes/$id'
     | '/journal'
     | '/lovable/email/queue/process'
@@ -126,6 +137,7 @@ export interface FileRouteTypes {
     | '/sitemap.xml'
     | '/submit'
     | '/_authenticated/admin'
+    | '/journal/$slug'
     | '/recipes/$id'
     | '/journal/'
     | '/lovable/email/queue/process'
@@ -137,6 +149,7 @@ export interface RootRouteChildren {
   AuthRoute: typeof AuthRoute
   SitemapDotxmlRoute: typeof SitemapDotxmlRoute
   SubmitRoute: typeof SubmitRoute
+  JournalSlugRoute: typeof JournalSlugRoute
   RecipesIdRoute: typeof RecipesIdRoute
   JournalIndexRoute: typeof JournalIndexRoute
   LovableEmailQueueProcessRoute: typeof LovableEmailQueueProcessRoute
@@ -193,6 +206,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof JournalIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/journal/$slug': {
+      id: '/journal/$slug'
+      path: '/journal/$slug'
+      fullPath: '/journal/$slug'
+      preLoaderRoute: typeof JournalSlugRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/recipes/$id': {
       id: '/recipes/$id'
       path: '/recipes/$id'
@@ -227,6 +247,7 @@ const rootRouteChildren: RootRouteChildren = {
   AuthRoute: AuthRoute,
   SitemapDotxmlRoute: SitemapDotxmlRoute,
   SubmitRoute: SubmitRoute,
+  JournalSlugRoute: JournalSlugRoute,
   RecipesIdRoute: RecipesIdRoute,
   JournalIndexRoute: JournalIndexRoute,
   LovableEmailQueueProcessRoute: LovableEmailQueueProcessRoute,
