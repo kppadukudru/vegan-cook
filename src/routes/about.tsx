@@ -1,53 +1,38 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
+import { getSitePage } from "@/lib/site-pages.functions";
+import { ABOUT_FALLBACK } from "@/lib/site-pages";
 import { Prose } from "@/components/Prose";
 import { SiteFooter, SiteHeader } from "@/components/SiteChrome";
 
-const ABOUT_BODY = `I cook plant-based food at home, and I write down what actually works.
 
-## Why this exists
-
-Most vegan recipe sites assume you're doing it for one reason. In practice the people reading this are a mix: some have a dairy allergy or a soy allergy and no choice at all, some are cutting animal products for ethical or environmental reasons, and plenty are just cooking for someone else in the house. The food doesn't need to be different for those groups — but the labelling does. That's why every recipe here declares what it contains and lets you screen out what you can't eat.
-
-## What I actually believe about vegan food
-
-It isn't a salad. It isn't a compromise version of a real dish. A dal cooked properly, a fermented dosa, a mushroom risotto finished with good olive oil instead of butter — none of those are missing anything. The recipes here are the ones I make on ordinary weeknights, written out in enough detail that they work the first time.
-
-## Where I'm cooking from
-
-I'm based in India, so most of what I cook is what's around me — that's the part I know well. I've also travelled a little, including one week in northern Italy (Venice, Milan, Verona), and I kept notes on what was straightforward to order and what wasn't. Those notes are one traveller's week, not a guidebook, and the journal says so plainly.
-
-## How recipes get checked
-
-Every recipe, including the ones readers submit, is screened for non-plant ingredients before it can be published, and reviewed by hand after that. Allergens are declared per recipe, with a notes field for the awkward cases — shared equipment, trace sesame, that sort of thing. If something is wrong, I'd rather hear about it and fix it.
-
-## Submit something
-
-If you cook something worth sharing, send it in. Recipes come with ingredients, method, cookware and allergen information, and go live once they've been reviewed.`;
 
 export const Route = createFileRoute("/about")({
-  head: () => ({
-    meta: [
-      { title: "About — Who Writes Vegan Cook, and Why" },
-      {
-        name: "description",
-        content:
-          "Vegan Cook is written for people cooking plant-based by allergy or by choice — how the recipes are checked and why allergens are declared on every one.",
-      },
-      { property: "og:title", content: "About — Who Writes Vegan Cook, and Why" },
-      {
-        property: "og:description",
-        content: "Plant-based cooking for allergies and lifestyle choices alike.",
-      },
-      { property: "og:type", content: "website" },
-      { property: "og:url", content: "https://www.vegancook.live/about" },
-      { name: "twitter:card", content: "summary" },
-    ],
-    links: [{ rel: "canonical", href: "https://www.vegancook.live/about" }],
-  }),
+  loader: async () => (await getSitePage({ data: { id: "about" } })) ?? ABOUT_FALLBACK,
+  head: ({ loaderData }) => {
+    const page = loaderData ?? ABOUT_FALLBACK;
+    return {
+      meta: [
+        { title: page.metaTitle },
+        { name: "description", content: page.metaDescription },
+        { property: "og:title", content: page.metaTitle },
+        { property: "og:description", content: page.metaDescription },
+        { property: "og:type", content: "website" },
+        { property: "og:url", content: "https://www.vegancook.live/about" },
+        { name: "twitter:card", content: "summary" },
+      ],
+      links: [{ rel: "canonical", href: "https://www.vegancook.live/about" }],
+    };
+  },
+  errorComponent: () => (
+    <div className="p-10 text-sm text-mute">Could not load this page. Please refresh.</div>
+  ),
+  notFoundComponent: () => <div className="p-10 text-sm text-mute">Page not found.</div>,
   component: AboutPage,
 });
 
 function AboutPage() {
+  const page = Route.useLoaderData();
+
   return (
     <div className="bg-paper text-ink min-h-dvh antialiased">
       <SiteHeader />
@@ -57,7 +42,7 @@ function AboutPage() {
           <p className="lg:col-span-3 text-[10px] uppercase tracking-[0.15em] text-mute">About</p>
           <div className="lg:col-span-9">
             <h1 className="font-serif text-3xl md:text-5xl leading-[1.1] tracking-tight text-balance max-w-[38ch]">
-              A kitchen notebook for people who read the label before the menu.
+              {page.heading}
             </h1>
           </div>
         </section>
@@ -78,7 +63,7 @@ function AboutPage() {
             </Link>
           </div>
           <div className="lg:col-span-9">
-            <Prose markdown={ABOUT_BODY} />
+            <Prose markdown={page.body} />
           </div>
         </section>
       </main>
