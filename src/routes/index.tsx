@@ -259,7 +259,7 @@ function Index() {
           </div>
 
           <div className="lg:col-span-9 grid grid-cols-1 md:grid-cols-2 gap-12">
-            <div className="space-y-4">
+            <div className="space-y-4 order-1">
               <span className="text-[10px] uppercase tracking-[0.15em] text-mute border-b border-steel pb-2 block w-full">
                 Cooking skill
               </span>
@@ -275,7 +275,7 @@ function Index() {
               </div>
             </div>
 
-            <div className="space-y-4">
+            <div className="space-y-4 order-5">
               <span className="text-[10px] uppercase tracking-[0.15em] text-mute border-b border-steel pb-2 block w-full">
                 Avoid these allergens
               </span>
@@ -303,7 +303,7 @@ function Index() {
               </div>
             </div>
 
-            <div className="space-y-4">
+            <div className="space-y-4 order-2">
               <span className="text-[10px] uppercase tracking-[0.15em] text-mute border-b border-steel pb-2 block w-full">
                 Cuisine
               </span>
@@ -325,7 +325,7 @@ function Index() {
               </div>
             </div>
 
-            <div className="space-y-4">
+            <div className="space-y-4 order-4">
               <span className="text-[10px] uppercase tracking-[0.15em] text-mute border-b border-steel pb-2 block w-full">
                 Spice level
               </span>
@@ -347,7 +347,7 @@ function Index() {
               </div>
             </div>
 
-            <div className="space-y-4">
+            <div className="space-y-4 order-3">
               <span className="text-[10px] uppercase tracking-[0.15em] text-mute border-b border-steel pb-2 block w-full">
                 Meal
               </span>
