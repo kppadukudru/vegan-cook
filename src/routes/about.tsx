@@ -2,7 +2,7 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { Prose } from "@/components/Prose";
 import { SiteFooter, SiteHeader } from "@/components/SiteChrome";
 
-const ABOUT_BODY = `I cook plant-based food, and I travel. Those two things don't always cooperate, so this site is where I write down what works.
+const ABOUT_BODY = `I cook plant-based food at home, and I write down what actually works.
 
 ## Why this exists
 
@@ -12,9 +12,9 @@ Most vegan recipe sites assume you're doing it for one reason. In practice the p
 
 It isn't a salad. It isn't a compromise version of a real dish. A dal cooked properly, a fermented dosa, a mushroom risotto finished with good olive oil instead of butter — none of those are missing anything. The recipes here are the ones I make on ordinary weeknights, written out in enough detail that they work the first time.
 
-## Where the travel comes in
+## Where I'm cooking from
 
-I'm based in India, so a lot of what I cook is what's around me. I've also spent enough time in northern Italy — Venice, Milan, Verona — to have learned the specific phrases and dishes that get you fed there rather than apologised at. That kind of knowledge doesn't fit into a recipe card, so it lives in the journal.
+I'm based in India, so most of what I cook is what's around me — that's the part I know well. I've also travelled a little, including one week in northern Italy (Venice, Milan, Verona), and I kept notes on what was straightforward to order and what wasn't. Those notes are one traveller's week, not a guidebook, and the journal says so plainly.
 
 ## How recipes get checked
 
@@ -31,7 +31,7 @@ export const Route = createFileRoute("/about")({
       {
         name: "description",
         content:
-          "Vegan Cook is written for people cooking plant-based by allergy or by choice — how the recipes are checked, why allergens are declared, and where the travel notes come from.",
+          "Vegan Cook is written for people cooking plant-based by allergy or by choice — how the recipes are checked and why allergens are declared on every one.",
       },
       { property: "og:title", content: "About — Who Writes Vegan Cook, and Why" },
       {
