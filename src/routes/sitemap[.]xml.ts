@@ -21,9 +21,22 @@ export const Route = createFileRoute("/sitemap.xml")({
           .eq("status", "published");
         const recipeIds = (data ?? []).map((row: Pick<Recipe, "id">) => row.id);
 
+        const { data: postRows } = await createPublicClient()
+          .from("journal_posts")
+          .select("id")
+          .eq("status", "published");
+        const postIds = (postRows ?? []).map((row: { id: string }) => row.id);
+
         const entries: SitemapEntry[] = [
           { path: "/", changefreq: "daily", priority: "1.0" },
           { path: "/submit", changefreq: "monthly", priority: "0.6" },
+          { path: "/about", changefreq: "monthly", priority: "0.6" },
+          { path: "/journal", changefreq: "weekly", priority: "0.8" },
+          ...postIds.map((id) => ({
+            path: `/journal/${id}`,
+            changefreq: "monthly" as const,
+            priority: "0.7",
+          })),
           ...recipeIds.map((id) => ({
             path: `/recipes/${id}`,
             changefreq: "monthly" as const,

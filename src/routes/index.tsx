@@ -123,6 +123,12 @@ function Index() {
             <a href="#archive" className="hover:text-ink transition-colors">
               Recipes
             </a>
+            <Link to="/journal" className="hover:text-ink transition-colors">
+              Journal
+            </Link>
+            <Link to="/about" className="hover:text-ink transition-colors">
+              About
+            </Link>
             <Link to="/submit" className="hover:text-ink transition-colors">
               Submit a recipe
             </Link>
@@ -471,7 +477,18 @@ function Index() {
 
       <footer className="border-t border-steel px-6 md:px-8 py-8 flex flex-col md:flex-row items-start md:items-center justify-between gap-4 text-[10px] uppercase tracking-[0.15em] text-mute">
         <span>Vegan Cook — plant-based cooking, every day.</span>
-        <span className="tabular-nums">{allRecipes.length} recipes in the collection</span>
+        <div className="flex gap-6 items-center">
+          <span className="tabular-nums">{allRecipes.length} recipes in the collection</span>
+          <Link to="/journal" className="hover:text-ink transition-colors">
+            Journal
+          </Link>
+          <Link to="/about" className="hover:text-ink transition-colors">
+            About
+          </Link>
+          <Link to="/auth" className="hover:text-ink transition-colors">
+            Editor
+          </Link>
+        </div>
       </footer>
     </div>
   );
