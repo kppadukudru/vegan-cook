@@ -101,6 +101,51 @@ export type Database = {
         }
         Relationships: []
       }
+      journal_posts: {
+        Row: {
+          author: string
+          body: string
+          cover_alt: string | null
+          cover_url: string | null
+          created_at: string
+          excerpt: string
+          id: string
+          published_at: string
+          status: string
+          tag: Database["public"]["Enums"]["journal_tag"]
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          author?: string
+          body?: string
+          cover_alt?: string | null
+          cover_url?: string | null
+          created_at?: string
+          excerpt?: string
+          id: string
+          published_at?: string
+          status?: string
+          tag?: Database["public"]["Enums"]["journal_tag"]
+          title: string
+          updated_at?: string
+        }
+        Update: {
+          author?: string
+          body?: string
+          cover_alt?: string | null
+          cover_url?: string | null
+          created_at?: string
+          excerpt?: string
+          id?: string
+          published_at?: string
+          status?: string
+          tag?: Database["public"]["Enums"]["journal_tag"]
+          title?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       recipe_submissions: {
         Row: {
           allergen_notes: string | null
@@ -383,6 +428,7 @@ export type Database = {
     }
     Enums: {
       app_role: "admin" | "user"
+      journal_tag: "Travel" | "Allergies" | "Alternatives" | "Essay"
       meal_type: "Breakfast" | "Lunch" | "Dinner" | "Snack" | "Dessert"
       recipe_cuisine:
         | "Indian"
@@ -527,6 +573,7 @@ export const Constants = {
   public: {
     Enums: {
       app_role: ["admin", "user"],
+      journal_tag: ["Travel", "Allergies", "Alternatives", "Essay"],
       meal_type: ["Breakfast", "Lunch", "Dinner", "Snack", "Dessert"],
       recipe_cuisine: [
         "Indian",
