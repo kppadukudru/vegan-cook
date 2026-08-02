@@ -10,6 +10,7 @@ import {
 } from "@/lib/admin-schemas";
 import { importInput } from "@/lib/csv-import";
 import { journalIdInput, journalPostInput } from "@/lib/journal-schemas";
+import { sitePageInput } from "@/lib/site-pages-schemas";
 import type { Recipe } from "@/data/recipes";
 
 /** Who am I, and am I allowed into the editor? */
@@ -116,4 +117,23 @@ export const adminDeletePost = createServerFn({ method: "POST" })
     await assertAdmin(context);
     const { deletePost } = await import("@/lib/journal-admin.server");
     return deletePost(data.id);
+  });
+
+/** Page copy: every editable page, drafts included. */
+export const adminListSitePages = createServerFn({ method: "GET" })
+  .middleware([requireSupabaseAuth])
+  .handler(async ({ context }) => {
+    await assertAdmin(context);
+    const { listSitePages } = await import("@/lib/site-pages-admin.server");
+    return listSitePages();
+  });
+
+/** Page copy: save one page. */
+export const adminSaveSitePage = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((data: unknown) => sitePageInput.parse(data))
+  .handler(async ({ data, context }) => {
+    await assertAdmin(context);
+    const { saveSitePage } = await import("@/lib/site-pages-admin.server");
+    return saveSitePage(data);
   });

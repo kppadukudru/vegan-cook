@@ -34,6 +34,7 @@ import {
 import { claimFirstEditorRole } from "@/lib/bootstrap.functions";
 import { CsvImport } from "@/components/admin/CsvImport";
 import { JournalAdmin } from "@/components/admin/JournalAdmin";
+import { PagesAdmin } from "@/components/admin/PagesAdmin";
 
 
 
@@ -143,7 +144,7 @@ function AdminPage() {
   const rejectSubmission = useServerFn(adminRejectSubmission);
 
   const [isAdmin, setIsAdmin] = useState<boolean | null>(null);
-  const [tab, setTab] = useState<"recipes" | "submissions" | "import" | "journal">("recipes");
+  const [tab, setTab] = useState<"recipes" | "submissions" | "import" | "journal" | "pages">("recipes");
   const [recipes, setRecipes] = useState<Recipe[]>([]);
   const [submissions, setSubmissions] = useState<Submission[]>([]);
   const [form, setForm] = useState<FormState | null>(null);
@@ -323,6 +324,9 @@ function AdminPage() {
           <TabButton active={tab === "journal"} onClick={() => setTab("journal")}>
             Journal
           </TabButton>
+          <TabButton active={tab === "pages"} onClick={() => setTab("pages")}>
+            Pages
+          </TabButton>
         </div>
 
         {notice && (
@@ -454,6 +458,8 @@ function AdminPage() {
         {tab === "import" && <CsvImport onImported={refresh} />}
 
         {tab === "journal" && <JournalAdmin />}
+
+        {tab === "pages" && <PagesAdmin />}
       </div>
     </Shell>
   );
