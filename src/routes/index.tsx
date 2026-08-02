@@ -123,6 +123,12 @@ function Index() {
             <a href="#archive" className="hover:text-ink transition-colors">
               Recipes
             </a>
+            <Link to="/journal" className="hover:text-ink transition-colors">
+              Journal
+            </Link>
+            <Link to="/about" className="hover:text-ink transition-colors">
+              About
+            </Link>
             <Link to="/submit" className="hover:text-ink transition-colors">
               Submit a recipe
             </Link>
@@ -253,7 +259,7 @@ function Index() {
           </div>
 
           <div className="lg:col-span-9 grid grid-cols-1 md:grid-cols-2 gap-12">
-            <div className="space-y-4">
+            <div className="space-y-4 order-1">
               <span className="text-[10px] uppercase tracking-[0.15em] text-mute border-b border-steel pb-2 block w-full">
                 Cooking skill
               </span>
@@ -269,7 +275,7 @@ function Index() {
               </div>
             </div>
 
-            <div className="space-y-4">
+            <div className="space-y-4 order-5">
               <span className="text-[10px] uppercase tracking-[0.15em] text-mute border-b border-steel pb-2 block w-full">
                 Avoid these allergens
               </span>
@@ -297,7 +303,7 @@ function Index() {
               </div>
             </div>
 
-            <div className="space-y-4">
+            <div className="space-y-4 order-2">
               <span className="text-[10px] uppercase tracking-[0.15em] text-mute border-b border-steel pb-2 block w-full">
                 Cuisine
               </span>
@@ -319,7 +325,7 @@ function Index() {
               </div>
             </div>
 
-            <div className="space-y-4">
+            <div className="space-y-4 order-4">
               <span className="text-[10px] uppercase tracking-[0.15em] text-mute border-b border-steel pb-2 block w-full">
                 Spice level
               </span>
@@ -341,7 +347,7 @@ function Index() {
               </div>
             </div>
 
-            <div className="space-y-4">
+            <div className="space-y-4 order-3">
               <span className="text-[10px] uppercase tracking-[0.15em] text-mute border-b border-steel pb-2 block w-full">
                 Meal
               </span>
@@ -471,7 +477,18 @@ function Index() {
 
       <footer className="border-t border-steel px-6 md:px-8 py-8 flex flex-col md:flex-row items-start md:items-center justify-between gap-4 text-[10px] uppercase tracking-[0.15em] text-mute">
         <span>Vegan Cook — plant-based cooking, every day.</span>
-        <span className="tabular-nums">{allRecipes.length} recipes in the collection</span>
+        <div className="flex gap-6 items-center">
+          <span className="tabular-nums">{allRecipes.length} recipes in the collection</span>
+          <Link to="/journal" className="hover:text-ink transition-colors">
+            Journal
+          </Link>
+          <Link to="/about" className="hover:text-ink transition-colors">
+            About
+          </Link>
+          <Link to="/auth" className="hover:text-ink transition-colors">
+            Editor
+          </Link>
+        </div>
       </footer>
     </div>
   );

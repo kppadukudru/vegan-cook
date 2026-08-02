@@ -8,6 +8,7 @@ import {
   rejectInput,
 } from "@/lib/admin-schemas";
 import { importInput } from "@/lib/csv-import";
+import { journalIdInput, journalPostInput } from "@/lib/journal-schemas";
 import type { Recipe } from "@/data/recipes";
 
 /** Who am I, and am I allowed into the editor? */
@@ -90,4 +91,32 @@ export const adminImportRecipes = createServerFn({ method: "POST" })
     await assertAdmin(context);
     const { importRecipes } = await import("@/lib/admin.server");
     return importRecipes(data.rows, data.publish);
+  });
+
+/** Journal: every post, drafts included. */
+export const adminListPosts = createServerFn({ method: "GET" })
+  .middleware([requireSupabaseAuth])
+  .handler(async ({ context }) => {
+    await assertAdmin(context);
+    const { listAllPosts } = await import("@/lib/journal-admin.server");
+    return listAllPosts();
+  });
+
+/** Journal: create or update a post. */
+export const adminSavePost = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((data: unknown) => journalPostInput.parse(data))
+  .handler(async ({ data, context }) => {
+    await assertAdmin(context);
+    const { savePost } = await import("@/lib/journal-admin.server");
+    return savePost(data);
+  });
+
+export const adminDeletePost = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((data: unknown) => journalIdInput.parse(data))
+  .handler(async ({ data, context }) => {
+    await assertAdmin(context);
+    const { deletePost } = await import("@/lib/journal-admin.server");
+    return deletePost(data.id);
   });
