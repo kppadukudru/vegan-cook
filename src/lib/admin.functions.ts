@@ -2,6 +2,7 @@ import { createServerFn } from "@tanstack/react-start";
 import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
 import {
   assertAdmin,
+  isCallerAdmin,
   idInput,
   publishInput,
   recipeInput,
@@ -15,11 +16,7 @@ import type { Recipe } from "@/data/recipes";
 export const getAdminStatus = createServerFn({ method: "GET" })
   .middleware([requireSupabaseAuth])
   .handler(async ({ context }) => {
-    const { data } = await context.supabase.rpc("has_role", {
-      _user_id: context.userId,
-      _role: "admin",
-    });
-    return { isAdmin: data === true, userId: context.userId };
+    return { isAdmin: await isCallerAdmin(context), userId: context.userId };
   });
 
 /** Every recipe, drafts included. */
