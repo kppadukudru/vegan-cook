@@ -4,40 +4,47 @@
 
 The subscribe form works only halfway: it validates the address and saves it to the `subscribers` table (1 address stored today). There is no template, no send job, and no unsubscribe flow, so nobody has ever received anything. The sender domain `notify.vegancook.live` is verified.
 
-One important constraint: Lovable's built-in email is for one-to-one app emails (confirmations, receipts, password resets). It is not built for list newsletters sent to every subscriber — that needs a dedicated newsletter service, otherwise sender reputation and deliverability suffer. So the weekly send itself goes through a newsletter provider; Lovable handles the signup, the list, and the honest copy.
+One constraint worth stating plainly: Lovable's built-in email is for one-to-one app emails — confirmations, receipts, password resets. It is not built for a newsletter sent to a whole list, and using it that way hurts deliverability. So the weekly issue goes out through a newsletter service; Lovable handles the site, the signups, the list, and composing the issue.
+
+You said you don't have a newsletter service. Brevo has a free tier (a few hundred sends a day, no card) and connects to this app directly, so that's the recommendation. Nothing about the site work below depends on it — you can start with the manual path and connect Brevo whenever you're ready.
 
 ## 1. Site copy: weekly, not daily
 
-- Home page subscribe block: headline and supporting copy become a weekly plan — five recipes each week, enough to plan meals ahead.
+- Home page subscribe block: headline and copy become a weekly plan — five recipes each week, enough to plan meals ahead.
 - Replace "One email a day. Unsubscribe whenever." with weekly wording plus the send day.
-- Update the success message after signup so it promises weekly, not daily.
-- Sweep the rest of the site (footer, about/meta copy, page descriptions) for any "every day"/"daily" newsletter phrasing and change it.
-- Keep the recipe-of-the-day feature on the home page as-is — that's a site feature, separate from the email.
+- Update the post-signup success message to promise weekly, not daily.
+- Sweep footer, about copy, and page metadata for any "every day"/"daily" newsletter phrasing.
+- The recipe-of-the-day feature on the home page stays as-is — that's a site feature, separate from the email.
 
-## 2. Signup that behaves correctly
+## 2. Signups that behave correctly
 
-- `subscribers` gains `unsubscribed_at` and a `source` field, so removals are recorded rather than deleted and the list stays auditable.
-- Signup sends one immediate confirmation email ("you're on the weekly list, first issue lands <day>") — that one is a legitimate app email and uses the existing verified domain and queue.
-- Public unsubscribe page that works from any newsletter footer link and marks the subscriber as unsubscribed.
-- Admin desk gets a small Subscribers panel: count, recent signups, unsubscribes, and a CSV export.
+- `subscribers` gains `unsubscribed_at` and `source`, so removals are recorded rather than deleted.
+- Signup sends one immediate confirmation email ("you're on the weekly list, first issue lands <day>"). That one is a genuine app email and uses the verified domain and existing queue.
+- Public unsubscribe page that works from any newsletter footer link and marks the subscriber unsubscribed.
+- Admin desk gets a Subscribers panel: count, recent signups, unsubscribes, and a CSV export — so the list is portable to any service.
 
-## 3. The weekly send
+## 3. Composing the weekly issue
 
-Two options — pick one:
+The app picks and composes the issue either way:
 
-- **Provider-driven (recommended):** connect a newsletter service (Buttondown, Beehiiv, Mailchimp — whichever you prefer). Signups sync to it automatically, and each week you send the issue from there. Best deliverability, built-in list management and analytics.
-- **Draft-only in Lovable:** each week the app assembles the five-recipe issue (title, blurb, time, cuisine, spice, link) as ready-to-paste HTML on an admin page. You paste it into whatever mail tool you use. No provider setup, more manual work each week.
+- Five published recipes per ISO week, chosen deterministically, no repeats until the catalogue cycles, mixed across skill level and cuisine.
+- New admin page shows the upcoming issue: the five recipes, an editable subject line, a swap control for any recipe you don't want, and the finished email rendered in Vegan Cook styling.
+- A **Copy HTML** button, so you can paste the issue straight into whatever mail tool you use.
 
-Either way, the weekly picking logic lives in the app: five published recipes per week, deterministic per ISO week, no repeats until the catalogue cycles, and a mix of skill levels and cuisines so a week isn't five identical dishes.
+## 4. Sending it
+
+**Start manual:** each week you open the admin page, review the five, copy, and send from your mail tool. Zero setup, works immediately.
+
+**Then connect Brevo when ready:** signups sync to a Brevo list automatically, and the admin page gains a "Send this issue" button that pushes the composed email to your list. Brevo handles delivery, unsubscribes, and open stats. Needs a free Brevo account and its API key.
 
 ## Technical notes
 
-- Copy changes are confined to `src/routes/index.tsx`, `src/components/SiteChrome.tsx`, and page metadata.
-- `newsletter.functions.ts` gains the confirmation-email send and returns weekly-worded messages.
-- Weekly selection helper sits next to the existing recipe-of-the-day helper so both share the catalogue query.
-- Unsubscribe route lives on a public path passed through by app middleware.
-- If you choose provider sync, subscriber sync happens server-side with the provider key stored as a secret.
+- Copy changes confined to `src/routes/index.tsx`, `src/components/SiteChrome.tsx`, and route metadata.
+- `newsletter.functions.ts` gains the confirmation send and weekly wording.
+- Weekly picker sits beside the existing recipe-of-the-day helper so both share the catalogue query.
+- Issue HTML is rendered server-side from a React Email template so the manual paste and the Brevo send are byte-identical.
+- Unsubscribe route on a public path passed through by app middleware; Brevo key stored as a project secret if you connect it.
 
 ## Open question
 
-Which weekly path do you want — connect a newsletter provider (and which one), or the paste-ready draft in the admin desk? And what send day suits you (default: Sunday morning IST, so the week is plannable)?
+What send day suits you — default Sunday morning IST, so the week is plannable? And should I include the Brevo hookup now, or ship the manual flow first?
