@@ -33,7 +33,7 @@ export const Route = createRootRoute({
       {
         name: "description",
         content:
-          "Vegan food that isn't boring and isn't just salad. Recipes filtered by skill level and allergens, with a new one featured every day.",
+          "Vegan food that isn't boring and isn't just salad. Recipes filtered by skill level and allergens, with a new one featured every day and five more in your inbox each week.",
       },
       { name: "author", content: "Vegan Cook" },
       { property: "og:title", content: "Vegan Cook — Plant-Based Cooking, Every Day" },

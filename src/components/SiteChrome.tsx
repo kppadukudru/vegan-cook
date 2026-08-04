@@ -30,8 +30,8 @@ export function SiteHeader() {
           </Link>
         </nav>
       </div>
-      <Link to="/" hash="daily" className="bg-ink text-paper px-4 py-2 hover:bg-leaf transition-colors">
-        Get the daily recipe
+      <Link to="/" hash="weekly" className="bg-ink text-paper px-4 py-2 hover:bg-leaf transition-colors">
+        Get the weekly newsletter
       </Link>
     </header>
   );

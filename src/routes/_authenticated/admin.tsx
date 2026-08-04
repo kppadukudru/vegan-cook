@@ -34,6 +34,7 @@ import {
 import { claimFirstEditorRole } from "@/lib/bootstrap.functions";
 import { CsvImport } from "@/components/admin/CsvImport";
 import { JournalAdmin } from "@/components/admin/JournalAdmin";
+import { NewsletterAdmin } from "@/components/admin/NewsletterAdmin";
 import { PagesAdmin } from "@/components/admin/PagesAdmin";
 
 
@@ -144,7 +145,7 @@ function AdminPage() {
   const rejectSubmission = useServerFn(adminRejectSubmission);
 
   const [isAdmin, setIsAdmin] = useState<boolean | null>(null);
-  const [tab, setTab] = useState<"recipes" | "submissions" | "import" | "journal" | "pages">("recipes");
+  const [tab, setTab] = useState<"recipes" | "submissions" | "import" | "journal" | "pages" | "newsletter">("recipes");
   const [recipes, setRecipes] = useState<Recipe[]>([]);
   const [submissions, setSubmissions] = useState<Submission[]>([]);
   const [form, setForm] = useState<FormState | null>(null);
@@ -324,6 +325,9 @@ function AdminPage() {
           <TabButton active={tab === "journal"} onClick={() => setTab("journal")}>
             Journal
           </TabButton>
+          <TabButton active={tab === "newsletter"} onClick={() => setTab("newsletter")}>
+            Newsletter
+          </TabButton>
           <TabButton active={tab === "pages"} onClick={() => setTab("pages")}>
             Pages
           </TabButton>
@@ -458,6 +462,8 @@ function AdminPage() {
         {tab === "import" && <CsvImport onImported={refresh} />}
 
         {tab === "journal" && <JournalAdmin />}
+
+        {tab === "newsletter" && <NewsletterAdmin />}
 
         {tab === "pages" && <PagesAdmin />}
       </div>

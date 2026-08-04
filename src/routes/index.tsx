@@ -18,7 +18,7 @@ import {
   type SpiceLevel,
 } from "@/data/recipes";
 import { listPublishedRecipes } from "@/lib/recipes.functions";
-import { subscribeToDaily } from "@/lib/newsletter.functions";
+import { subscribeToWeekly } from "@/lib/newsletter.functions";
 
 
 export const Route = createFileRoute("/")({
@@ -28,7 +28,7 @@ export const Route = createFileRoute("/")({
       {
         name: "description",
         content:
-          "Vegan cooking for allergies and lifestyle choices alike. Filter by skill level and allergens, get a new recipe daily, and submit your own.",
+          "Vegan cooking for allergies and lifestyle choices alike. Filter by skill level and allergens, get five recipes in your inbox every week, and submit your own.",
       },
       { property: "og:title", content: "Vegan Cook — A New Plant-Based Recipe Every Day" },
       {
@@ -49,7 +49,7 @@ export const Route = createFileRoute("/")({
           name: "Vegan Cook",
           url: "https://www.vegancook.live/",
           description:
-            "Vegan cooking for allergies and lifestyle choices alike. Filter by skill level and allergens, get a new recipe daily, and submit your own.",
+            "Vegan cooking for allergies and lifestyle choices alike. Filter by skill level and allergens, get five recipes in your inbox every week, and submit your own.",
           publisher: {
             "@type": "Organization",
             name: "Vegan Cook",
@@ -132,16 +132,16 @@ function Index() {
             <Link to="/submit" className="hover:text-ink transition-colors">
               Submit a recipe
             </Link>
-            <a href="#daily" className="hover:text-ink transition-colors">
-              Daily email
+            <a href="#weekly" className="hover:text-ink transition-colors">
+              Weekly newsletter
             </a>
           </nav>
         </div>
         <a
-          href="#daily"
+          href="#weekly"
           className="bg-ink text-paper px-4 py-2 hover:bg-leaf transition-colors"
         >
-          Get the daily recipe
+          Get the weekly newsletter
         </a>
       </header>
 
@@ -435,15 +435,16 @@ function Index() {
           </div>
         </section>
 
-        {/* Daily email */}
+        {/* Weekly newsletter */}
         <section
-          id="daily"
+          id="weekly"
           className="border-t border-steel px-6 md:px-8 py-16 grid grid-cols-1 lg:grid-cols-12 gap-12 scroll-mt-8"
         >
           <div className="lg:col-span-3">
-            <h2 className="font-serif text-2xl tracking-tight">A recipe a day</h2>
+            <h2 className="font-serif text-2xl tracking-tight">The weekly newsletter</h2>
             <p className="text-xs text-mute mt-2 max-w-[30ch]">
-              One plant-based recipe in your inbox each morning. No offers, no digests.
+              Five plant-based recipes every Sunday — enough to plan the week. No offers, no
+              digests.
             </p>
           </div>
           <div className="lg:col-span-9">
@@ -495,7 +496,7 @@ function Index() {
 }
 
 function SubscribeForm() {
-  const subscribe = useServerFn(subscribeToDaily);
+  const subscribe = useServerFn(subscribeToWeekly);
   const [email, setEmail] = useState("");
   const [state, setState] = useState<"idle" | "sending" | "done" | "error">("idle");
   const [message, setMessage] = useState("");
@@ -523,11 +524,11 @@ function SubscribeForm() {
   return (
     <div className="border border-steel p-8 space-y-4">
       <form onSubmit={onSubmit} className="flex flex-col sm:flex-row gap-px bg-steel">
-        <label htmlFor="daily-email" className="sr-only">
+        <label htmlFor="weekly-email" className="sr-only">
           Email address
         </label>
         <input
-          id="daily-email"
+          id="weekly-email"
           type="email"
           required
           maxLength={255}
@@ -541,7 +542,7 @@ function SubscribeForm() {
           disabled={state === "sending"}
           className="bg-ink text-paper px-6 py-3 text-[10px] uppercase tracking-[0.15em] hover:bg-leaf transition-colors disabled:opacity-60"
         >
-          {state === "sending" ? "Signing up…" : "Send me a recipe daily"}
+          {state === "sending" ? "Signing up…" : "Send me the weekly newsletter"}
         </button>
       </form>
       {message && (
@@ -553,7 +554,7 @@ function SubscribeForm() {
         </p>
       )}
       <p className="text-[10px] uppercase tracking-[0.15em] text-mute">
-        One email a day. Unsubscribe whenever.
+        One email a week, five recipes. Unsubscribe whenever.
       </p>
     </div>
   );
