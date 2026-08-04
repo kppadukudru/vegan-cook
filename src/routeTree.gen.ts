@@ -15,6 +15,7 @@ import { Route as AboutRouteImport } from './routes/about'
 import { Route as AuthRouteImport } from './routes/auth'
 import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
 import { Route as SubmitRouteImport } from './routes/submit'
+import { Route as UnsubscribeRouteImport } from './routes/unsubscribe'
 import { Route as AuthenticatedAdminRouteImport } from './routes/_authenticated/admin'
 import { Route as EmailUnsubscribeRouteImport } from './routes/email/unsubscribe'
 import { Route as JournalIndexRouteImport } from './routes/journal.index'
@@ -52,6 +53,11 @@ const SitemapDotxmlRoute = SitemapDotxmlRouteImport.update({
 const SubmitRoute = SubmitRouteImport.update({
   id: '/submit',
   path: '/submit',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const UnsubscribeRoute = UnsubscribeRouteImport.update({
+  id: '/unsubscribe',
+  path: '/unsubscribe',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AuthenticatedAdminRoute = AuthenticatedAdminRouteImport.update({
@@ -109,6 +115,7 @@ export interface FileRoutesByFullPath {
   '/auth': typeof AuthRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/submit': typeof SubmitRoute
+  '/unsubscribe': typeof UnsubscribeRoute
   '/admin': typeof AuthenticatedAdminRoute
   '/email/unsubscribe': typeof EmailUnsubscribeRoute
   '/journal/$slug': typeof JournalSlugRoute
@@ -125,6 +132,7 @@ export interface FileRoutesByTo {
   '/auth': typeof AuthRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/submit': typeof SubmitRoute
+  '/unsubscribe': typeof UnsubscribeRoute
   '/admin': typeof AuthenticatedAdminRoute
   '/email/unsubscribe': typeof EmailUnsubscribeRoute
   '/journal/$slug': typeof JournalSlugRoute
@@ -143,6 +151,7 @@ export interface FileRoutesById {
   '/auth': typeof AuthRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/submit': typeof SubmitRoute
+  '/unsubscribe': typeof UnsubscribeRoute
   '/_authenticated/admin': typeof AuthenticatedAdminRoute
   '/email/unsubscribe': typeof EmailUnsubscribeRoute
   '/journal/$slug': typeof JournalSlugRoute
@@ -161,6 +170,7 @@ export interface FileRouteTypes {
     | '/auth'
     | '/sitemap.xml'
     | '/submit'
+    | '/unsubscribe'
     | '/admin'
     | '/email/unsubscribe'
     | '/journal/$slug'
@@ -177,6 +187,7 @@ export interface FileRouteTypes {
     | '/auth'
     | '/sitemap.xml'
     | '/submit'
+    | '/unsubscribe'
     | '/admin'
     | '/email/unsubscribe'
     | '/journal/$slug'
@@ -194,6 +205,7 @@ export interface FileRouteTypes {
     | '/auth'
     | '/sitemap.xml'
     | '/submit'
+    | '/unsubscribe'
     | '/_authenticated/admin'
     | '/email/unsubscribe'
     | '/journal/$slug'
@@ -212,6 +224,7 @@ export interface RootRouteChildren {
   AuthRoute: typeof AuthRoute
   SitemapDotxmlRoute: typeof SitemapDotxmlRoute
   SubmitRoute: typeof SubmitRoute
+  UnsubscribeRoute: typeof UnsubscribeRoute
   EmailUnsubscribeRoute: typeof EmailUnsubscribeRoute
   JournalSlugRoute: typeof JournalSlugRoute
   RecipesIdRoute: typeof RecipesIdRoute
@@ -264,6 +277,13 @@ declare module '@tanstack/react-router' {
       path: '/submit'
       fullPath: '/submit'
       preLoaderRoute: typeof SubmitRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/unsubscribe': {
+      id: '/unsubscribe'
+      path: '/unsubscribe'
+      fullPath: '/unsubscribe'
+      preLoaderRoute: typeof UnsubscribeRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/_authenticated/admin': {
@@ -350,6 +370,7 @@ const rootRouteChildren: RootRouteChildren = {
   AuthRoute: AuthRoute,
   SitemapDotxmlRoute: SitemapDotxmlRoute,
   SubmitRoute: SubmitRoute,
+  UnsubscribeRoute: UnsubscribeRoute,
   EmailUnsubscribeRoute: EmailUnsubscribeRoute,
   JournalSlugRoute: JournalSlugRoute,
   RecipesIdRoute: RecipesIdRoute,
