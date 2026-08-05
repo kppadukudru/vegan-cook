@@ -10,9 +10,14 @@ export function SiteHeader() {
           Vegan Cook
         </Link>
         <nav className="hidden md:flex gap-8 text-mute">
-          <Link to="/" className="hover:text-ink transition-colors">
+          <Link
+            to="/recipes"
+            activeProps={{ className: "text-ink" }}
+            className="hover:text-ink transition-colors"
+          >
             Recipes
           </Link>
+
           <Link
             to="/vegan-breakfast-ideas"
             activeProps={{ className: "text-ink" }}
