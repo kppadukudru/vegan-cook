@@ -425,6 +425,7 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      claim_first_editor: { Args: { _user_id: string }; Returns: boolean }
       delete_email: {
         Args: { message_id: number; queue_name: string }
         Returns: boolean
@@ -440,6 +441,14 @@ export type Database = {
           _user_id: string
         }
         Returns: boolean
+      }
+      list_editors: {
+        Args: never
+        Returns: {
+          email: string
+          granted_at: string
+          user_id: string
+        }[]
       }
       move_to_dlq: {
         Args: {
@@ -458,6 +467,7 @@ export type Database = {
           read_ct: number
         }[]
       }
+      user_id_for_email: { Args: { _email: string }; Returns: string }
     }
     Enums: {
       app_role: "admin" | "user"
