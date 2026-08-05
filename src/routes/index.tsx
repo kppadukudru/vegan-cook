@@ -3,22 +3,22 @@ import { MobileNav } from "@/components/MobileNav";
 import { useServerFn } from "@tanstack/react-start";
 import { useMemo, useState } from "react";
 import {
-  ALL_ALLERGENS,
-  ALL_CUISINES,
-  ALL_MEAL_TYPES,
-  ALL_SPICE_LEVELS,
   dayIndex,
   formatDate,
   formatTime,
   pickRecipeOfTheDay,
-  type Allergen,
-  type Cuisine,
-  type MealType,
   type Recipe,
-  type Skill,
-  type SpiceLevel,
 } from "@/data/recipes";
+import { RecipeCard } from "@/components/RecipeCard";
+import {
+  EMPTY_FILTERS,
+  RecipeFilters,
+  filterRecipes,
+  filtersToSearch,
+  type RecipeFilterState,
+} from "@/components/RecipeFilters";
 import { listPublishedRecipes } from "@/lib/recipes.functions";
+
 import { subscribeToWeekly } from "@/lib/newsletter.functions";
 
 
@@ -78,27 +78,18 @@ export const Route = createFileRoute("/")({
 
 
 
-const SKILLS: Skill[] = ["Beginner", "Intermediate", "Expert"];
+/** How many recipes the home page previews before sending people to /recipes. */
+const HOME_PREVIEW_COUNT = 6;
 
 function Index() {
   const allRecipes = Route.useLoaderData() as Recipe[];
-  const [skill, setSkill] = useState<Skill | "All">("All");
-  const [avoid, setAvoid] = useState<Set<Allergen>>(new Set());
-  const [cuisine, setCuisine] = useState<Cuisine | "All">("All");
-  const [spice, setSpice] = useState<SpiceLevel | "All">("All");
-  const [meal, setMeal] = useState<MealType | "All">("All");
+  const [filters, setFilters] = useState<RecipeFilterState>(EMPTY_FILTERS);
 
-  const filtered = useMemo(() => {
-    return allRecipes.filter((r) => {
-      if (skill !== "All" && r.skill !== skill) return false;
-      if (cuisine !== "All" && r.cuisine !== cuisine) return false;
-      if (spice !== "All" && r.spiceLevel !== spice) return false;
-      if (meal !== "All" && !r.mealTypes.includes(meal)) return false;
-      for (const a of avoid) if (r.contains.includes(a)) return false;
-      return true;
-    });
-  }, [allRecipes, skill, avoid, cuisine, spice, meal]);
+  const update = (patch: Partial<RecipeFilterState>) =>
+    setFilters((prev) => ({ ...prev, ...patch }));
 
+  const filtered = useMemo(() => filterRecipes(allRecipes, filters), [allRecipes, filters]);
+  const preview = filtered.slice(0, HOME_PREVIEW_COUNT);
 
   // Rotates once per day across the whole catalogue.
   const featured = useMemo(() => pickRecipeOfTheDay(allRecipes), [allRecipes]);
@@ -108,14 +99,6 @@ function Index() {
     [],
   );
 
-  const toggleAllergen = (a: Allergen) => {
-    setAvoid((prev) => {
-      const next = new Set(prev);
-      if (next.has(a)) next.delete(a);
-      else next.add(a);
-      return next;
-    });
-  };
 
   return (
     <div className="bg-paper text-ink min-h-dvh antialiased selection:bg-ink selection:text-paper">
@@ -124,9 +107,10 @@ function Index() {
           <MobileNav />
           <span className="font-serif text-xl tracking-tight normal-case">Vegan Cook</span>
           <nav className="hidden md:flex gap-8 text-mute">
-            <a href="#archive" className="hover:text-ink transition-colors">
+            <Link to="/recipes" className="hover:text-ink transition-colors">
               Recipes
-            </a>
+            </Link>
+
             <Link to="/vegan-breakfast-ideas" className="hover:text-ink transition-colors">
               Breakfast
             </Link>
@@ -265,121 +249,12 @@ function Index() {
             </p>
           </div>
 
-          <div className="lg:col-span-9 grid grid-cols-1 md:grid-cols-2 gap-12">
-            <div className="space-y-4 order-1">
-              <span className="text-[10px] uppercase tracking-[0.15em] text-mute border-b border-steel pb-2 block w-full">
-                Cooking skill
-              </span>
-              <div className="flex flex-wrap gap-2">
-                <FilterChip active={skill === "All"} onClick={() => setSkill("All")}>
-                  All
-                </FilterChip>
-                {SKILLS.map((s) => (
-                  <FilterChip key={s} active={skill === s} onClick={() => setSkill(s)}>
-                    {s}
-                  </FilterChip>
-                ))}
-              </div>
-            </div>
-
-            <div className="space-y-4 order-5">
-              <span className="text-[10px] uppercase tracking-[0.15em] text-mute border-b border-steel pb-2 block w-full">
-                Avoid these allergens
-              </span>
-              <div className="flex flex-wrap gap-2">
-                {ALL_ALLERGENS.map((a) => {
-                  const active = avoid.has(a);
-                  return (
-                    <button
-                      key={a}
-                      onClick={() => toggleAllergen(a)}
-                      aria-pressed={active}
-                      className={`px-4 py-2 text-xs flex items-center gap-2 transition-colors ${
-                        active
-                          ? "border border-ink bg-ink text-paper"
-                          : "border border-steel text-mute hover:border-ink hover:text-ink"
-                      }`}
-                    >
-                      <span
-                        className={`block size-1.5 ${active ? "bg-paper" : "border border-mute"}`}
-                      />
-                      {a}
-                    </button>
-                  );
-                })}
-              </div>
-            </div>
-
-            <div className="space-y-4 order-2">
-              <span className="text-[10px] uppercase tracking-[0.15em] text-mute border-b border-steel pb-2 block w-full">
-                Cuisine
-              </span>
-              <div className="flex flex-wrap gap-2">
-                {(["All", ...ALL_CUISINES] as (Cuisine | "All")[]).map((c) => (
-                  <button
-                    key={c}
-                    onClick={() => setCuisine(c)}
-                    aria-pressed={cuisine === c}
-                    className={`px-4 py-2 text-xs transition-colors ${
-                      cuisine === c
-                        ? "border border-ink bg-ink text-paper"
-                        : "border border-steel text-mute hover:border-ink hover:text-ink"
-                    }`}
-                  >
-                    {c}
-                  </button>
-                ))}
-              </div>
-            </div>
-
-            <div className="space-y-4 order-4">
-              <span className="text-[10px] uppercase tracking-[0.15em] text-mute border-b border-steel pb-2 block w-full">
-                Spice level
-              </span>
-              <div className="flex flex-wrap gap-2">
-                {(["All", ...ALL_SPICE_LEVELS] as (SpiceLevel | "All")[]).map((s) => (
-                  <button
-                    key={s}
-                    onClick={() => setSpice(s)}
-                    aria-pressed={spice === s}
-                    className={`px-4 py-2 text-xs transition-colors ${
-                      spice === s
-                        ? "border border-ink bg-ink text-paper"
-                        : "border border-steel text-mute hover:border-ink hover:text-ink"
-                    }`}
-                  >
-                    {s}
-                  </button>
-                ))}
-              </div>
-            </div>
-
-            <div className="space-y-4 order-3">
-              <span className="text-[10px] uppercase tracking-[0.15em] text-mute border-b border-steel pb-2 block w-full">
-                Meal
-              </span>
-              <div className="flex flex-wrap gap-2">
-                {(["All", ...ALL_MEAL_TYPES] as (MealType | "All")[]).map((m) => (
-                  <button
-                    key={m}
-                    onClick={() => setMeal(m)}
-                    aria-pressed={meal === m}
-                    className={`px-4 py-2 text-xs transition-colors ${
-                      meal === m
-                        ? "border border-ink bg-ink text-paper"
-                        : "border border-steel text-mute hover:border-ink hover:text-ink"
-                    }`}
-                  >
-                    {m}
-                  </button>
-                ))}
-              </div>
-            </div>
+          <div className="lg:col-span-9">
+            <RecipeFilters value={filters} onChange={update} />
           </div>
-
         </section>
 
-        {/* Collection */}
+        {/* Collection preview */}
         <section className="px-6 md:px-8 pb-24 grid grid-cols-1 lg:grid-cols-12 gap-12">
           <div className="lg:col-span-3">
             <h2 className="font-serif text-2xl tracking-tight">The collection</h2>
@@ -388,59 +263,44 @@ function Index() {
             </p>
           </div>
 
-          <div className="lg:col-span-9">
+          <div className="lg:col-span-9 space-y-8">
             {filtered.length === 0 ? (
               <div className="border border-dashed border-steel p-12 text-center text-sm text-mute">
                 Nothing matches those constraints. Try loosening a filter.
               </div>
             ) : (
-              <ul className="grid grid-cols-1 sm:grid-cols-2 gap-px bg-steel border border-steel">
-                {filtered.map((r) => (
-                  <li key={r.id} className="bg-paper">
+              <>
+                <ul className="grid grid-cols-1 sm:grid-cols-2 gap-px bg-steel border border-steel">
+                  {preview.map((r) => (
+                    <RecipeCard key={r.id} recipe={r} />
+                  ))}
+                </ul>
+                <div className="flex flex-col sm:flex-row sm:items-center gap-4">
+                  <p className="text-[10px] uppercase tracking-[0.15em] text-mute tabular-nums">
+                    Showing {preview.length} of {filtered.length}
+                  </p>
+                  {filtered.length > preview.length ? (
                     <Link
-                      to="/recipes/$id"
-                      params={{ id: r.id }}
-                      className="p-6 h-full flex flex-col gap-4 group hover:bg-secondary transition-colors"
+                      to="/recipes"
+                      search={filtersToSearch(filters)}
+                      className="bg-ink text-paper px-5 py-3 text-[10px] uppercase tracking-[0.15em] hover:bg-leaf transition-colors"
                     >
-                      {r.imageUrl && (
-                        <img
-                          src={r.imageUrl}
-                          alt={r.imageAlt || r.title}
-                          loading="lazy"
-                          className="w-full aspect-[3/2] object-cover border border-steel"
-                        />
-                      )}
-                      <div className="flex items-start justify-between gap-4">
-                        <h3 className="font-serif text-xl leading-tight tracking-tight text-balance group-hover:text-leaf transition-colors">
-                          {r.title}
-                        </h3>
-                        <span className="text-[9px] uppercase tracking-[0.1em] text-mute shrink-0 mt-1">
-                          {r.skill}
-                        </span>
-                      </div>
-                      <p className="text-xs text-mute leading-relaxed line-clamp-3">{r.blurb}</p>
-                      <div className="flex flex-wrap gap-x-3 gap-y-1 text-[9px] uppercase tracking-[0.1em] text-mute">
-                        {r.cuisine && <span>{r.cuisine}</span>}
-                        {r.spiceLevel && <span>{r.spiceLevel} spice</span>}
-                        {r.mealTypes.length > 0 && <span>{r.mealTypes.join(" / ")}</span>}
-                        {r.calories != null && <span className="tabular-nums">{r.calories} kcal</span>}
-                      </div>
-                      <div className="flex items-center justify-between text-[10px] uppercase tracking-[0.15em] text-mute mt-auto pt-4 border-t border-steel">
-                        <span className="tabular-nums">{formatTime(r.timeMinutes)}</span>
-                        <span>
-                          {r.contains.length === 0
-                            ? "No declared allergens"
-                            : `Contains ${r.contains.join(", ")}`}
-                        </span>
-                      </div>
-
+                      See all {filtered.length} matching recipes
                     </Link>
-                  </li>
-                ))}
-              </ul>
+                  ) : (
+                    <Link
+                      to="/recipes"
+                      className="text-[10px] uppercase tracking-[0.15em] text-mute underline hover:text-ink transition-colors"
+                    >
+                      Browse all {allRecipes.length} recipes
+                    </Link>
+                  )}
+                </div>
+              </>
             )}
           </div>
         </section>
+
 
         {/* Weekly newsletter */}
         <section
@@ -487,9 +347,13 @@ function Index() {
         <span>Vegan Cook — plant-based cooking, every day.</span>
         <div className="flex gap-6 items-center">
           <span className="tabular-nums">{allRecipes.length} recipes in the collection</span>
+          <Link to="/recipes" className="hover:text-ink transition-colors">
+            Recipes
+          </Link>
           <Link to="/journal" className="hover:text-ink transition-colors">
             Journal
           </Link>
+
           <Link to="/about" className="hover:text-ink transition-colors">
             About
           </Link>
@@ -573,29 +437,5 @@ function Cell({ label, value }: { label: string; value: string }) {
       <span className="text-[9px] uppercase tracking-[0.1em] text-mute">{label}</span>
       <span className="text-sm font-medium">{value}</span>
     </div>
-  );
-}
-
-function FilterChip({
-  active,
-  onClick,
-  children,
-}: {
-  active: boolean;
-  onClick: () => void;
-  children: React.ReactNode;
-}) {
-  return (
-    <button
-      onClick={onClick}
-      aria-pressed={active}
-      className={`px-4 py-2 text-xs transition-colors ${
-        active
-          ? "border border-ink bg-ink text-paper"
-          : "border border-steel text-mute hover:border-ink hover:text-ink"
-      }`}
-    >
-      {children}
-    </button>
   );
 }

@@ -10,9 +10,14 @@ export function SiteHeader() {
           Vegan Cook
         </Link>
         <nav className="hidden md:flex gap-8 text-mute">
-          <Link to="/" className="hover:text-ink transition-colors">
+          <Link
+            to="/recipes"
+            activeProps={{ className: "text-ink" }}
+            className="hover:text-ink transition-colors"
+          >
             Recipes
           </Link>
+
           <Link
             to="/vegan-breakfast-ideas"
             activeProps={{ className: "text-ink" }}
@@ -51,9 +56,13 @@ export function SiteFooter({ note }: { note?: string }) {
     <footer className="border-t border-steel px-6 md:px-8 py-8 flex flex-col md:flex-row items-start md:items-center justify-between gap-4 text-[10px] uppercase tracking-[0.15em] text-mute">
       <span>{note ?? "Vegan Cook — plant-based cooking, every day."}</span>
       <div className="flex gap-6">
+        <Link to="/recipes" className="hover:text-ink transition-colors">
+          Recipes
+        </Link>
         <Link to="/journal" className="hover:text-ink transition-colors">
           Journal
         </Link>
+
         <Link to="/about" className="hover:text-ink transition-colors">
           About
         </Link>
