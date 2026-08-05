@@ -1,4 +1,5 @@
 import type { ComponentType } from 'react'
+import { template as editorInvite } from './editor-invite'
 import { template as newsletterWelcome } from './newsletter-welcome'
 import { template as weeklyIssue } from './weekly-issue'
 
@@ -16,6 +17,7 @@ export interface TemplateEntry {
  * Import and register new templates here after creating them in this directory.
  */
 export const TEMPLATES: Record<string, TemplateEntry> = {
+  'editor-invite': editorInvite,
   'newsletter-welcome': newsletterWelcome,
   'weekly-issue': weeklyIssue,
 }

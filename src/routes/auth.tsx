@@ -24,7 +24,6 @@ function AuthPage() {
   const navigate = useNavigate();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [mode, setMode] = useState<"signin" | "signup">("signin");
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState("");
   const [notice, setNotice] = useState("");
@@ -41,33 +40,6 @@ function AuthPage() {
     setError("");
     setNotice("");
 
-    if (mode === "signup") {
-      if (!/^(?=.*[A-Za-z])(?=.*\d)(?=.*[^A-Za-z0-9]).{10,}$/.test(password)) {
-        setBusy(false);
-        setError(
-          "Use at least 10 characters with letters, numbers and at least one symbol.",
-        );
-        return;
-      }
-      const { data, error: signUpError } = await supabase.auth.signUp({
-        email,
-        password,
-        options: { emailRedirectTo: `${window.location.origin}/auth` },
-      });
-      setBusy(false);
-      if (signUpError) {
-        setError(signUpError.message);
-        return;
-      }
-      if (!data.session) {
-        setNotice("Check your inbox to confirm the address, then sign in.");
-        setMode("signin");
-        return;
-      }
-      navigate({ to: "/admin", replace: true });
-      return;
-    }
-
     const { error: signInError } = await supabase.auth.signInWithPassword({ email, password });
     setBusy(false);
     if (signInError) {
@@ -77,6 +49,24 @@ function AuthPage() {
     navigate({ to: "/admin", replace: true });
   };
 
+  const onForgotPassword = async () => {
+    if (!email) {
+      setError("Enter your email address first.");
+      return;
+    }
+    setBusy(true);
+    setError("");
+    setNotice("");
+    const { error: resetError } = await supabase.auth.resetPasswordForEmail(email, {
+      redirectTo: `${window.location.origin}/auth/reset-password`,
+    });
+    setBusy(false);
+    if (resetError) {
+      setError(resetError.message);
+      return;
+    }
+    setNotice("Check your inbox for a password-reset link.");
+  };
 
   return (
     <div className="bg-paper text-ink min-h-dvh antialiased">
@@ -89,12 +79,10 @@ function AuthPage() {
       <main className="max-w-md mx-auto px-6 py-20 space-y-8">
         <div className="space-y-3">
           <p className="text-[10px] uppercase tracking-[0.15em] text-mute">Editing desk</p>
-          <h1 className="font-serif text-3xl tracking-tight">
-            {mode === "signin" ? "Sign in" : "Create an editor account"}
-          </h1>
+          <h1 className="font-serif text-3xl tracking-tight">Sign in</h1>
           <p className="text-sm text-mute leading-relaxed">
-            This is for the people who maintain the recipe table and review submissions. Readers
-            do not need an account.
+            This page is only for editors. If you need access, ask an existing editor to invite you.
+            Readers do not need an account.
           </p>
         </div>
 
@@ -115,16 +103,11 @@ function AuthPage() {
             <input
               type="password"
               required
-              autoComplete={mode === "signin" ? "current-password" : "new-password"}
+              autoComplete="current-password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               className="w-full border border-steel bg-paper px-3 py-2.5 text-sm focus:border-ink outline-none"
             />
-            {mode === "signup" && (
-              <span className="block text-xs text-mute">
-                At least 10 characters, mixing letters, numbers and a symbol.
-              </span>
-            )}
           </label>
 
           {error && <p className="text-xs text-destructive">{error}</p>}
@@ -135,26 +118,18 @@ function AuthPage() {
             disabled={busy}
             className="w-full bg-ink text-paper px-5 py-3 text-[10px] uppercase tracking-[0.15em] hover:bg-leaf transition-colors disabled:opacity-50"
           >
-            {busy
-              ? "Working…"
-              : mode === "signin"
-                ? "Sign in"
-                : "Create account"}
+            {busy ? "Working…" : "Sign in"}
           </button>
 
           <button
             type="button"
-            onClick={() => {
-              setMode(mode === "signin" ? "signup" : "signin");
-              setError("");
-              setNotice("");
-            }}
-            className="w-full text-[10px] uppercase tracking-[0.15em] text-mute hover:text-ink transition-colors"
+            onClick={onForgotPassword}
+            disabled={busy}
+            className="w-full text-[10px] uppercase tracking-[0.15em] text-mute hover:text-ink transition-colors disabled:opacity-50"
           >
-            {mode === "signin" ? "Need an editor account?" : "Already have one? Sign in"}
+            Forgot password?
           </button>
         </form>
-
       </main>
     </div>
   );

@@ -18,6 +18,8 @@ import { Route as SubmitRouteImport } from './routes/submit'
 import { Route as UnsubscribeRouteImport } from './routes/unsubscribe'
 import { Route as VeganBreakfastIdeasRouteImport } from './routes/vegan-breakfast-ideas'
 import { Route as AuthenticatedAdminRouteImport } from './routes/_authenticated/admin'
+import { Route as AuthResetPasswordRouteImport } from './routes/auth.reset-password'
+import { Route as AuthSetupRouteImport } from './routes/auth.setup'
 import { Route as EmailUnsubscribeRouteImport } from './routes/email/unsubscribe'
 import { Route as JournalIndexRouteImport } from './routes/journal.index'
 import { Route as JournalSlugRouteImport } from './routes/journal.$slug'
@@ -71,6 +73,16 @@ const AuthenticatedAdminRoute = AuthenticatedAdminRouteImport.update({
   path: '/admin',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
+const AuthResetPasswordRoute = AuthResetPasswordRouteImport.update({
+  id: '/reset-password',
+  path: '/reset-password',
+  getParentRoute: () => AuthRoute,
+} as any)
+const AuthSetupRoute = AuthSetupRouteImport.update({
+  id: '/setup',
+  path: '/setup',
+  getParentRoute: () => AuthRoute,
+} as any)
 const EmailUnsubscribeRoute = EmailUnsubscribeRouteImport.update({
   id: '/email/unsubscribe',
   path: '/email/unsubscribe',
@@ -118,12 +130,14 @@ const LovableEmailTransactionalSendRoute =
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
-  '/auth': typeof AuthRoute
+  '/auth': typeof AuthRouteWithChildren
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/submit': typeof SubmitRoute
   '/unsubscribe': typeof UnsubscribeRoute
   '/vegan-breakfast-ideas': typeof VeganBreakfastIdeasRoute
   '/admin': typeof AuthenticatedAdminRoute
+  '/auth/reset-password': typeof AuthResetPasswordRoute
+  '/auth/setup': typeof AuthSetupRoute
   '/email/unsubscribe': typeof EmailUnsubscribeRoute
   '/journal/$slug': typeof JournalSlugRoute
   '/recipes/$id': typeof RecipesIdRoute
@@ -136,12 +150,14 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
-  '/auth': typeof AuthRoute
+  '/auth': typeof AuthRouteWithChildren
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/submit': typeof SubmitRoute
   '/unsubscribe': typeof UnsubscribeRoute
   '/vegan-breakfast-ideas': typeof VeganBreakfastIdeasRoute
   '/admin': typeof AuthenticatedAdminRoute
+  '/auth/reset-password': typeof AuthResetPasswordRoute
+  '/auth/setup': typeof AuthSetupRoute
   '/email/unsubscribe': typeof EmailUnsubscribeRoute
   '/journal/$slug': typeof JournalSlugRoute
   '/recipes/$id': typeof RecipesIdRoute
@@ -156,12 +172,14 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/_authenticated': typeof AuthenticatedRouteRouteWithChildren
   '/about': typeof AboutRoute
-  '/auth': typeof AuthRoute
+  '/auth': typeof AuthRouteWithChildren
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/submit': typeof SubmitRoute
   '/unsubscribe': typeof UnsubscribeRoute
   '/vegan-breakfast-ideas': typeof VeganBreakfastIdeasRoute
   '/_authenticated/admin': typeof AuthenticatedAdminRoute
+  '/auth/reset-password': typeof AuthResetPasswordRoute
+  '/auth/setup': typeof AuthSetupRoute
   '/email/unsubscribe': typeof EmailUnsubscribeRoute
   '/journal/$slug': typeof JournalSlugRoute
   '/recipes/$id': typeof RecipesIdRoute
@@ -182,6 +200,8 @@ export interface FileRouteTypes {
     | '/unsubscribe'
     | '/vegan-breakfast-ideas'
     | '/admin'
+    | '/auth/reset-password'
+    | '/auth/setup'
     | '/email/unsubscribe'
     | '/journal/$slug'
     | '/recipes/$id'
@@ -200,6 +220,8 @@ export interface FileRouteTypes {
     | '/unsubscribe'
     | '/vegan-breakfast-ideas'
     | '/admin'
+    | '/auth/reset-password'
+    | '/auth/setup'
     | '/email/unsubscribe'
     | '/journal/$slug'
     | '/recipes/$id'
@@ -219,6 +241,8 @@ export interface FileRouteTypes {
     | '/unsubscribe'
     | '/vegan-breakfast-ideas'
     | '/_authenticated/admin'
+    | '/auth/reset-password'
+    | '/auth/setup'
     | '/email/unsubscribe'
     | '/journal/$slug'
     | '/recipes/$id'
@@ -233,7 +257,7 @@ export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AuthenticatedRouteRoute: typeof AuthenticatedRouteRouteWithChildren
   AboutRoute: typeof AboutRoute
-  AuthRoute: typeof AuthRoute
+  AuthRoute: typeof AuthRouteWithChildren
   SitemapDotxmlRoute: typeof SitemapDotxmlRoute
   SubmitRoute: typeof SubmitRoute
   UnsubscribeRoute: typeof UnsubscribeRoute
@@ -313,6 +337,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedAdminRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/auth/reset-password': {
+      id: '/auth/reset-password'
+      path: '/reset-password'
+      fullPath: '/auth/reset-password'
+      preLoaderRoute: typeof AuthResetPasswordRouteImport
+      parentRoute: typeof AuthRoute
+    }
+    '/auth/setup': {
+      id: '/auth/setup'
+      path: '/setup'
+      fullPath: '/auth/setup'
+      preLoaderRoute: typeof AuthSetupRouteImport
+      parentRoute: typeof AuthRoute
+    }
     '/email/unsubscribe': {
       id: '/email/unsubscribe'
       path: '/email/unsubscribe'
@@ -383,11 +421,23 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
 const AuthenticatedRouteRouteWithChildren =
   AuthenticatedRouteRoute._addFileChildren(AuthenticatedRouteRouteChildren)
 
+interface AuthRouteChildren {
+  AuthResetPasswordRoute: typeof AuthResetPasswordRoute
+  AuthSetupRoute: typeof AuthSetupRoute
+}
+
+const AuthRouteChildren: AuthRouteChildren = {
+  AuthResetPasswordRoute: AuthResetPasswordRoute,
+  AuthSetupRoute: AuthSetupRoute,
+}
+
+const AuthRouteWithChildren = AuthRoute._addFileChildren(AuthRouteChildren)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AuthenticatedRouteRoute: AuthenticatedRouteRouteWithChildren,
   AboutRoute: AboutRoute,
-  AuthRoute: AuthRoute,
+  AuthRoute: AuthRouteWithChildren,
   SitemapDotxmlRoute: SitemapDotxmlRoute,
   SubmitRoute: SubmitRoute,
   UnsubscribeRoute: UnsubscribeRoute,
@@ -404,13 +454,3 @@ const rootRouteChildren: RootRouteChildren = {
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
-
-import type { getRouter } from './router.tsx'
-import type { startInstance } from './start.ts'
-declare module '@tanstack/react-start' {
-  interface Register {
-    ssr: true
-    router: Awaited<ReturnType<typeof getRouter>>
-    config: Awaited<ReturnType<typeof startInstance.getOptions>>
-  }
-}

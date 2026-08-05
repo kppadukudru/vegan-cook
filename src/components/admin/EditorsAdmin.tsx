@@ -45,7 +45,7 @@ export function EditorsAdmin({ currentUserId }: { currentUserId: string | null }
         setProblem(result.message);
       }
     } catch (err) {
-      setProblem(err instanceof Error ? err.message : "Could not add that editor.");
+      setProblem(err instanceof Error ? err.message : "Could not invite that editor.");
     } finally {
       setBusy(false);
     }
@@ -76,8 +76,8 @@ export function EditorsAdmin({ currentUserId }: { currentUserId: string | null }
         <h2 className="font-serif text-2xl tracking-tight">Editors</h2>
         <p className="text-sm text-mute leading-relaxed">
           Editors can change recipes, review submissions, write journal posts and edit page copy.
-          The person must create an account at <span className="text-ink">/auth</span> first —
-          then add their email here.
+          Enter an email to invite someone. If they do not have an account yet, one is created for
+          them and they receive a password-reset link.
         </p>
       </div>
 
@@ -100,7 +100,7 @@ export function EditorsAdmin({ currentUserId }: { currentUserId: string | null }
           disabled={busy}
           className="bg-ink text-paper px-5 py-3 text-[10px] uppercase tracking-[0.15em] hover:bg-leaf transition-colors disabled:opacity-50"
         >
-          {busy ? "Working…" : "Make editor"}
+          {busy ? "Working…" : "Invite editor"}
         </button>
       </form>
 
