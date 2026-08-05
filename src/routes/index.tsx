@@ -107,9 +107,10 @@ function Index() {
           <MobileNav />
           <span className="font-serif text-xl tracking-tight normal-case">Vegan Cook</span>
           <nav className="hidden md:flex gap-8 text-mute">
-            <a href="#archive" className="hover:text-ink transition-colors">
+            <Link to="/recipes" className="hover:text-ink transition-colors">
               Recipes
-            </a>
+            </Link>
+
             <Link to="/vegan-breakfast-ideas" className="hover:text-ink transition-colors">
               Breakfast
             </Link>
