@@ -31,7 +31,6 @@ import {
   adminSaveRecipe,
   getAdminStatus,
 } from "@/lib/admin.functions";
-import { claimFirstEditorRole } from "@/lib/bootstrap.functions";
 import { CsvImport } from "@/components/admin/CsvImport";
 import { JournalAdmin } from "@/components/admin/JournalAdmin";
 import { NewsletterAdmin } from "@/components/admin/NewsletterAdmin";
@@ -136,7 +135,6 @@ type Submission = Awaited<ReturnType<typeof adminListSubmissions>>[number];
 function AdminPage() {
   const navigate = useNavigate();
   const status = useServerFn(getAdminStatus);
-  const claimRole = useServerFn(claimFirstEditorRole);
 
   const listRecipes = useServerFn(adminListRecipes);
   const listSubmissions = useServerFn(adminListSubmissions);
@@ -154,7 +152,6 @@ function AdminPage() {
   const [notice, setNotice] = useState("");
   const [problem, setProblem] = useState("");
   const [busy, setBusy] = useState(false);
-  const [inviteCode, setInviteCode] = useState("");
 
   const refresh = useCallback(async () => {
     const [r, s] = await Promise.all([listRecipes(), listSubmissions()]);
