@@ -41,27 +41,48 @@ export const setupFirstEditor = createServerFn({ method: "POST" })
       email_confirm: true,
     });
 
+    let userId = userData?.user?.id ?? null;
+    let created = true;
+
     if (createError) {
-      if (createError.message.toLowerCase().includes("already been registered")) {
-        return {
-          ok: false as const,
-          message: "That email already has an account. Sign in at /auth instead.",
-        };
+      const alreadyExists =
+        createError.message.toLowerCase().includes("already been registered") ||
+        createError.message.toLowerCase().includes("already exists");
+      if (!alreadyExists) throw new Error(createError.message);
+
+      // The account exists but no editor exists yet: promote it and reset the
+      // password so the invite code holder can sign in.
+      created = false;
+      const { data: existingId, error: idError } = await supabaseAdmin.rpc("user_id_for_email", {
+        _email: data.email,
+      });
+      if (idError) throw new Error(idError.message);
+      if (!existingId) {
+        return { ok: false as const, message: "Could not find that account." };
       }
-      throw new Error(createError.message);
+      userId = existingId as string;
+
+      const { error: updateError } = await supabaseAdmin.auth.admin.updateUserById(userId, {
+        password: data.password,
+        email_confirm: true,
+      });
+      if (updateError) throw new Error(updateError.message);
     }
 
-    if (!userData.user) {
+    if (!userId) {
       return { ok: false as const, message: "Could not create the account." };
     }
 
     const { error: claimError } = await supabaseAdmin.rpc("claim_first_editor", {
-      _user_id: userData.user.id,
+      _user_id: userId,
     });
     if (claimError) throw new Error(claimError.message);
 
     return {
       ok: true as const,
-      message: "Editor account created. Sign in with your email and password.",
+      message: created
+        ? "Editor account created. Sign in with your email and password."
+        : "Existing account promoted to editor and password updated. Sign in now.",
     };
+
   });
