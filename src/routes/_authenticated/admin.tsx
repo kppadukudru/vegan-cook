@@ -378,9 +378,24 @@ function AdminPage() {
                   </div>
                   <div className="flex gap-2 text-[10px] uppercase tracking-[0.15em]">
                     <button
-                      onClick={() => {
-                        setForm(formFromRecipe(r));
-                        window.scrollTo({ top: 0 });
+                      disabled={busy}
+                      onClick={() =>
+                        void runAction(() =>
+                          setRecipeStatus({
+                            data: { id: r.id, status: r.status === "draft" ? "published" : "draft" },
+                          }),
+                        )
+                      }
+                      className={
+                        r.status === "draft"
+                          ? "bg-leaf text-paper px-3 py-2 hover:bg-ink transition-colors disabled:opacity-50"
+                          : "border border-steel px-3 py-2 text-mute hover:border-ink hover:text-ink transition-colors disabled:opacity-50"
+                      }
+                    >
+                      {r.status === "draft" ? "Publish" : "Unpublish"}
+                    </button>
+                    <button
+
                       }}
                       className="border border-ink px-3 py-2 hover:bg-ink hover:text-paper transition-colors"
                     >
