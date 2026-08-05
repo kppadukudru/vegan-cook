@@ -167,6 +167,7 @@ function AdminPage() {
         const result = await status();
         if (cancelled) return;
         setIsAdmin(result.isAdmin);
+        setUserId(result.userId);
         if (result.isAdmin) await refresh();
       } catch {
         if (!cancelled) setIsAdmin(false);
