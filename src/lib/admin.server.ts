@@ -56,7 +56,37 @@ export async function saveRecipe(data: RecipeInput): Promise<Result> {
   return { ok: true, id, message: `Saved "${data.title}".` };
 }
 
+export async function setRecipeStatus(
+  id: string,
+  status: "published" | "draft",
+): Promise<Result> {
+  const { error } = await supabaseAdmin.from("recipes").update({ status }).eq("id", id);
+  if (error) {
+    console.error("setRecipeStatus failed:", error.message);
+    return { ok: false, message: "Could not change that recipe's status." };
+  }
+  return { ok: true, id, message: status === "published" ? "Recipe published." : "Recipe moved to draft." };
+}
+
+export async function publishAllDrafts(): Promise<Result> {
+  const { data, error } = await supabaseAdmin
+    .from("recipes")
+    .update({ status: "published" })
+    .eq("status", "draft")
+    .select("id");
+  if (error) {
+    console.error("publishAllDrafts failed:", error.message);
+    return { ok: false, message: "Could not publish the drafts." };
+  }
+  const count = data?.length ?? 0;
+  return {
+    ok: true,
+    message: count === 0 ? "No drafts left to publish." : `Published ${count} draft recipe${count === 1 ? "" : "s"}.`,
+  };
+}
+
 export async function deleteRecipe(id: string): Promise<Result> {
+
   const { error } = await supabaseAdmin.from("recipes").delete().eq("id", id);
   if (error) return { ok: false, message: "Could not delete that recipe." };
   return { ok: true, message: "Recipe removed." };
