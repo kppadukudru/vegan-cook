@@ -334,6 +334,9 @@ function AdminPage() {
           <TabButton active={tab === "pages"} onClick={() => setTab("pages")}>
             Pages
           </TabButton>
+          <TabButton active={tab === "editors"} onClick={() => setTab("editors")}>
+            Editors
+          </TabButton>
         </div>
 
         {notice && (
