@@ -125,6 +125,9 @@ function Index() {
             <a href="#archive" className="hover:text-ink transition-colors">
               Recipes
             </a>
+            <Link to="/vegan-breakfast-ideas" className="hover:text-ink transition-colors">
+              Breakfast
+            </Link>
             <Link to="/journal" className="hover:text-ink transition-colors">
               Journal
             </Link>
