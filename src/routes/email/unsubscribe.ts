@@ -80,17 +80,59 @@ export const Route = createFileRoute("/email/unsubscribe")({
             const body = await request.json()
             if (body.token) {
               token = body.token
+            } else if (typeof body.email === 'string' && body.email.includes('@')) {
+              // No token (e.g. the reader landed on /unsubscribe directly).
+              // Suppress the address itself, best-effort rate limited.
+              const email = body.email.trim().toLowerCase()
+              if (email.length > 200) {
+                return Response.json({ error: 'Invalid email' }, { status: 400 })
+              }
+              const { checkRateLimit, clientIpFromHeaders } = await import(
+                '@/lib/rate-limit.server'
+              )
+              const gate = checkRateLimit(
+                'unsubscribe-by-email',
+                clientIpFromHeaders(request.headers),
+                10,
+                60 * 60 * 1000,
+              )
+              if (!gate.allowed) {
+                return Response.json({ error: 'Too many attempts' }, { status: 429 })
+              }
+
+              const supabaseByEmail = createClient(supabaseUrl, supabaseServiceKey)
+              const { data: existing } = await supabaseByEmail
+                .from('suppressed_emails')
+                .select('id')
+                .eq('email', email)
+                .maybeSingle()
+              if (existing) {
+                return Response.json({ success: false, reason: 'already_unsubscribed' })
+              }
+
+              const { error: suppressErr } = await supabaseByEmail
+                .from('suppressed_emails')
+                .upsert({ email, reason: 'unsubscribe' }, { onConflict: 'email' })
+              if (suppressErr) {
+                console.error('Failed to suppress email by address', { error: suppressErr })
+                return Response.json({ error: 'Failed to process unsubscribe' }, { status: 500 })
+              }
+              await supabaseByEmail
+                .from('email_unsubscribe_tokens')
+                .update({ used_at: new Date().toISOString() })
+                .eq('email', email)
+                .is('used_at', null)
+
+              console.log('Email unsubscribed by address', {
+                email_redacted: redactEmail(email),
+              })
+              return Response.json({ success: true })
             }
           } catch {
             // Fall through — token stays from query param
           }
         }
 
-        if (!token) {
-          return Response.json({ error: 'Token is required' }, { status: 400 })
-        }
-
-        const supabase = createClient(supabaseUrl, supabaseServiceKey)
 
         // Look up the token
         const { data: tokenRecord, error: lookupError } = await supabase
