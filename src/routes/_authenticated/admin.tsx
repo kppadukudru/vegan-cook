@@ -328,13 +328,25 @@ function AdminPage() {
         {tab === "recipes" && (
           <section className="space-y-6">
             {!form && (
-              <button
-                onClick={() => setForm(emptyForm())}
-                className="bg-ink text-paper px-5 py-3 text-[10px] uppercase tracking-[0.15em] hover:bg-leaf transition-colors"
-              >
-                New recipe
-              </button>
+              <div className="flex flex-wrap items-center gap-3">
+                <button
+                  onClick={() => setForm(emptyForm())}
+                  className="bg-ink text-paper px-5 py-3 text-[10px] uppercase tracking-[0.15em] hover:bg-leaf transition-colors"
+                >
+                  New recipe
+                </button>
+                {draftCount > 0 && (
+                  <button
+                    disabled={busy}
+                    onClick={() => void runAction(() => publishAllDrafts())}
+                    className="border border-ink px-5 py-3 text-[10px] uppercase tracking-[0.15em] hover:bg-ink hover:text-paper transition-colors disabled:opacity-50"
+                  >
+                    Publish all {draftCount} drafts
+                  </button>
+                )}
+              </div>
             )}
+
 
             {form && (
               <RecipeForm
