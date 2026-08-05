@@ -113,7 +113,7 @@ function RecipesArchive() {
       meal: oneOf<MealType>(ALL_MEAL_TYPES, search.meal),
       avoid: (search.avoid ?? "")
         .split(",")
-        .filter((a): a is Allergen => (ALL_ALLERGENS as string[]).includes(a)),
+        .filter((a: string): a is Allergen => (ALL_ALLERGENS as string[]).includes(a)),
     }),
     [search],
   );
