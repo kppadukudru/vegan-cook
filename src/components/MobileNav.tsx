@@ -3,7 +3,7 @@ import { useState } from "react";
 import { Menu, X } from "lucide-react";
 
 const LINKS = [
-  { label: "Recipes", to: "/", hash: "archive" },
+  { label: "Recipes", to: "/recipes" },
   { label: "Breakfast ideas", to: "/vegan-breakfast-ideas" },
   { label: "Journal", to: "/journal" },
   { label: "About", to: "/about" },
