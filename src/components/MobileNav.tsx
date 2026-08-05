@@ -4,6 +4,7 @@ import { Menu, X } from "lucide-react";
 
 const LINKS = [
   { label: "Recipes", to: "/", hash: "archive" },
+  { label: "Breakfast ideas", to: "/vegan-breakfast-ideas" },
   { label: "Journal", to: "/journal" },
   { label: "About", to: "/about" },
   { label: "Submit a recipe", to: "/submit" },
