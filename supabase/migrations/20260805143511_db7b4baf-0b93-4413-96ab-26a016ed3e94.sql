@@ -1,0 +1,1 @@
+UPDATE public.recipes SET status = 'published' WHERE status = 'draft';

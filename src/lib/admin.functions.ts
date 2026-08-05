@@ -6,7 +6,9 @@ import {
   idInput,
   publishInput,
   recipeInput,
+  recipeStatusInput,
   rejectInput,
+
 } from "@/lib/admin-schemas";
 import { importInput } from "@/lib/csv-import";
 import { journalIdInput, journalPostInput } from "@/lib/journal-schemas";
@@ -52,6 +54,26 @@ export const adminDeleteRecipe = createServerFn({ method: "POST" })
     const { deleteRecipe } = await import("@/lib/admin.server");
     return deleteRecipe(data.id);
   });
+
+/** One-click publish / unpublish from the recipe list. */
+export const adminSetRecipeStatus = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((data: unknown) => recipeStatusInput.parse(data))
+  .handler(async ({ data, context }) => {
+    await assertAdmin(context);
+    const { setRecipeStatus } = await import("@/lib/admin.server");
+    return setRecipeStatus(data.id, data.status);
+  });
+
+/** Publish every recipe currently sitting in draft. */
+export const adminPublishAllDrafts = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .handler(async ({ context }) => {
+    await assertAdmin(context);
+    const { publishAllDrafts } = await import("@/lib/admin.server");
+    return publishAllDrafts();
+  });
+
 
 /** The review queue. */
 export const adminListSubmissions = createServerFn({ method: "GET" })

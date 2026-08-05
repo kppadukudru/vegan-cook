@@ -26,10 +26,13 @@ import {
   adminDeleteRecipe,
   adminListRecipes,
   adminListSubmissions,
+  adminPublishAllDrafts,
   adminPublishSubmission,
   adminRejectSubmission,
   adminSaveRecipe,
+  adminSetRecipeStatus,
   getAdminStatus,
+
 } from "@/lib/admin.functions";
 import { CsvImport } from "@/components/admin/CsvImport";
 import { JournalAdmin } from "@/components/admin/JournalAdmin";
@@ -140,6 +143,9 @@ function AdminPage() {
   const listSubmissions = useServerFn(adminListSubmissions);
   const saveRecipe = useServerFn(adminSaveRecipe);
   const removeRecipe = useServerFn(adminDeleteRecipe);
+  const setRecipeStatus = useServerFn(adminSetRecipeStatus);
+  const publishAllDrafts = useServerFn(adminPublishAllDrafts);
+
   const publishSubmission = useServerFn(adminPublishSubmission);
   const rejectSubmission = useServerFn(adminRejectSubmission);
 
@@ -185,6 +191,11 @@ function AdminPage() {
     () => submissions.filter((s) => s.status !== "pending"),
     [submissions],
   );
+  const draftCount = useMemo(
+    () => recipes.filter((r) => r.status === "draft").length,
+    [recipes],
+  );
+
 
   const signOut = async () => {
     await supabase.auth.signOut();
@@ -322,13 +333,25 @@ function AdminPage() {
         {tab === "recipes" && (
           <section className="space-y-6">
             {!form && (
-              <button
-                onClick={() => setForm(emptyForm())}
-                className="bg-ink text-paper px-5 py-3 text-[10px] uppercase tracking-[0.15em] hover:bg-leaf transition-colors"
-              >
-                New recipe
-              </button>
+              <div className="flex flex-wrap items-center gap-3">
+                <button
+                  onClick={() => setForm(emptyForm())}
+                  className="bg-ink text-paper px-5 py-3 text-[10px] uppercase tracking-[0.15em] hover:bg-leaf transition-colors"
+                >
+                  New recipe
+                </button>
+                {draftCount > 0 && (
+                  <button
+                    disabled={busy}
+                    onClick={() => void runAction(() => publishAllDrafts())}
+                    className="border border-ink px-5 py-3 text-[10px] uppercase tracking-[0.15em] hover:bg-ink hover:text-paper transition-colors disabled:opacity-50"
+                  >
+                    Publish all {draftCount} drafts
+                  </button>
+                )}
+              </div>
             )}
+
 
             {form && (
               <RecipeForm
@@ -355,10 +378,28 @@ function AdminPage() {
                   </div>
                   <div className="flex gap-2 text-[10px] uppercase tracking-[0.15em]">
                     <button
+                      disabled={busy}
+                      onClick={() =>
+                        void runAction(() =>
+                          setRecipeStatus({
+                            data: { id: r.id, status: r.status === "draft" ? "published" : "draft" },
+                          }),
+                        )
+                      }
+                      className={
+                        r.status === "draft"
+                          ? "bg-leaf text-paper px-3 py-2 hover:bg-ink transition-colors disabled:opacity-50"
+                          : "border border-steel px-3 py-2 text-mute hover:border-ink hover:text-ink transition-colors disabled:opacity-50"
+                      }
+                    >
+                      {r.status === "draft" ? "Publish" : "Unpublish"}
+                    </button>
+                    <button
                       onClick={() => {
                         setForm(formFromRecipe(r));
                         window.scrollTo({ top: 0 });
                       }}
+
                       className="border border-ink px-3 py-2 hover:bg-ink hover:text-paper transition-colors"
                     >
                       Edit

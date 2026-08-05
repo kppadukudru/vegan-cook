@@ -49,6 +49,12 @@ export type RecipeInput = z.infer<typeof recipeInput>;
 
 export const idInput = z.object({ id: z.string().max(80) });
 
+export const recipeStatusInput = z.object({
+  id: z.string().max(80),
+  status: z.enum(["published", "draft"]),
+});
+
+
 export const publishInput = z.object({
   id: z.string().uuid(),
   asDraft: z.boolean().default(false),
