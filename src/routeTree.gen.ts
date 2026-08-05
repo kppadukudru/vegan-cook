@@ -18,6 +18,7 @@ import { Route as SubmitRouteImport } from './routes/submit'
 import { Route as UnsubscribeRouteImport } from './routes/unsubscribe'
 import { Route as VeganBreakfastIdeasRouteImport } from './routes/vegan-breakfast-ideas'
 import { Route as AuthenticatedAdminRouteImport } from './routes/_authenticated/admin'
+import { Route as AuthIndexRouteImport } from './routes/auth.index'
 import { Route as AuthResetPasswordRouteImport } from './routes/auth.reset-password'
 import { Route as AuthSetupRouteImport } from './routes/auth.setup'
 import { Route as EmailUnsubscribeRouteImport } from './routes/email/unsubscribe'
@@ -72,6 +73,11 @@ const AuthenticatedAdminRoute = AuthenticatedAdminRouteImport.update({
   id: '/admin',
   path: '/admin',
   getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
+const AuthIndexRoute = AuthIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => AuthRoute,
 } as any)
 const AuthResetPasswordRoute = AuthResetPasswordRouteImport.update({
   id: '/reset-password',
@@ -141,6 +147,7 @@ export interface FileRoutesByFullPath {
   '/email/unsubscribe': typeof EmailUnsubscribeRoute
   '/journal/$slug': typeof JournalSlugRoute
   '/recipes/$id': typeof RecipesIdRoute
+  '/auth/': typeof AuthIndexRoute
   '/journal/': typeof JournalIndexRoute
   '/lovable/email/suppression': typeof LovableEmailSuppressionRoute
   '/lovable/email/queue/process': typeof LovableEmailQueueProcessRoute
@@ -150,7 +157,6 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
-  '/auth': typeof AuthRouteWithChildren
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/submit': typeof SubmitRoute
   '/unsubscribe': typeof UnsubscribeRoute
@@ -161,6 +167,7 @@ export interface FileRoutesByTo {
   '/email/unsubscribe': typeof EmailUnsubscribeRoute
   '/journal/$slug': typeof JournalSlugRoute
   '/recipes/$id': typeof RecipesIdRoute
+  '/auth': typeof AuthIndexRoute
   '/journal': typeof JournalIndexRoute
   '/lovable/email/suppression': typeof LovableEmailSuppressionRoute
   '/lovable/email/queue/process': typeof LovableEmailQueueProcessRoute
@@ -183,6 +190,7 @@ export interface FileRoutesById {
   '/email/unsubscribe': typeof EmailUnsubscribeRoute
   '/journal/$slug': typeof JournalSlugRoute
   '/recipes/$id': typeof RecipesIdRoute
+  '/auth/': typeof AuthIndexRoute
   '/journal/': typeof JournalIndexRoute
   '/lovable/email/suppression': typeof LovableEmailSuppressionRoute
   '/lovable/email/queue/process': typeof LovableEmailQueueProcessRoute
@@ -205,6 +213,7 @@ export interface FileRouteTypes {
     | '/email/unsubscribe'
     | '/journal/$slug'
     | '/recipes/$id'
+    | '/auth/'
     | '/journal/'
     | '/lovable/email/suppression'
     | '/lovable/email/queue/process'
@@ -214,7 +223,6 @@ export interface FileRouteTypes {
   to:
     | '/'
     | '/about'
-    | '/auth'
     | '/sitemap.xml'
     | '/submit'
     | '/unsubscribe'
@@ -225,6 +233,7 @@ export interface FileRouteTypes {
     | '/email/unsubscribe'
     | '/journal/$slug'
     | '/recipes/$id'
+    | '/auth'
     | '/journal'
     | '/lovable/email/suppression'
     | '/lovable/email/queue/process'
@@ -246,6 +255,7 @@ export interface FileRouteTypes {
     | '/email/unsubscribe'
     | '/journal/$slug'
     | '/recipes/$id'
+    | '/auth/'
     | '/journal/'
     | '/lovable/email/suppression'
     | '/lovable/email/queue/process'
@@ -337,6 +347,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedAdminRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/auth/': {
+      id: '/auth/'
+      path: '/'
+      fullPath: '/auth/'
+      preLoaderRoute: typeof AuthIndexRouteImport
+      parentRoute: typeof AuthRoute
+    }
     '/auth/reset-password': {
       id: '/auth/reset-password'
       path: '/reset-password'
@@ -424,11 +441,13 @@ const AuthenticatedRouteRouteWithChildren =
 interface AuthRouteChildren {
   AuthResetPasswordRoute: typeof AuthResetPasswordRoute
   AuthSetupRoute: typeof AuthSetupRoute
+  AuthIndexRoute: typeof AuthIndexRoute
 }
 
 const AuthRouteChildren: AuthRouteChildren = {
   AuthResetPasswordRoute: AuthResetPasswordRoute,
   AuthSetupRoute: AuthSetupRoute,
+  AuthIndexRoute: AuthIndexRoute,
 }
 
 const AuthRouteWithChildren = AuthRoute._addFileChildren(AuthRouteChildren)
