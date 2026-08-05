@@ -32,9 +32,9 @@ export const Route = createFileRoute("/sitemap.xml")({
 
         const { data: pageRows } = await createPublicClient()
           .from("site_pages")
-          .select("slug, updated_at")
+          .select("id, updated_at")
           .eq("status", "published");
-        const pages = (pageRows ?? []) as { slug: string; updated_at: string | null }[];
+        const pages = (pageRows ?? []) as { id: string; updated_at: string | null }[];
 
         /** Latest published date across a set — the collection's own last change. */
         const latest = (values: (string | null | undefined)[]) => {
@@ -44,7 +44,7 @@ export const Route = createFileRoute("/sitemap.xml")({
 
         const latestRecipe = latest(recipes.map((r) => r.published_at));
         const latestPost = latest(posts.map((p) => p.published_at));
-        const aboutUpdated = day(pages.find((p) => p.slug === "about")?.updated_at);
+        const aboutUpdated = day(pages.find((p) => p.id === "about")?.updated_at);
 
         const entries: SitemapEntry[] = [
           { path: "/", changefreq: "daily", priority: "1.0", ...(latestRecipe ? { lastmod: latestRecipe } : {}) },
