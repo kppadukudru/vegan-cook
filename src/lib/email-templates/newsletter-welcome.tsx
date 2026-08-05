@@ -15,6 +15,7 @@ import type { TemplateEntry } from "./registry";
 
 interface Props {
   siteUrl?: string;
+  unsubscribeUrl?: string;
 }
 
 const main = { backgroundColor: "#ffffff", fontFamily: "Georgia, 'Times New Roman', serif" };
@@ -38,7 +39,10 @@ const small = {
 };
 const link = { color: "#2f6b3a" };
 
-const Email = ({ siteUrl = "https://vegancook.live" }: Props) => (
+const Email = ({
+  siteUrl = "https://vegancook.live",
+  unsubscribeUrl = "https://vegancook.live/unsubscribe",
+}: Props) => (
   <Html lang="en" dir="ltr">
     <Head />
     <Preview>You're on the Vegan Cook weekly list — five recipes every Sunday.</Preview>
@@ -70,6 +74,10 @@ const Email = ({ siteUrl = "https://vegancook.live" }: Props) => (
             <Link href={siteUrl} style={link}>
               vegancook.live
             </Link>
+            . One email a week.{" "}
+            <Link href={unsubscribeUrl} style={link}>
+              Unsubscribe
+            </Link>
             .
           </Text>
         </Section>
@@ -82,5 +90,8 @@ export const template = {
   component: Email,
   subject: "You're on the Vegan Cook weekly list",
   displayName: "Weekly newsletter — signup confirmation",
-  previewData: { siteUrl: "https://vegancook.live" },
+  previewData: {
+    siteUrl: "https://vegancook.live",
+    unsubscribeUrl: "https://vegancook.live/unsubscribe",
+  },
 } satisfies TemplateEntry;
