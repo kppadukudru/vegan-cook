@@ -40,14 +40,38 @@ function AuthSignInPage() {
     setError("");
     setNotice("");
 
-    const { error: signInError } = await supabase.auth.signInWithPassword({ email, password });
-    setBusy(false);
+    const { data, error: signInError } = await supabase.auth.signInWithPassword({
+      email: email.trim().toLowerCase(),
+      password,
+    });
     if (signInError) {
+      setBusy(false);
       setError(signInError.message);
+      return;
+    }
+    if (!data.session) {
+      setBusy(false);
+      setError("Sign-in did not return a session. Try the password reset link below.");
+      return;
+    }
+
+    // Wait until the session is actually readable before navigating, otherwise
+    // the protected-route gate can bounce straight back to this page.
+    for (let attempt = 0; attempt < 20; attempt += 1) {
+      const { data: check } = await supabase.auth.getSession();
+      if (check.session) break;
+      await new Promise((resolve) => setTimeout(resolve, 50));
+    }
+
+    const { data: userCheck, error: userError } = await supabase.auth.getUser();
+    setBusy(false);
+    if (userError || !userCheck.user) {
+      setError("Signed in, but the session could not be confirmed. Please try again.");
       return;
     }
     navigate({ to: "/admin", replace: true });
   };
+
 
   const onForgotPassword = async () => {
     if (!email) {
@@ -57,7 +81,7 @@ function AuthSignInPage() {
     setBusy(true);
     setError("");
     setNotice("");
-    const { error: resetError } = await supabase.auth.resetPasswordForEmail(email, {
+    const { error: resetError } = await supabase.auth.resetPasswordForEmail(email.trim().toLowerCase(), {
       redirectTo: `${window.location.origin}/auth/reset-password`,
     });
     setBusy(false);
