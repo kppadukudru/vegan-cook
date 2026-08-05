@@ -36,6 +36,7 @@ import { CsvImport } from "@/components/admin/CsvImport";
 import { JournalAdmin } from "@/components/admin/JournalAdmin";
 import { NewsletterAdmin } from "@/components/admin/NewsletterAdmin";
 import { PagesAdmin } from "@/components/admin/PagesAdmin";
+import { EditorsAdmin } from "@/components/admin/EditorsAdmin";
 
 
 
