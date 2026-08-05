@@ -14,6 +14,13 @@ export function SiteHeader() {
             Recipes
           </Link>
           <Link
+            to="/vegan-breakfast-ideas"
+            activeProps={{ className: "text-ink" }}
+            className="hover:text-ink transition-colors"
+          >
+            Breakfast
+          </Link>
+          <Link
             to="/journal"
             activeProps={{ className: "text-ink" }}
             className="hover:text-ink transition-colors"
