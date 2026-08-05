@@ -58,7 +58,7 @@ export function SiteFooter({ note }: { note?: string }) {
           About
         </Link>
         <Link to="/auth" className="hover:text-ink transition-colors">
-          Editor
+          Editor sign-in
         </Link>
       </div>
     </footer>
