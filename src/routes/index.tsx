@@ -435,27 +435,3 @@ function Cell({ label, value }: { label: string; value: string }) {
     </div>
   );
 }
-
-function FilterChip({
-  active,
-  onClick,
-  children,
-}: {
-  active: boolean;
-  onClick: () => void;
-  children: React.ReactNode;
-}) {
-  return (
-    <button
-      onClick={onClick}
-      aria-pressed={active}
-      className={`px-4 py-2 text-xs transition-colors ${
-        active
-          ? "border border-ink bg-ink text-paper"
-          : "border border-steel text-mute hover:border-ink hover:text-ink"
-      }`}
-    >
-      {children}
-    </button>
-  );
-}
