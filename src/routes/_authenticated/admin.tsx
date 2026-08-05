@@ -191,6 +191,11 @@ function AdminPage() {
     () => submissions.filter((s) => s.status !== "pending"),
     [submissions],
   );
+  const draftCount = useMemo(
+    () => recipes.filter((r) => r.status === "draft").length,
+    [recipes],
+  );
+
 
   const signOut = async () => {
     await supabase.auth.signOut();
