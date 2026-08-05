@@ -36,6 +36,7 @@ import { CsvImport } from "@/components/admin/CsvImport";
 import { JournalAdmin } from "@/components/admin/JournalAdmin";
 import { NewsletterAdmin } from "@/components/admin/NewsletterAdmin";
 import { PagesAdmin } from "@/components/admin/PagesAdmin";
+import { EditorsAdmin } from "@/components/admin/EditorsAdmin";
 
 
 
@@ -145,7 +146,8 @@ function AdminPage() {
   const rejectSubmission = useServerFn(adminRejectSubmission);
 
   const [isAdmin, setIsAdmin] = useState<boolean | null>(null);
-  const [tab, setTab] = useState<"recipes" | "submissions" | "import" | "journal" | "pages" | "newsletter">("recipes");
+  const [userId, setUserId] = useState<string | null>(null);
+  const [tab, setTab] = useState<"recipes" | "submissions" | "import" | "journal" | "pages" | "newsletter" | "editors">("recipes");
   const [recipes, setRecipes] = useState<Recipe[]>([]);
   const [submissions, setSubmissions] = useState<Submission[]>([]);
   const [form, setForm] = useState<FormState | null>(null);
@@ -166,6 +168,7 @@ function AdminPage() {
         const result = await status();
         if (cancelled) return;
         setIsAdmin(result.isAdmin);
+        setUserId(result.userId);
         if (result.isAdmin) await refresh();
       } catch {
         if (!cancelled) setIsAdmin(false);
@@ -331,6 +334,9 @@ function AdminPage() {
           <TabButton active={tab === "pages"} onClick={() => setTab("pages")}>
             Pages
           </TabButton>
+          <TabButton active={tab === "editors"} onClick={() => setTab("editors")}>
+            Editors
+          </TabButton>
         </div>
 
         {notice && (
@@ -466,6 +472,8 @@ function AdminPage() {
         {tab === "newsletter" && <NewsletterAdmin />}
 
         {tab === "pages" && <PagesAdmin />}
+
+        {tab === "editors" && <EditorsAdmin currentUserId={userId} />}
       </div>
     </Shell>
   );

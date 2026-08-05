@@ -74,7 +74,9 @@ export async function enqueueTemplateEmail(options: {
     unsubscribeToken = stored.token;
   }
 
-  const element = React.createElement(template.component, templateData);
+  const { SITE_URL: siteUrl } = await import("@/lib/newsletter");
+  const unsubscribeUrl = `${siteUrl}/unsubscribe?token=${unsubscribeToken}`;
+  const element = React.createElement(template.component, { unsubscribeUrl, ...templateData });
   const html = await render(element);
   const text = await render(element, { plainText: true });
   const subject =
