@@ -143,6 +143,9 @@ function AdminPage() {
   const listSubmissions = useServerFn(adminListSubmissions);
   const saveRecipe = useServerFn(adminSaveRecipe);
   const removeRecipe = useServerFn(adminDeleteRecipe);
+  const setRecipeStatus = useServerFn(adminSetRecipeStatus);
+  const publishAllDrafts = useServerFn(adminPublishAllDrafts);
+
   const publishSubmission = useServerFn(adminPublishSubmission);
   const rejectSubmission = useServerFn(adminRejectSubmission);
 
