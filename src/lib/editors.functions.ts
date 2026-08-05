@@ -78,13 +78,6 @@ export const adminGrantEditor = createServerFn({ method: "POST" })
 
     const resetUrl = linkError ? undefined : linkData.properties.action_link;
 
-    const { data: inviter, error: inviterError } = await supabaseAdmin
-      .from("auth.users")
-      .select("email")
-      .eq("id", context.userId)
-      .maybeSingle();
-    if (inviterError) console.error("Failed to load inviter email", inviterError);
-
     const { enqueueTemplateEmail } = await import("@/lib/newsletter.server");
     await enqueueTemplateEmail({
       templateName: "editor-invite",
@@ -92,7 +85,8 @@ export const adminGrantEditor = createServerFn({ method: "POST" })
       idempotencyKey: `editor-invite-${targetUserId}`,
       templateData: {
         resetUrl,
-        invitedByEmail: inviter?.email ?? "an existing editor",
+        invitedByEmail:
+          typeof context.claims?.email === "string" ? context.claims.email : "an existing editor",
       },
     });
 
