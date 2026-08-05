@@ -395,8 +395,11 @@ function AdminPage() {
                       {r.status === "draft" ? "Publish" : "Unpublish"}
                     </button>
                     <button
-
+                      onClick={() => {
+                        setForm(formFromRecipe(r));
+                        window.scrollTo({ top: 0 });
                       }}
+
                       className="border border-ink px-3 py-2 hover:bg-ink hover:text-paper transition-colors"
                     >
                       Edit
