@@ -81,7 +81,7 @@ function AuthSignInPage() {
     setBusy(true);
     setError("");
     setNotice("");
-    const { error: resetError } = await supabase.auth.resetPasswordForEmail(email, {
+    const { error: resetError } = await supabase.auth.resetPasswordForEmail(email.trim().toLowerCase(), {
       redirectTo: `${window.location.origin}/auth/reset-password`,
     });
     setBusy(false);
