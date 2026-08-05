@@ -1,4 +1,5 @@
 import { Link } from "@tanstack/react-router";
+import { MobileNav } from "@/components/MobileNav";
 
 export function SiteHeader() {
   return (

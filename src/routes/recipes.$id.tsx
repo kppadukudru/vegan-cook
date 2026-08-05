@@ -1,4 +1,5 @@
 import { createFileRoute, Link, notFound } from "@tanstack/react-router";
+import { MobileNav } from "@/components/MobileNav";
 import { ALL_ALLERGENS, formatDate, formatTime, type Recipe } from "@/data/recipes";
 import { getPublishedRecipe } from "@/lib/recipes.functions";
 

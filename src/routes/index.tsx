@@ -1,4 +1,5 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
+import { MobileNav } from "@/components/MobileNav";
 import { useServerFn } from "@tanstack/react-start";
 import { useMemo, useState } from "react";
 import {
