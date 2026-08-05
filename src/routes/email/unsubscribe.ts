@@ -133,6 +133,11 @@ export const Route = createFileRoute("/email/unsubscribe")({
           }
         }
 
+        if (!token) {
+          return Response.json({ error: 'Token is required' }, { status: 400 })
+        }
+
+        const supabase = createClient(supabaseUrl, supabaseServiceKey)
 
         // Look up the token
         const { data: tokenRecord, error: lookupError } = await supabase
