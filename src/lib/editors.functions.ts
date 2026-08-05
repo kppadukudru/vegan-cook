@@ -29,7 +29,7 @@ export const adminListEditors = createServerFn({ method: "GET" })
     );
   });
 
-/** Promote an existing account (by email) to editor. */
+/** Invite an editor by email. Creates a confirmed account if one does not exist. */
 export const adminGrantEditor = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
   .inputValidator((data: unknown) => emailInput.parse(data))
@@ -41,20 +41,61 @@ export const adminGrantEditor = createServerFn({ method: "POST" })
       _email: data.email,
     });
     if (lookupError) throw new Error(lookupError.message);
-    if (!userId) {
-      return {
-        ok: false as const,
-        message:
-          "No account with that email. Ask them to sign up at /auth first, then add them here.",
-      };
+
+    let targetUserId: string;
+    let createdAccount = false;
+
+    if (userId) {
+      targetUserId = userId;
+    } else {
+      const tempPassword = crypto.randomUUID();
+      const { data: newUser, error: createError } = await supabaseAdmin.auth.admin.createUser({
+        email: data.email,
+        password: tempPassword,
+        email_confirm: true,
+      });
+      if (createError) throw new Error(createError.message);
+      if (!newUser.user) throw new Error("Could not create the account.");
+      targetUserId = newUser.user.id;
+      createdAccount = true;
     }
 
     const { error } = await supabaseAdmin
       .from("user_roles")
-      .upsert({ user_id: userId, role: "admin" }, { onConflict: "user_id,role" });
+      .upsert({ user_id: targetUserId, role: "admin" }, { onConflict: "user_id,role" });
     if (error) throw new Error(error.message);
 
-    return { ok: true as const, message: `${data.email} is now an editor.` };
+    const siteUrl = process.env['SITE_URL'] ?? "https://vegancook.live";
+    const { data: linkData, error: linkError } = await supabaseAdmin.auth.admin.generateLink({
+      type: "recovery",
+      email: data.email,
+      options: { redirectTo: `${siteUrl}/auth/reset-password` },
+    });
+
+    if (linkError) {
+      console.error("Failed to generate recovery link for editor invite", linkError);
+    }
+
+    const resetUrl = linkError ? undefined : linkData.properties.action_link;
+
+    const { enqueueTemplateEmail } = await import("@/lib/newsletter.server");
+    await enqueueTemplateEmail({
+      templateName: "editor-invite",
+      recipientEmail: data.email,
+      idempotencyKey: `editor-invite-${targetUserId}`,
+      templateData: {
+        resetUrl,
+        invitedByEmail:
+          typeof context.claims?.email === "string" ? context.claims.email : "an existing editor",
+      },
+    });
+
+    return {
+      ok: true as const,
+      message: createdAccount
+        ? `Invitation sent to ${data.email}. They can set a password from the email.`
+        : `${data.email} is now an editor and has been notified.`,
+    };
   });
 
 /** Remove the editor role from an account. You cannot remove your own. */

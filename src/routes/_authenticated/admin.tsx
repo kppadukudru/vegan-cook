@@ -31,7 +31,6 @@ import {
   adminSaveRecipe,
   getAdminStatus,
 } from "@/lib/admin.functions";
-import { claimFirstEditorRole } from "@/lib/bootstrap.functions";
 import { CsvImport } from "@/components/admin/CsvImport";
 import { JournalAdmin } from "@/components/admin/JournalAdmin";
 import { NewsletterAdmin } from "@/components/admin/NewsletterAdmin";
@@ -136,7 +135,6 @@ type Submission = Awaited<ReturnType<typeof adminListSubmissions>>[number];
 function AdminPage() {
   const navigate = useNavigate();
   const status = useServerFn(getAdminStatus);
-  const claimRole = useServerFn(claimFirstEditorRole);
 
   const listRecipes = useServerFn(adminListRecipes);
   const listSubmissions = useServerFn(adminListSubmissions);
@@ -154,7 +152,6 @@ function AdminPage() {
   const [notice, setNotice] = useState("");
   const [problem, setProblem] = useState("");
   const [busy, setBusy] = useState(false);
-  const [inviteCode, setInviteCode] = useState("");
 
   const refresh = useCallback(async () => {
     const [r, s] = await Promise.all([listRecipes(), listSubmissions()]);
@@ -257,61 +254,18 @@ function AdminPage() {
     return (
       <Shell onSignOut={signOut}>
         <div className="space-y-5 max-w-lg">
-          <h1 className="font-serif text-3xl tracking-tight">Not an editor yet</h1>
+          <h1 className="font-serif text-3xl tracking-tight">Not an editor</h1>
           <p className="text-sm text-mute leading-relaxed">
             You are signed in, but this account does not hold the editor role, so it cannot change
-            the recipe table. If you are setting the site up for the first time, enter the invite
-            code below to claim the role — it only works while no editor exists.
+            the recipe table. Ask an existing editor to invite you from the Editors tab in the admin
+            desk.
           </p>
-          {problem && <p className="text-sm text-destructive">{problem}</p>}
-          <form
-            onSubmit={async (e) => {
-              e.preventDefault();
-              setBusy(true);
-              setProblem("");
-              try {
-                const result = await claimRole({ data: { inviteCode } });
-                if (result.ok) {
-                  const next = await status();
-                  setIsAdmin(next.isAdmin);
-                  if (next.isAdmin) await refresh();
-                } else {
-                  setProblem(result.message);
-                }
-              } catch (err) {
-                setProblem(err instanceof Error ? err.message : "Could not claim the role.");
-              } finally {
-                setBusy(false);
-              }
-            }}
-            className="space-y-5"
+          <Link
+            to="/"
+            className="inline-block border border-steel px-5 py-3 text-[10px] uppercase tracking-[0.15em] text-mute hover:border-ink hover:text-ink transition-colors"
           >
-            <label className="block space-y-2">
-              <span className="text-[10px] uppercase tracking-[0.15em] text-mute">Invite code</span>
-              <input
-                type="text"
-                required
-                value={inviteCode}
-                onChange={(e) => setInviteCode(e.target.value)}
-                className="w-full border border-steel bg-paper px-3 py-2.5 text-sm focus:border-ink outline-none"
-              />
-            </label>
-            <div className="flex flex-wrap gap-3">
-              <button
-                type="submit"
-                disabled={busy}
-                className="bg-ink text-paper px-5 py-3 text-[10px] uppercase tracking-[0.15em] hover:bg-leaf transition-colors disabled:opacity-50"
-              >
-                {busy ? "Claiming…" : "Claim the editor role"}
-              </button>
-              <Link
-                to="/"
-                className="border border-steel px-5 py-3 text-[10px] uppercase tracking-[0.15em] text-mute hover:border-ink hover:text-ink transition-colors"
-              >
-                Back to the site
-              </Link>
-            </div>
-          </form>
+            Back to the site
+          </Link>
         </div>
       </Shell>
     );
