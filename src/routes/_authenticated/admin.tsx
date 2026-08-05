@@ -472,6 +472,8 @@ function AdminPage() {
         {tab === "newsletter" && <NewsletterAdmin />}
 
         {tab === "pages" && <PagesAdmin />}
+
+        {tab === "editors" && <EditorsAdmin currentUserId={userId} />}
       </div>
     </Shell>
   );
