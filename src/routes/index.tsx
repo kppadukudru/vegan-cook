@@ -78,27 +78,18 @@ export const Route = createFileRoute("/")({
 
 
 
-const SKILLS: Skill[] = ["Beginner", "Intermediate", "Expert"];
+/** How many recipes the home page previews before sending people to /recipes. */
+const HOME_PREVIEW_COUNT = 6;
 
 function Index() {
   const allRecipes = Route.useLoaderData() as Recipe[];
-  const [skill, setSkill] = useState<Skill | "All">("All");
-  const [avoid, setAvoid] = useState<Set<Allergen>>(new Set());
-  const [cuisine, setCuisine] = useState<Cuisine | "All">("All");
-  const [spice, setSpice] = useState<SpiceLevel | "All">("All");
-  const [meal, setMeal] = useState<MealType | "All">("All");
+  const [filters, setFilters] = useState<RecipeFilterState>(EMPTY_FILTERS);
 
-  const filtered = useMemo(() => {
-    return allRecipes.filter((r) => {
-      if (skill !== "All" && r.skill !== skill) return false;
-      if (cuisine !== "All" && r.cuisine !== cuisine) return false;
-      if (spice !== "All" && r.spiceLevel !== spice) return false;
-      if (meal !== "All" && !r.mealTypes.includes(meal)) return false;
-      for (const a of avoid) if (r.contains.includes(a)) return false;
-      return true;
-    });
-  }, [allRecipes, skill, avoid, cuisine, spice, meal]);
+  const update = (patch: Partial<RecipeFilterState>) =>
+    setFilters((prev) => ({ ...prev, ...patch }));
 
+  const filtered = useMemo(() => filterRecipes(allRecipes, filters), [allRecipes, filters]);
+  const preview = filtered.slice(0, HOME_PREVIEW_COUNT);
 
   // Rotates once per day across the whole catalogue.
   const featured = useMemo(() => pickRecipeOfTheDay(allRecipes), [allRecipes]);
@@ -108,14 +99,6 @@ function Index() {
     [],
   );
 
-  const toggleAllergen = (a: Allergen) => {
-    setAvoid((prev) => {
-      const next = new Set(prev);
-      if (next.has(a)) next.delete(a);
-      else next.add(a);
-      return next;
-    });
-  };
 
   return (
     <div className="bg-paper text-ink min-h-dvh antialiased selection:bg-ink selection:text-paper">
