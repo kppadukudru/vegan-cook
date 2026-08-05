@@ -3,22 +3,22 @@ import { MobileNav } from "@/components/MobileNav";
 import { useServerFn } from "@tanstack/react-start";
 import { useMemo, useState } from "react";
 import {
-  ALL_ALLERGENS,
-  ALL_CUISINES,
-  ALL_MEAL_TYPES,
-  ALL_SPICE_LEVELS,
   dayIndex,
   formatDate,
   formatTime,
   pickRecipeOfTheDay,
-  type Allergen,
-  type Cuisine,
-  type MealType,
   type Recipe,
-  type Skill,
-  type SpiceLevel,
 } from "@/data/recipes";
+import { RecipeCard } from "@/components/RecipeCard";
+import {
+  EMPTY_FILTERS,
+  RecipeFilters,
+  filterRecipes,
+  filtersToSearch,
+  type RecipeFilterState,
+} from "@/components/RecipeFilters";
 import { listPublishedRecipes } from "@/lib/recipes.functions";
+
 import { subscribeToWeekly } from "@/lib/newsletter.functions";
 
 
