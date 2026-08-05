@@ -347,9 +347,13 @@ function Index() {
         <span>Vegan Cook — plant-based cooking, every day.</span>
         <div className="flex gap-6 items-center">
           <span className="tabular-nums">{allRecipes.length} recipes in the collection</span>
+          <Link to="/recipes" className="hover:text-ink transition-colors">
+            Recipes
+          </Link>
           <Link to="/journal" className="hover:text-ink transition-colors">
             Journal
           </Link>
+
           <Link to="/about" className="hover:text-ink transition-colors">
             About
           </Link>
