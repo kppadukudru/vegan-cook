@@ -26,6 +26,22 @@ const submissionSchema = z.object({
 export const submitRecipe = createServerFn({ method: "POST" })
   .inputValidator((data: unknown) => submissionSchema.parse(data))
   .handler(async ({ data }) => {
+    // Best-effort abuse guard: 5 submissions per IP per hour.
+    const { getRequest } = await import("@tanstack/react-start/server");
+    const { checkRateLimit, clientIpFromHeaders } = await import("@/lib/rate-limit.server");
+    const gate = checkRateLimit(
+      "submit-recipe",
+      clientIpFromHeaders(getRequest().headers),
+      5,
+      60 * 60 * 1000,
+    );
+    if (!gate.allowed) {
+      return {
+        ok: false as const,
+        message: `That's a lot of recipes at once. Please try again in about ${gate.retryAfterMinutes} minute(s).`,
+      };
+    }
+
     // Server-side vegan guard — the client check is convenience only.
     const lines = [
       ...data.ingredients.split("\n"),

@@ -38,7 +38,9 @@ export const Route = createFileRoute("/")({
       },
       { property: "og:type", content: "website" },
       { property: "og:url", content: "https://www.vegancook.live/" },
-      { name: "twitter:card", content: "summary" },
+      { property: "og:image", content: "https://www.vegancook.live/og-vegan-cook.jpg" },
+      { name: "twitter:image", content: "https://www.vegancook.live/og-vegan-cook.jpg" },
+      { name: "twitter:card", content: "summary_large_image" },
     ],
     links: [{ rel: "canonical", href: "https://www.vegancook.live/" }],
     scripts: [

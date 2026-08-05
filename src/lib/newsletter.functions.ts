@@ -8,6 +8,22 @@ const subscribeSchema = z.object({
 export const subscribeToWeekly = createServerFn({ method: "POST" })
   .inputValidator((data: unknown) => subscribeSchema.parse(data))
   .handler(async ({ data }) => {
+    // Best-effort abuse guard: 10 signups per IP per hour.
+    const { getRequest } = await import("@tanstack/react-start/server");
+    const { checkRateLimit, clientIpFromHeaders } = await import("@/lib/rate-limit.server");
+    const gate = checkRateLimit(
+      "subscribe-weekly",
+      clientIpFromHeaders(getRequest().headers),
+      10,
+      60 * 60 * 1000,
+    );
+    if (!gate.allowed) {
+      return {
+        ok: false as const,
+        message: `Too many signups from this connection. Please try again in about ${gate.retryAfterMinutes} minute(s).`,
+      };
+    }
+
     const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
     const { error } = await supabaseAdmin
       .from("subscribers")
