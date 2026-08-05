@@ -27,6 +27,7 @@ export interface WeeklyIssueRecipe {
 interface Props {
   weekOf?: string;
   siteUrl?: string;
+  unsubscribeUrl?: string;
   recipes?: WeeklyIssueRecipe[];
 }
 
