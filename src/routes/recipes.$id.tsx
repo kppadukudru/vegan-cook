@@ -1,4 +1,5 @@
 import { createFileRoute, Link, notFound } from "@tanstack/react-router";
+import { MobileNav } from "@/components/MobileNav";
 import { ALL_ALLERGENS, formatDate, formatTime, type Recipe } from "@/data/recipes";
 import { getPublishedRecipe } from "@/lib/recipes.functions";
 
@@ -123,6 +124,7 @@ function RecipePage() {
     <div className="bg-paper text-ink min-h-dvh antialiased selection:bg-ink selection:text-paper">
       <header className="border-b border-steel px-6 md:px-8 py-5 flex items-center justify-between uppercase text-[10px] tracking-[0.15em] font-medium">
         <div className="flex gap-8 md:gap-12 items-center">
+          <MobileNav />
           <Link to="/" className="font-serif text-xl tracking-tight normal-case">
             Vegan Cook
           </Link>

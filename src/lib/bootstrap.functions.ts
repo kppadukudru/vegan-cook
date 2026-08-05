@@ -11,20 +11,20 @@ export const claimFirstEditorRole = createServerFn({ method: "POST" })
   .handler(async ({ context }) => {
     const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
 
-    const { count, error: countError } = await supabaseAdmin
-      .from("user_roles")
-      .select("id", { count: "exact", head: true })
-      .eq("role", "admin");
-
-    if (countError) throw new Error(countError.message);
-    if ((count ?? 0) > 0) {
-      return { ok: false, message: "An editor already exists for this site." };
-    }
-
+    // A partial unique index on user_roles (role = 'admin') makes this insert the
+    // single source of truth: concurrent callers race on the DB, not on a count.
     const { error } = await supabaseAdmin
       .from("user_roles")
       .insert({ user_id: context.userId, role: "admin" });
 
-    if (error) throw new Error(error.message);
+    if (error) {
+      // 23505 = unique_violation → an editor already exists (or this user already claimed).
+      if (error.code === "23505") {
+        return { ok: false, message: "An editor already exists for this site." };
+      }
+      throw new Error(error.message);
+    }
+
     return { ok: true, message: "You are now the editor for this site." };
   });
+

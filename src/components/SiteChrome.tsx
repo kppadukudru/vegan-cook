@@ -1,9 +1,11 @@
 import { Link } from "@tanstack/react-router";
+import { MobileNav } from "@/components/MobileNav";
 
 export function SiteHeader() {
   return (
     <header className="border-b border-steel px-6 md:px-8 py-5 flex items-center justify-between uppercase text-[10px] tracking-[0.15em] font-medium">
       <div className="flex gap-8 md:gap-12 items-center">
+          <MobileNav />
         <Link to="/" className="font-serif text-xl tracking-tight normal-case">
           Vegan Cook
         </Link>
