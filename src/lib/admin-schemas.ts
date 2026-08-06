@@ -42,6 +42,7 @@ export const recipeInput = z.object({
     .refine((v) => v === "" || /^https?:\/\//i.test(v), "Image link must start with http:// or https://")
     .default(""),
   imageAlt: z.string().trim().max(200).default(""),
+  imageCaption: z.string().trim().max(200).default(""),
 });
 
 

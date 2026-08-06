@@ -45,6 +45,7 @@ export async function saveRecipe(data: RecipeInput): Promise<Result> {
       calories: data.calories ?? null,
       image_url: data.imageUrl || null,
       image_alt: data.imageAlt || null,
+      image_caption: data.imageCaption || null,
     },
     { onConflict: "id" },
   );
@@ -253,6 +254,7 @@ export async function importRecipes(
       calories: data.calories ?? null,
       image_url: data.imageUrl || null,
       image_alt: data.imageAlt || null,
+      image_caption: data.imageCaption || null,
     });
     results.push({
       id,

@@ -247,6 +247,7 @@ export type Database = {
           cuisine: Database["public"]["Enums"]["recipe_cuisine"] | null
           id: string
           image_alt: string | null
+          image_caption: string | null
           image_url: string | null
           ingredients: Json
           meal_types: Database["public"]["Enums"]["meal_type"][]
@@ -272,6 +273,7 @@ export type Database = {
           cuisine?: Database["public"]["Enums"]["recipe_cuisine"] | null
           id: string
           image_alt?: string | null
+          image_caption?: string | null
           image_url?: string | null
           ingredients?: Json
           meal_types?: Database["public"]["Enums"]["meal_type"][]
@@ -297,6 +299,7 @@ export type Database = {
           cuisine?: Database["public"]["Enums"]["recipe_cuisine"] | null
           id?: string
           image_alt?: string | null
+          image_caption?: string | null
           image_url?: string | null
           ingredients?: Json
           meal_types?: Database["public"]["Enums"]["meal_type"][]

@@ -180,12 +180,19 @@ function RecipePage() {
             </p>
 
             {recipe.imageUrl && (
-              <img
-                src={recipe.imageUrl}
-                alt={recipe.imageAlt || recipe.title}
-                loading="lazy"
-                className="w-full aspect-[3/2] object-cover border border-steel"
-              />
+              <figure className="m-0">
+                <img
+                  src={recipe.imageUrl}
+                  alt={recipe.imageAlt || recipe.title}
+                  loading="lazy"
+                  className="w-full aspect-[3/2] object-cover border border-steel"
+                />
+                {recipe.imageCaption && recipe.imageCaption.trim() !== "" && (
+                  <figcaption className="mt-2 text-[10px] uppercase tracking-[0.15em] text-mute">
+                    {recipe.imageCaption}
+                  </figcaption>
+                )}
+              </figure>
             )}
 
             <p className="text-[10px] uppercase tracking-[0.15em] text-mute">
