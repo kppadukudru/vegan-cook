@@ -62,12 +62,10 @@ function JournalIndex() {
           <p className="lg:col-span-3 text-[10px] uppercase tracking-[0.15em] text-mute">Journal</p>
           <div className="lg:col-span-9 space-y-6">
             <h1 className="font-serif text-3xl md:text-5xl leading-[1.1] tracking-tight text-balance max-w-[38ch]">
-              Notes on eating plant-based — where I've travelled, and what I've had to work around.
+              Notes on eating plant-based, at home and on the road.
             </h1>
             <p className="text-mute text-base leading-relaxed max-w-[62ch] text-pretty">
-              Longer pieces that don't fit into a recipe card: how to order in a city that doesn't
-              expect you, what a dairy allergy actually rules out, and which alternatives are worth
-              the shelf space.
+              Longer pieces that don't fit on a recipe card. Reading labels when a dairy allergy leaves no room for error, how the plant milks really compare, and what's already vegan on a menu in Italy or India.
             </p>
           </div>
         </div>

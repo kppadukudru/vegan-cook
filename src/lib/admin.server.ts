@@ -247,7 +247,7 @@ export async function importRecipes(
       allergen_notes: data.allergenNotes || null,
       author: data.author,
       published_at: data.publishedAt,
-      status: publish ? "published" : "draft",
+      status: publish ? "published" : data.status,
       cuisine: data.cuisine ?? null,
       spice_level: data.spiceLevel ?? null,
       meal_types: data.mealTypes ?? [],
@@ -278,9 +278,12 @@ export async function importRecipes(
   const created = results.filter((r) => r.outcome === "created").length;
   const updated = results.filter((r) => r.outcome === "updated").length;
   const skipped = results.filter((r) => r.outcome === "skipped").length;
+  const mixedStatus = !publish && (created > 0 || updated > 0);
   return {
     ok: true,
-    message: `Imported ${created} new and updated ${updated} recipe${updated === 1 ? "" : "s"} as ${publish ? "published" : "drafts"}${skipped > 0 ? `, skipped ${skipped}` : ""}.`,
+    message: mixedStatus
+      ? `Imported ${created} new and updated ${updated} recipe${updated === 1 ? "" : "s"}, using each row's own status${skipped > 0 ? `, skipped ${skipped}` : ""}.`
+      : `Imported ${created} new and updated ${updated} recipe${updated === 1 ? "" : "s"} as ${publish ? "published" : "drafts"}${skipped > 0 ? `, skipped ${skipped}` : ""}.`,
     results,
   };
 }
