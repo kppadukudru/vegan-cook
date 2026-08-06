@@ -247,7 +247,7 @@ export async function importRecipes(
       allergen_notes: data.allergenNotes || null,
       author: data.author,
       published_at: data.publishedAt,
-      status: publish ? "published" : "draft",
+      status: publish ? "published" : data.status,
       cuisine: data.cuisine ?? null,
       spice_level: data.spiceLevel ?? null,
       meal_types: data.mealTypes ?? [],
