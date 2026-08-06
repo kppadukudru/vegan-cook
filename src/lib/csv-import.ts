@@ -27,6 +27,7 @@ export const CSV_OPTIONAL = [
   "status",
   "image_url",
   "image_alt",
+  "image_caption",
 ] as const;
 
 export const CSV_COLUMNS = [...CSV_REQUIRED, ...CSV_OPTIONAL];

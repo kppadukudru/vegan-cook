@@ -47,6 +47,7 @@ export interface Recipe {
   /** Optional hero photo. Recipes render fine without one. */
   imageUrl?: string;
   imageAlt?: string;
+  imageCaption?: string;
 }
 
 export const ALL_ALLERGENS: Allergen[] = [
