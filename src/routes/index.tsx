@@ -177,11 +177,18 @@ function Index() {
               </p>
 
               {featured.imageUrl && (
-                <img
-                  src={featured.imageUrl}
-                  alt={featured.imageAlt || featured.title}
-                  className="w-full aspect-[3/2] object-cover border border-steel"
-                />
+                <figure className="m-0">
+                  <img
+                    src={featured.imageUrl}
+                    alt={featured.imageAlt || featured.title}
+                    className="w-full aspect-[3/2] object-cover border border-steel"
+                  />
+                  {featured.imageCaption && featured.imageCaption.trim() !== "" && (
+                    <figcaption className="mt-2 text-[10px] uppercase tracking-[0.15em] text-mute">
+                      {featured.imageCaption}
+                    </figcaption>
+                  )}
+                </figure>
               )}
 
               <Link
