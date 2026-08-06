@@ -82,6 +82,7 @@ interface FormState {
   calories: string;
   imageUrl: string;
   imageAlt: string;
+  imageCaption: string;
 }
 
 const emptyForm = (): FormState => ({
@@ -106,6 +107,7 @@ const emptyForm = (): FormState => ({
   calories: "",
   imageUrl: "",
   imageAlt: "",
+  imageCaption: "",
 });
 
 const formFromRecipe = (r: Recipe): FormState => ({
@@ -130,6 +132,7 @@ const formFromRecipe = (r: Recipe): FormState => ({
   calories: r.calories != null ? String(r.calories) : "",
   imageUrl: r.imageUrl ?? "",
   imageAlt: r.imageAlt ?? "",
+  imageCaption: r.imageCaption ?? "",
 });
 
 
@@ -245,6 +248,7 @@ function AdminPage() {
       calories: form.calories.trim() === "" ? null : Number(form.calories),
       imageUrl: form.imageUrl.trim(),
       imageAlt: form.imageAlt.trim(),
+      imageCaption: form.imageCaption.trim(),
     };
     await runAction(async () => {
       const result = await saveRecipe({ data: payload });
