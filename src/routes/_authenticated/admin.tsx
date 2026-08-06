@@ -776,7 +776,18 @@ function RecipeForm({
             className={inputClass}
           />
         </Field>
+        <Field
+          label="Photo caption"
+          hint='Optional. Shown under the photo, e.g. "Stock photo, not the actual dish."'
+        >
+          <input
+            value={form.imageCaption}
+            onChange={(e) => set("imageCaption", e.target.value)}
+            className={inputClass}
+          />
+        </Field>
       </div>
+
 
       {form.imageUrl.trim() !== "" && (
         <img
