@@ -278,12 +278,11 @@ export async function importRecipes(
   const created = results.filter((r) => r.outcome === "created").length;
   const updated = results.filter((r) => r.outcome === "updated").length;
   const skipped = results.filter((r) => r.outcome === "skipped").length;
-  const mixedStatus = !publish && (created > 0 || updated > 0);
   return {
     ok: true,
-    message: mixedStatus
-      ? `Imported ${created} new and updated ${updated} recipe${updated === 1 ? "" : "s"}, using each row's own status${skipped > 0 ? `, skipped ${skipped}` : ""}.`
-      : `Imported ${created} new and updated ${updated} recipe${updated === 1 ? "" : "s"} as ${publish ? "published" : "drafts"}${skipped > 0 ? `, skipped ${skipped}` : ""}.`,
+    message: publish
+      ? `Imported ${created} new and updated ${updated} recipe${updated === 1 ? "" : "s"} as published${skipped > 0 ? `, skipped ${skipped}` : ""}.`
+      : `Imported ${created} new and updated ${updated} recipe${updated === 1 ? "" : "s"}, using each row's own status${skipped > 0 ? `, skipped ${skipped}` : ""}.`,
     results,
   };
 }
