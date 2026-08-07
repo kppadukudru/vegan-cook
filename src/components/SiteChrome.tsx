@@ -26,6 +26,14 @@ export function SiteHeader() {
             Breakfast
           </Link>
           <Link
+            to="/gluten-free-vegan-recipes"
+            activeProps={{ className: "text-ink" }}
+            className="hover:text-ink transition-colors"
+          >
+            Gluten-free
+          </Link>
+
+          <Link
             to="/journal"
             activeProps={{ className: "text-ink" }}
             className="hover:text-ink transition-colors"
