@@ -13,6 +13,7 @@ import { Route as IndexRouteImport } from './routes/index'
 import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/route'
 import { Route as AboutRouteImport } from './routes/about'
 import { Route as AuthRouteImport } from './routes/auth'
+import { Route as GlutenFreeVeganRecipesRouteImport } from './routes/gluten-free-vegan-recipes'
 import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
 import { Route as SubmitRouteImport } from './routes/submit'
 import { Route as UnsubscribeRouteImport } from './routes/unsubscribe'
@@ -48,6 +49,11 @@ const AboutRoute = AboutRouteImport.update({
 const AuthRoute = AuthRouteImport.update({
   id: '/auth',
   path: '/auth',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const GlutenFreeVeganRecipesRoute = GlutenFreeVeganRecipesRouteImport.update({
+  id: '/gluten-free-vegan-recipes',
+  path: '/gluten-free-vegan-recipes',
   getParentRoute: () => rootRouteImport,
 } as any)
 const SitemapDotxmlRoute = SitemapDotxmlRouteImport.update({
@@ -143,6 +149,7 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
   '/auth': typeof AuthRouteWithChildren
+  '/gluten-free-vegan-recipes': typeof GlutenFreeVeganRecipesRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/submit': typeof SubmitRoute
   '/unsubscribe': typeof UnsubscribeRoute
@@ -164,6 +171,7 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
+  '/gluten-free-vegan-recipes': typeof GlutenFreeVeganRecipesRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/submit': typeof SubmitRoute
   '/unsubscribe': typeof UnsubscribeRoute
@@ -188,6 +196,7 @@ export interface FileRoutesById {
   '/_authenticated': typeof AuthenticatedRouteRouteWithChildren
   '/about': typeof AboutRoute
   '/auth': typeof AuthRouteWithChildren
+  '/gluten-free-vegan-recipes': typeof GlutenFreeVeganRecipesRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/submit': typeof SubmitRoute
   '/unsubscribe': typeof UnsubscribeRoute
@@ -212,6 +221,7 @@ export interface FileRouteTypes {
     | '/'
     | '/about'
     | '/auth'
+    | '/gluten-free-vegan-recipes'
     | '/sitemap.xml'
     | '/submit'
     | '/unsubscribe'
@@ -233,6 +243,7 @@ export interface FileRouteTypes {
   to:
     | '/'
     | '/about'
+    | '/gluten-free-vegan-recipes'
     | '/sitemap.xml'
     | '/submit'
     | '/unsubscribe'
@@ -256,6 +267,7 @@ export interface FileRouteTypes {
     | '/_authenticated'
     | '/about'
     | '/auth'
+    | '/gluten-free-vegan-recipes'
     | '/sitemap.xml'
     | '/submit'
     | '/unsubscribe'
@@ -280,6 +292,7 @@ export interface RootRouteChildren {
   AuthenticatedRouteRoute: typeof AuthenticatedRouteRouteWithChildren
   AboutRoute: typeof AboutRoute
   AuthRoute: typeof AuthRouteWithChildren
+  GlutenFreeVeganRecipesRoute: typeof GlutenFreeVeganRecipesRoute
   SitemapDotxmlRoute: typeof SitemapDotxmlRoute
   SubmitRoute: typeof SubmitRoute
   UnsubscribeRoute: typeof UnsubscribeRoute
@@ -323,6 +336,13 @@ declare module '@tanstack/react-router' {
       path: '/auth'
       fullPath: '/auth'
       preLoaderRoute: typeof AuthRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/gluten-free-vegan-recipes': {
+      id: '/gluten-free-vegan-recipes'
+      path: '/gluten-free-vegan-recipes'
+      fullPath: '/gluten-free-vegan-recipes'
+      preLoaderRoute: typeof GlutenFreeVeganRecipesRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/sitemap.xml': {
@@ -477,6 +497,7 @@ const rootRouteChildren: RootRouteChildren = {
   AuthenticatedRouteRoute: AuthenticatedRouteRouteWithChildren,
   AboutRoute: AboutRoute,
   AuthRoute: AuthRouteWithChildren,
+  GlutenFreeVeganRecipesRoute: GlutenFreeVeganRecipesRoute,
   SitemapDotxmlRoute: SitemapDotxmlRoute,
   SubmitRoute: SubmitRoute,
   UnsubscribeRoute: UnsubscribeRoute,
