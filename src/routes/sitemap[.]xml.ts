@@ -62,6 +62,13 @@ export const Route = createFileRoute("/sitemap.xml")({
             priority: "0.9",
             ...(latestRecipe ? { lastmod: latestRecipe } : {}),
           },
+          {
+            path: "/gluten-free-vegan-recipes",
+            changefreq: "weekly",
+            priority: "0.9",
+            ...(latestRecipe ? { lastmod: latestRecipe } : {}),
+          },
+
           { path: "/submit", changefreq: "monthly", priority: "0.6" },
           { path: "/about", changefreq: "monthly", priority: "0.6", ...(aboutUpdated ? { lastmod: aboutUpdated } : {}) },
           { path: "/journal", changefreq: "weekly", priority: "0.8", ...(latestPost ? { lastmod: latestPost } : {}) },
