@@ -1,5 +1,5 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { MobileNav } from "@/components/MobileNav";
+import { SiteHeader } from "@/components/SiteChrome";
 import { useServerFn } from "@tanstack/react-start";
 import { useMemo, useState } from "react";
 import {
@@ -102,39 +102,7 @@ function Index() {
 
   return (
     <div className="bg-paper text-ink min-h-dvh antialiased selection:bg-ink selection:text-paper">
-      <header className="border-b border-steel px-6 md:px-8 py-5 flex items-center justify-between uppercase text-[10px] tracking-[0.15em] font-medium">
-        <div className="flex gap-8 md:gap-12 items-center">
-          <MobileNav />
-          <span className="font-serif text-xl tracking-tight normal-case">Vegan Cook</span>
-          <nav className="hidden md:flex gap-8 text-mute">
-            <Link to="/recipes" className="hover:text-ink transition-colors">
-              Recipes
-            </Link>
-
-            <Link to="/vegan-breakfast-ideas" className="hover:text-ink transition-colors">
-              Breakfast
-            </Link>
-            <Link to="/journal" className="hover:text-ink transition-colors">
-              Journal
-            </Link>
-            <Link to="/about" className="hover:text-ink transition-colors">
-              About
-            </Link>
-            <Link to="/submit" className="hover:text-ink transition-colors">
-              Submit a recipe
-            </Link>
-            <a href="#weekly" className="hover:text-ink transition-colors">
-              Weekly newsletter
-            </a>
-          </nav>
-        </div>
-        <a
-          href="#weekly"
-          className="bg-ink text-paper px-4 py-2 hover:bg-leaf transition-colors"
-        >
-          Get the weekly newsletter
-        </a>
-      </header>
+      <SiteHeader />
 
       {/* Mission statement — top of page */}
       <section className="border-b border-steel px-6 md:px-8 py-12 md:py-16 max-w-[1440px] mx-auto">

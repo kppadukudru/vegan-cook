@@ -1,5 +1,5 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { MobileNav } from "@/components/MobileNav";
+import { SiteHeader } from "@/components/SiteChrome";
 import { useServerFn } from "@tanstack/react-start";
 import { useState } from "react";
 import {
@@ -137,22 +137,7 @@ function SubmitPage() {
 
   return (
     <div className="bg-paper text-ink min-h-dvh antialiased selection:bg-ink selection:text-paper">
-      <header className="border-b border-steel px-6 md:px-8 py-5 flex items-center justify-between uppercase text-[10px] tracking-[0.15em] font-medium">
-        <div className="flex gap-8 md:gap-12 items-center">
-          <MobileNav />
-          <Link to="/" className="font-serif text-xl tracking-tight normal-case">
-            Vegan Cook
-          </Link>
-          <nav className="hidden md:flex gap-8 text-mute">
-            <Link to="/" className="hover:text-ink transition-colors">
-              Recipes
-            </Link>
-          </nav>
-        </div>
-        <Link to="/" className="text-mute hover:text-ink transition-colors flex items-center gap-2">
-          <span aria-hidden>←</span> Back
-        </Link>
-      </header>
+      <SiteHeader />
 
       <main className="max-w-[1440px] mx-auto px-6 md:px-8 py-16 grid grid-cols-1 lg:grid-cols-12 gap-12">
         <div className="lg:col-span-4 space-y-6">
