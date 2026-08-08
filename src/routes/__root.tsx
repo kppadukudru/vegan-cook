@@ -33,8 +33,9 @@ export const Route = createRootRoute({
       {
         name: "description",
         content:
-          "Vegan food that isn't boring and isn't just salad. Recipes filtered by skill level and allergens, with a new one featured every day and five more in your inbox each week.",
+          "Vegan recipes that aren't just salad — filtered by skill level and allergens, with a new one every day and five more each week.",
       },
+
       { name: "author", content: "Vegan Cook" },
       { property: "og:title", content: "Vegan Cook — Plant-Based Cooking, Every Day" },
       {
@@ -56,6 +57,41 @@ export const Route = createRootRoute({
         href: appCss,
       },
     ],
+    scripts: [
+      {
+        type: "application/ld+json",
+        children: JSON.stringify({
+          "@context": "https://schema.org",
+          "@graph": [
+            {
+              "@type": "Organization",
+              "@id": "https://www.vegancook.live/#organization",
+              name: "Vegan Cook",
+              url: "https://www.vegancook.live",
+              description:
+                "Plant-based recipes tested and tagged by skill level, cuisine and allergens.",
+            },
+            {
+              "@type": "WebSite",
+              "@id": "https://www.vegancook.live/#website",
+              name: "Vegan Cook",
+              url: "https://www.vegancook.live",
+              inLanguage: "en",
+              publisher: { "@id": "https://www.vegancook.live/#organization" },
+              potentialAction: {
+                "@type": "SearchAction",
+                target: {
+                  "@type": "EntryPoint",
+                  urlTemplate: "https://www.vegancook.live/recipes?q={search_term_string}",
+                },
+                "query-input": "required name=search_term_string",
+              },
+            },
+          ],
+        }),
+      },
+    ],
+
   }),
   shellComponent: RootShell,
   component: RootComponent,
