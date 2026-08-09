@@ -58,7 +58,7 @@ export function NewsletterAdmin() {
         <h2 className="font-serif text-xl tracking-tight">Weekly newsletter</h2>
         <p className="text-sm text-mute leading-relaxed max-w-[70ch]">
           Every subscriber gets a confirmation email automatically when they sign up. The weekly
-          issue below is built for you — five recipes, no repeats until the whole collection has
+          issue below is built for you: five recipes, no repeats until the whole collection has
           been through. Copy the HTML (or the plain text) into your mail tool and send it to the
           subscriber list.
         </p>

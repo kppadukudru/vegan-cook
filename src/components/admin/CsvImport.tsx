@@ -38,7 +38,7 @@ export function CsvImport({ onImported }: { onImported: () => Promise<void> | vo
     const trimmed = csv.trim();
     if (!trimmed) {
       setRows(null);
-      setProblem("There is nothing to read yet — choose a file or paste some CSV.");
+      setProblem("There is nothing to read yet. Choose a file or paste some CSV.");
       return;
     }
     const out = Papa.parse<Record<string, string>>(trimmed, {
@@ -58,7 +58,7 @@ export function CsvImport({ onImported }: { onImported: () => Promise<void> | vo
       .map((raw, i) => normalizeCsvRow(raw, i + 2));
     setRows(parsedRows);
     if (out.data.length > MAX_IMPORT_ROWS) {
-      setNotice(`Only the first ${MAX_IMPORT_ROWS} rows were read — split larger files.`);
+      setNotice(`Only the first ${MAX_IMPORT_ROWS} rows were read. Split larger files.`);
     }
   };
 

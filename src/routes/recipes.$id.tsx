@@ -175,7 +175,7 @@ function RecipePage() {
             )}
 
             <p className="text-[10px] uppercase tracking-[0.15em] text-mute">
-              By {recipe.author} — published {formatDate(recipe.publishedAt)}
+              By {recipe.author}. Published {formatDate(recipe.publishedAt)}
             </p>
           </div>
 
@@ -267,7 +267,7 @@ function RecipePage() {
             <h2 className="font-serif text-2xl tracking-tight">Allergen profile</h2>
             <p className="text-xs text-mute mt-2 max-w-[30ch]">
               Every recipe here is fully plant-based. Cross-contamination risk depends on your
-              kitchen — check all packaging.
+              kitchen, so check all packaging.
             </p>
           </div>
           <div className="lg:col-span-9 space-y-8">

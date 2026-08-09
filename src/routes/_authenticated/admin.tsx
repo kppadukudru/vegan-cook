@@ -759,7 +759,7 @@ function RecipeForm({
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         <Field
           label="Photo link"
-          hint="Optional. Paste an https:// image address — leave blank for a text-only recipe."
+          hint="Optional. Paste an https:// image address. Leave blank for a text-only recipe."
         >
           <input
             type="url"

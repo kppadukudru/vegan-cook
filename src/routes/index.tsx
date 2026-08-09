@@ -112,12 +112,12 @@ function Index() {
           </p>
           <div className="lg:col-span-9 space-y-6">
             <h1 className="font-serif text-3xl md:text-5xl leading-[1.1] tracking-tight text-balance max-w-[38ch]">
-              Cooking for people with different dietary needs — by allergy, or by choice.
+              Cooking for people with different dietary needs, whether by allergy or by choice.
             </h1>
             <p className="text-mute text-base leading-relaxed max-w-[62ch] text-pretty">
               Vegan food does not have to be boring, and it is not just salad. Everything here is
               fully plant-based, written out properly, and tagged so you can screen out the
-              allergens you need to avoid — sulphites, peanuts, soy, gluten, tree nuts. Pick a
+              allergens you need to avoid: sulphites, peanuts, soy, gluten and tree nuts. Pick a
               skill level, pick what you can eat, and cook something you actually want to eat.
             </p>
           </div>
@@ -206,7 +206,7 @@ function Index() {
               The collection is being restocked.
             </h2>
             <p className="text-sm text-mute max-w-[52ch] leading-relaxed">
-              No recipes are published right now. Check back shortly — or send us yours.
+              No recipes are published right now. Check back shortly, or send us yours.
             </p>
           </section>
         )}
@@ -285,7 +285,7 @@ function Index() {
           <div className="lg:col-span-3">
             <h2 className="font-serif text-2xl tracking-tight">The weekly newsletter</h2>
             <p className="text-xs text-mute mt-2 max-w-[30ch]">
-              Five plant-based recipes every Sunday — enough to plan the week. No offers, no
+              Five plant-based recipes every Sunday, enough to plan the week. No offers, no
               digests.
             </p>
           </div>
@@ -305,7 +305,7 @@ function Index() {
           </div>
           <div className="lg:col-span-9 flex flex-col md:flex-row md:items-end justify-between gap-6 border border-steel p-8">
             <p className="text-sm text-mute max-w-[52ch] leading-relaxed">
-              Ingredients, method, cookware and allergens — the form checks every line and will
+              Ingredients, method, cookware and allergens. The form checks every line and will
               reject anything that isn't fully plant-based.
             </p>
             <Link
