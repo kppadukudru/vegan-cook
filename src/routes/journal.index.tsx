@@ -17,7 +17,7 @@ export const Route = createFileRoute("/journal/")({
       {
         name: "description",
         content:
-          "Travel notes, allergy guides and thoughts on plant-based eating — ordering vegan in Italy and India, and how the milk alternatives really compare.",
+          "Travel notes, allergy guides and thoughts on plant-based eating: ordering vegan in Italy and India, and how the milk alternatives really compare.",
       },
       { property: "og:title", content: "Journal — Notes on Eating Vegan, at Home and Away" },
       {

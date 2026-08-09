@@ -136,7 +136,7 @@ function UnsubscribePage() {
           <div className="space-y-3 border border-steel p-8">
             <p className="text-sm">You're unsubscribed. No more emails from us.</p>
             <p className="text-sm text-mute leading-relaxed">
-              The recipe collection stays open — the recipe of the day still rotates on the site.
+              The recipe collection stays open. The recipe of the day still rotates on the site.
             </p>
           </div>
         )}

@@ -23,7 +23,7 @@ export const Route = createFileRoute("/submit")({
       {
         name: "description",
         content:
-          "Share your own plant-based recipe. Ingredients, method, cookware and allergen details — reviewed before it joins the collection.",
+          "Share your own plant-based recipe. Ingredients, method, cookware and allergen details, reviewed before it joins the collection.",
       },
       { property: "og:title", content: "Submit a Recipe — Vegan Cook" },
       {
@@ -151,8 +151,8 @@ function SubmitPage() {
           <div className="border-l-2 border-leaf pl-5 py-1 space-y-2">
             <p className="text-[10px] uppercase tracking-[0.15em] text-mute">Plant-based only</p>
             <p className="text-sm leading-relaxed">
-              The form scans your ingredients and method for animal products — dairy, eggs, meat,
-              fish, honey and gelatine included — and won't accept the recipe until they're gone.
+              The form scans your ingredients and method for animal products, including dairy, eggs,
+              meat, fish, honey and gelatine, and won't accept the recipe until they're gone.
               Plant-based versions like oat milk, vegan butter or aquafaba are fine.
             </p>
           </div>

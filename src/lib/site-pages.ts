@@ -16,9 +16,9 @@ export const ABOUT_FALLBACK: SitePage = {
 
 ## Why this exists
 
-Every recipe here declares what it contains, so you can screen out what you can't eat — whether that's an allergy or a choice.`,
+Every recipe here declares what it contains, so you can screen out what you can't eat, whether that is an allergy or a choice.`,
   metaTitle: "About — Who Writes Vegan Cook, and Why",
   metaDescription:
-    "Vegan Cook is written for people cooking plant-based by allergy or by choice — how the recipes are checked and why allergens are declared on every one.",
+    "Vegan Cook is written for people cooking plant-based by allergy or by choice: how the recipes are checked and why allergens are declared on every one.",
   status: "published",
 };

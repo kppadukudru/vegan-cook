@@ -7,7 +7,7 @@ import { ALL_ALLERGENS, type Allergen, type Recipe } from "@/data/recipes";
 const URL = "https://www.vegancook.live/vegan-breakfast-ideas";
 const TITLE = "Vegan Breakfast Ideas — Allergy-Friendly, Tested Recipes";
 const DESCRIPTION =
-  "A working collection of vegan breakfast ideas, from ten-minute toast to fermented dosa — each one filterable by gluten, soy, peanut, tree nut and sulphite.";
+  "A working collection of vegan breakfast ideas, from ten-minute toast to fermented dosa, each one filterable by gluten, soy, peanut, tree nut and sulphite.";
 
 const FAQ: { q: string; a: string }[] = [
   {
@@ -16,7 +16,7 @@ const FAQ: { q: string; a: string }[] = [
   },
   {
     q: "Which vegan breakfasts are gluten-free?",
-    a: "Dosa, idli and the chia recipes are naturally gluten-free — they are built on rice, lentils, chia and fruit rather than wheat. Use the allergen filter on this page to see the current list.",
+    a: "Dosa, idli and the chia recipes are naturally gluten-free. They are built on rice, lentils, chia and fruit rather than wheat. Use the allergen filter on this page to see the current list.",
   },
   {
     q: "Can you eat a vegan breakfast with a soy allergy?",
@@ -120,7 +120,7 @@ function BreakfastCollection() {
               Vegan breakfast ideas that hold up on a weekday morning.
             </h1>
             <p className="text-mute text-base leading-relaxed max-w-[62ch] text-pretty">
-              {breakfasts.length} tested plant-based breakfasts from this catalogue — toast you can
+              {breakfasts.length} tested plant-based breakfasts from this catalogue. There is toast you can
               make before the kettle boils, fermented South Indian batters worth planning ahead for,
               and overnight puddings that are waiting for you. Every one lists exactly what it
               contains, so if you are avoiding gluten, soy, peanuts, tree nuts or sulphites you can
@@ -183,7 +183,7 @@ function BreakfastCollection() {
         <div className="lg:col-span-9 space-y-16">
           {shown.length === 0 ? (
             <div className="border border-dashed border-steel p-12 text-center text-sm text-mute">
-              Nothing in the breakfast collection avoids all of those at once yet — try removing a
+              Nothing in the breakfast collection avoids all of those at once yet. Try removing a
               filter, or{" "}
               <Link to="/submit" className="underline hover:text-ink">
                 submit a recipe
@@ -240,13 +240,13 @@ function BreakfastCollection() {
               <p>
                 <strong className="text-ink font-medium">Add a pulse or a seed.</strong> This is
                 what stops a plant-based breakfast falling apart by eleven. Lentils in idli and
-                dosa, chia and nut butters on toast, chickpea flour in a savoury pancake — a grain
+                dosa, chia and nut butters on toast, chickpea flour in a savoury pancake. A grain
                 plus a pulse is the whole trick.
               </p>
               <p>
                 <strong className="text-ink font-medium">Swap milk, don't skip it.</strong> Oat milk
-                is the closest match for batters and coffee; coconut milk carries fruit and spice
-                well; almond is thin but useful. If you are avoiding tree nuts, oat and rice milks
+                is the closest match for batters and coffee, coconut milk carries fruit and spice
+                well, and almond is thin but useful. If you are avoiding tree nuts, oat and rice milks
                 keep every recipe on this page open to you.
               </p>
               <p>
@@ -277,7 +277,7 @@ function BreakfastCollection() {
               Five recipes for the week, every Sunday
             </h2>
             <p className="text-sm text-mute leading-relaxed max-w-[58ch]">
-              The weekly newsletter plans your week for you — breakfasts included, allergens always
+              The weekly newsletter plans your week for you, breakfasts included and allergens always
               listed.
             </p>
             <Link

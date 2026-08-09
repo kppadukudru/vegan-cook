@@ -25,7 +25,7 @@ const FAQ: { q: string; a: string }[] = [
   },
   {
     q: "Do I still need to check labels?",
-    a: "Yes, on packaged goods. Soy sauce, stock cubes, oats and spice blends are the usual culprits — buy tamari instead of soy sauce and certified gluten-free oats, and check anything pre-mixed.",
+    a: "Yes, on packaged goods. Soy sauce, stock cubes, oats and spice blends are the usual culprits. Buy tamari instead of soy sauce and certified gluten-free oats, and check anything pre-mixed.",
   },
   {
     q: "Can a recipe be gluten-free and also free of soy or nuts?",
@@ -175,7 +175,7 @@ function GlutenFreeCollection() {
         <div className="lg:col-span-9 space-y-16">
           {shown.length === 0 ? (
             <div className="border border-dashed border-steel p-12 text-center text-sm text-mute">
-              Nothing gluten-free in that meal yet — try another, or{" "}
+              Nothing gluten-free in that meal yet. Try another, or{" "}
               <Link to="/submit" className="underline hover:text-ink">
                 submit a recipe
               </Link>{" "}
