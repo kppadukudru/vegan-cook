@@ -42,9 +42,8 @@ function mapReasonToMessage(reason: string): string {
   switch (reason) {
     case 'bounce':
       return 'Permanent bounce: email address is invalid or rejected'
-
     case 'complaint':
-      return 'Spam complaint — recipient marked email as spam'
+      return 'Spam complaint: recipient marked email as spam'
     case 'unsubscribe':
       return 'Recipient unsubscribed'
     default:
