@@ -13,11 +13,11 @@ export const Route = createFileRoute("/journal/$slug")({
   head: ({ loaderData }) => {
     if (!loaderData) {
       return {
-        meta: [{ title: "Post unavailable — Vegan Cook" }, { name: "robots", content: "noindex" }],
+        meta: [{ title: "Post unavailable | Vegan Cook" }, { name: "robots", content: "noindex" }],
       };
     }
     const url = `https://www.vegancook.live/journal/${loaderData.id}`;
-    const title = `${loaderData.title} — Vegan Cook Journal`;
+    const title = `${loaderData.title} | Vegan Cook Journal`;
     const description = loaderData.excerpt || `${loaderData.tag} notes from the Vegan Cook journal.`;
     return {
       meta: [
@@ -137,7 +137,7 @@ function PostPage() {
         </div>
       </article>
 
-      <SiteFooter note="Vegan Cook — journal" />
+      <SiteFooter note="Vegan Cook, journal" />
     </div>
   );
 }

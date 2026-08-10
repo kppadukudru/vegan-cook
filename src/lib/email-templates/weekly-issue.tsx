@@ -80,7 +80,7 @@ const Email = ({
     </Preview>
     <Body style={main}>
       <Container style={container}>
-        <Text style={kicker}>Vegan Cook — weekly{weekOf ? ` · week of ${weekOf}` : ""}</Text>
+        <Text style={kicker}>Vegan Cook weekly{weekOf ? ` · week of ${weekOf}` : ""}</Text>
         <Heading style={h1}>Five recipes for the week</Heading>
         <Text style={intro}>
           Enough to plan your cooking, with skill level, time and allergens on each. Vegan food
@@ -133,8 +133,8 @@ export const template = {
   component: Email,
   subject: ({ weekOf }: Record<string, unknown>) =>
     weekOf
-      ? `Vegan Cook weekly — five recipes for the week of ${String(weekOf)}`
-      : "Vegan Cook weekly — five recipes for the week",
+      ? `Vegan Cook weekly: five recipes for the week of ${String(weekOf)}`
+      : "Vegan Cook weekly: five recipes for the week",
   displayName: "Weekly newsletter issue",
   previewData: {
     weekOf: "6 April",

@@ -50,6 +50,6 @@ export const subscribeToWeekly = createServerFn({ method: "POST" })
     return {
       ok: true as const,
       message:
-        "You're on the list. Five plant-based recipes will land in your inbox every Sunday — check your inbox for a confirmation.",
+        "You're on the list. Five plant-based recipes will land in your inbox every Sunday. Check your inbox for a confirmation.",
     };
   });

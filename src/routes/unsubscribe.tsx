@@ -5,13 +5,13 @@ import { SiteFooter, SiteHeader } from "@/components/SiteChrome";
 export const Route = createFileRoute("/unsubscribe")({
   head: () => ({
     meta: [
-      { title: "Unsubscribe — Vegan Cook Weekly" },
+      { title: "Unsubscribe | Vegan Cook Weekly" },
       {
         name: "description",
         content:
           "Stop receiving the Vegan Cook weekly newsletter. One click, no questions, no hard feelings.",
       },
-      { property: "og:title", content: "Unsubscribe — Vegan Cook Weekly" },
+      { property: "og:title", content: "Unsubscribe | Vegan Cook Weekly" },
       {
         property: "og:description",
         content: "Stop receiving the Vegan Cook weekly newsletter.",

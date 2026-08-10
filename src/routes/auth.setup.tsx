@@ -5,12 +5,12 @@ import { setupFirstEditor } from "@/lib/setup.functions";
 export const Route = createFileRoute("/auth/setup")({
   head: () => ({
     meta: [
-      { title: "Editor Setup — Vegan Cook" },
+      { title: "Editor Setup | Vegan Cook" },
       {
         name: "description",
         content: "First-time editor setup for Vegan Cook.",
       },
-      { property: "og:title", content: "Editor Setup — Vegan Cook" },
+      { property: "og:title", content: "Editor Setup | Vegan Cook" },
       { property: "og:description", content: "First-time editor setup for Vegan Cook." },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary" },

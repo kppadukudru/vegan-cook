@@ -62,7 +62,7 @@ export function SiteHeader() {
 export function SiteFooter({ note }: { note?: string }) {
   return (
     <footer className="border-t border-steel px-6 md:px-8 py-8 flex flex-col md:flex-row items-start md:items-center justify-between gap-4 text-[10px] uppercase tracking-[0.15em] text-mute">
-      <span>{note ?? "Vegan Cook — plant-based cooking, every day."}</span>
+      <span>{note ?? "Vegan Cook. Plant-based cooking, every day."}</span>
       <div className="flex gap-6">
         <Link to="/recipes" className="hover:text-ink transition-colors">
           Recipes

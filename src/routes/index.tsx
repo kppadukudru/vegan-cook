@@ -25,13 +25,13 @@ import { subscribeToWeekly } from "@/lib/newsletter.functions";
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
-      { title: "Vegan Cook — A New Plant-Based Recipe Every Day" },
+      { title: "Vegan Cook: A New Plant-Based Recipe Every Day" },
       {
         name: "description",
         content:
           "Vegan cooking for allergies and lifestyle choices alike. Filter by skill level and allergens, get five recipes in your inbox every week, and submit your own.",
       },
-      { property: "og:title", content: "Vegan Cook — A New Plant-Based Recipe Every Day" },
+      { property: "og:title", content: "Vegan Cook: A New Plant-Based Recipe Every Day" },
       {
         property: "og:description",
         content: "Vegan food doesn't have to be boring, and it isn't just salad.",
@@ -319,7 +319,7 @@ function Index() {
       </main>
 
       <footer className="border-t border-steel px-6 md:px-8 py-8 flex flex-col md:flex-row items-start md:items-center justify-between gap-4 text-[10px] uppercase tracking-[0.15em] text-mute">
-        <span>Vegan Cook — plant-based cooking, every day.</span>
+        <span>Vegan Cook. Plant-based cooking, every day.</span>
         <div className="flex gap-6 items-center">
           <span className="tabular-nums">{allRecipes.length} recipes in the collection</span>
           <Link to="/recipes" className="hover:text-ink transition-colors">

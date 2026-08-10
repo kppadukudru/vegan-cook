@@ -6,7 +6,7 @@ import { listPublishedRecipes } from "@/lib/recipes.functions";
 import { ALL_MEAL_TYPES, type MealType, type Recipe } from "@/data/recipes";
 
 const URL = "https://www.vegancook.live/gluten-free-vegan-recipes";
-const TITLE = "Gluten-Free Vegan Recipes — Tested and Allergen-Tagged";
+const TITLE = "Gluten-Free Vegan Recipes: Tested and Allergen-Tagged";
 const DESCRIPTION =
   "Every gluten-free vegan recipe in the Vegan Cook collection, each one tagged with exactly what it contains so you can cook without reading the small print twice.";
 
@@ -114,7 +114,7 @@ function GlutenFreeCollection() {
       <section className="border-b border-steel px-6 md:px-8 py-12 md:py-16 max-w-[1440px] mx-auto">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12">
           <p className="lg:col-span-3 text-[10px] uppercase tracking-[0.15em] text-mute">
-            Collection — Gluten-free
+            Collection: Gluten-free
           </p>
           <div className="lg:col-span-9 space-y-6">
             <h1 className="font-serif text-3xl md:text-5xl leading-[1.1] tracking-tight text-balance max-w-[38ch]">
@@ -251,7 +251,7 @@ function GlutenFreeCollection() {
         </div>
       </main>
 
-      <SiteFooter note="Vegan Cook — gluten-free collection" />
+      <SiteFooter note="Vegan Cook, gluten-free collection" />
     </div>
   );
 }

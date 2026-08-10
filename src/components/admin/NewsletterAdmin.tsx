@@ -70,7 +70,7 @@ export function NewsletterAdmin() {
             Next week
           </button>
           <span className="text-xs text-mute">
-            {busy ? "Building…" : issue ? `Issue ${issue.week} — week of ${issue.weekOf}` : ""}
+            {busy ? "Building…" : issue ? `Issue ${issue.week}, week of ${issue.weekOf}` : ""}
           </span>
         </div>
         {notice && <p className="text-xs text-leaf">{notice}</p>}
@@ -131,7 +131,7 @@ export function NewsletterAdmin() {
             <ol className="mt-2 space-y-1 text-sm">
               {issue.recipes.map((recipe, index) => (
                 <li key={recipe.id}>
-                  {String(index + 1).padStart(2, "0")} — {recipe.title}{" "}
+                  {String(index + 1).padStart(2, "0")}. {recipe.title}{" "}
                   <span className="text-mute text-xs">
                     ({recipe.skill}, {recipe.timeMinutes} min)
                   </span>
