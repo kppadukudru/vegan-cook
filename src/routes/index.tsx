@@ -114,12 +114,13 @@ function Index() {
             <h1 className="font-serif text-3xl md:text-5xl leading-[1.1] tracking-tight text-balance max-w-[38ch]">
               Cooking for people with different dietary needs, whether by allergy or by choice.
             </h1>
-            <p className="text-mute text-base leading-relaxed max-w-[62ch] text-pretty">
-              Vegan food does not have to be boring, and it is not just salad. Everything here is
-              fully plant-based, written out properly, and tagged so you can screen out the
-              allergens you need to avoid: sulphites, peanuts, soy, gluten and tree nuts. Pick a
-              skill level, pick what you can eat, and cook something you actually want to eat.
-            </p>
+              <p className="text-mute text-base leading-relaxed max-w-[62ch] text-pretty">
+                Vegan food does not have to be boring, and it is not just salad. Everything here is
+                fully plant-based, written out properly, and tagged so you can screen out the
+                allergens you need to avoid: sulphites, peanuts, soy, gluten and tree nuts. Whether
+                you are plant-based yourself or cooking for someone who is, pick a skill level, pick
+                what needs avoiding, and cook something worth putting on the table.
+              </p>
           </div>
         </div>
       </section>
