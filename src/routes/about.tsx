@@ -68,7 +68,7 @@ function AboutPage() {
         </section>
       </main>
 
-      <SiteFooter note="Vegan Cook — about" />
+      <SiteFooter note="Vegan Cook, about" />
     </div>
   );
 }

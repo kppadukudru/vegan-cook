@@ -45,12 +45,12 @@ import { EditorsAdmin } from "@/components/admin/EditorsAdmin";
 export const Route = createFileRoute("/_authenticated/admin")({
   head: () => ({
     meta: [
-      { title: "Recipe Desk — Vegan Cook" },
+      { title: "Recipe Desk | Vegan Cook" },
       {
         name: "description",
         content: "Manage the Vegan Cook recipe table and review reader submissions.",
       },
-      { property: "og:title", content: "Recipe Desk — Vegan Cook" },
+      { property: "og:title", content: "Recipe Desk | Vegan Cook" },
       { property: "og:description", content: "Central recipe table and submission review queue." },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary" },

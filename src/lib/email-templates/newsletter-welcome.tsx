@@ -45,15 +45,15 @@ const Email = ({
 }: Props) => (
   <Html lang="en" dir="ltr">
     <Head />
-    <Preview>You're on the Vegan Cook weekly list — five recipes every Sunday.</Preview>
+    <Preview>You're on the Vegan Cook weekly list: five recipes every Sunday.</Preview>
     <Body style={main}>
       <Container style={container}>
         <Text style={kicker}>Vegan Cook</Text>
         <Heading style={h1}>You're on the list</Heading>
         <Text style={text}>
-          Thanks for subscribing. Every Sunday you'll get five plant-based recipes — enough to
-          plan the week — chosen from the whole collection, with skill level, time and allergen
-          notes on each.
+          Thanks for subscribing. Every Sunday you'll get five plant-based recipes, enough to plan
+          the week, chosen from the whole collection, with skill level, time and allergen notes on
+          each.
         </Text>
         <Text style={text}>
           No offers, no digests, no forwarding your address anywhere. Vegan food that isn't
@@ -89,7 +89,7 @@ const Email = ({
 export const template = {
   component: Email,
   subject: "You're on the Vegan Cook weekly list",
-  displayName: "Weekly newsletter — signup confirmation",
+  displayName: "Weekly newsletter signup confirmation",
   previewData: {
     siteUrl: "https://vegancook.live",
     unsubscribeUrl: "https://vegancook.live/unsubscribe",

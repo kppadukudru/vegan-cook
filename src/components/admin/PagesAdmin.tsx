@@ -104,7 +104,7 @@ export function PagesAdmin() {
       {form && (
         <div className="space-y-5 border border-steel p-5 md:p-6">
           <p className="text-[10px] uppercase tracking-[0.15em] text-mute">
-            Editing {LABELS[form.id] ?? form.id} — /{form.id}
+            Editing {LABELS[form.id] ?? form.id}: /{form.id}
           </p>
 
           <Field label="Headline">

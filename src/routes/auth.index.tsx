@@ -5,12 +5,12 @@ import { supabase } from "@/integrations/supabase/client";
 export const Route = createFileRoute("/auth/")({
   head: () => ({
     meta: [
-      { title: "Editor Sign In — Vegan Cook" },
+      { title: "Editor Sign In | Vegan Cook" },
       {
         name: "description",
         content: "Sign in to the Vegan Cook editing desk to manage recipes and review submissions.",
       },
-      { property: "og:title", content: "Editor Sign In — Vegan Cook" },
+      { property: "og:title", content: "Editor Sign In | Vegan Cook" },
       { property: "og:description", content: "Editing desk for the Vegan Cook recipe table." },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary" },

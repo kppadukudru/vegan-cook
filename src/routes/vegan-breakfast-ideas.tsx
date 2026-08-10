@@ -5,7 +5,7 @@ import { listPublishedRecipes } from "@/lib/recipes.functions";
 import { ALL_ALLERGENS, type Allergen, type Recipe } from "@/data/recipes";
 
 const URL = "https://www.vegancook.live/vegan-breakfast-ideas";
-const TITLE = "Vegan Breakfast Ideas — Allergy-Friendly, Tested Recipes";
+const TITLE = "Vegan Breakfast Ideas: Allergy-Friendly, Tested Recipes";
 const DESCRIPTION =
   "A working collection of vegan breakfast ideas, from ten-minute toast to fermented dosa, each one filterable by gluten, soy, peanut, tree nut and sulphite.";
 
@@ -113,7 +113,7 @@ function BreakfastCollection() {
       <section className="border-b border-steel px-6 md:px-8 py-12 md:py-16 max-w-[1440px] mx-auto">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12">
           <p className="lg:col-span-3 text-[10px] uppercase tracking-[0.15em] text-mute">
-            Collection — Breakfast
+            Collection: Breakfast
           </p>
           <div className="lg:col-span-9 space-y-6">
             <h1 className="font-serif text-3xl md:text-5xl leading-[1.1] tracking-tight text-balance max-w-[38ch]">

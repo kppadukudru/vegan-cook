@@ -5,12 +5,12 @@ import { supabase } from "@/integrations/supabase/client";
 export const Route = createFileRoute("/auth/reset-password")({
   head: () => ({
     meta: [
-      { title: "Reset Password — Vegan Cook" },
+      { title: "Reset Password | Vegan Cook" },
       {
         name: "description",
         content: "Set a new password for your Vegan Cook editor account.",
       },
-      { property: "og:title", content: "Reset Password — Vegan Cook" },
+      { property: "og:title", content: "Reset Password | Vegan Cook" },
       { property: "og:description", content: "Set a new password for your Vegan Cook editor account." },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary" },

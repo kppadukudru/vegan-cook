@@ -180,7 +180,7 @@ export async function publishSubmission(id: string, asDraft: boolean): Promise<R
     ok: true,
     id: recipeId,
     message: asDraft
-      ? "Converted to a draft recipe — edit it, then set it to published."
+      ? "Converted to a draft recipe. Edit it, then set it to published."
       : `Published "${sub.title}". It is live on the site now.`,
   };
 }
@@ -264,7 +264,7 @@ export async function importRecipes(
   }
 
   if (payloads.length === 0) {
-    return { ok: false, message: "Nothing was imported — every row was skipped.", results };
+    return { ok: false, message: "Nothing was imported: every row was skipped.", results };
   }
 
   const { error } = await supabaseAdmin

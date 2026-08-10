@@ -187,7 +187,7 @@ export function CsvImport({ onImported }: { onImported: () => Promise<void> | vo
             {rows.map((r) => (
               <li key={r.line} className="p-4 space-y-1">
                 <p className="text-sm">
-                  <span className="text-mute">Row {r.line}</span> — {r.title}
+                  <span className="text-mute">Row {r.line}</span>: {r.title}
                   {r.value && (
                     <span className="text-[10px] uppercase tracking-[0.15em] text-leaf ml-2">
                       ready / {r.value.id}
@@ -227,7 +227,7 @@ export function CsvImport({ onImported }: { onImported: () => Promise<void> | vo
                   }`}
                 >
                   {r.outcome}
-                  {r.message ? ` — ${r.message}` : ""}
+                  {r.message ? `: ${r.message}` : ""}
                 </span>
               </li>
             ))}

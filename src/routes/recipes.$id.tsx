@@ -13,14 +13,14 @@ export const Route = createFileRoute("/recipes/$id")({
   head: ({ params, loaderData }) => {
     const recipe = loaderData?.recipe;
     if (!recipe) {
-      return { meta: [{ title: "Recipe not found — Vegan Cook" }] };
+      return { meta: [{ title: "Recipe not found | Vegan Cook" }] };
     }
     const url = `https://www.vegancook.live/recipes/${params.id}`;
     return {
       meta: [
-        { title: `${recipe.title} — Vegan Cook` },
+        { title: `${recipe.title} | Vegan Cook` },
         { name: "description", content: recipe.blurb },
-        { property: "og:title", content: `${recipe.title} — Vegan Cook` },
+        { property: "og:title", content: `${recipe.title} | Vegan Cook` },
         { property: "og:description", content: recipe.blurb },
         { property: "og:type", content: "article" },
         { property: "og:url", content: url },
@@ -318,7 +318,7 @@ function RecipePage() {
       </main>
 
       <footer className="border-t border-steel px-6 md:px-8 py-8 flex flex-col md:flex-row items-start md:items-center justify-between gap-4 text-[10px] uppercase tracking-[0.15em] text-mute">
-        <span>Vegan Cook — plant-based cooking, every day.</span>
+        <span>Vegan Cook. Plant-based cooking, every day.</span>
         <Link to="/" className="hover:text-ink transition-colors">
           ← All recipes
         </Link>

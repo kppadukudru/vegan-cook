@@ -29,7 +29,7 @@ export const Route = createRootRoute({
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "Vegan Cook — Plant-Based Cooking, Every Day" },
+      { title: "Vegan Cook: Plant-Based Cooking, Every Day" },
       {
         name: "description",
         content:
@@ -37,7 +37,7 @@ export const Route = createRootRoute({
       },
 
       { name: "author", content: "Vegan Cook" },
-      { property: "og:title", content: "Vegan Cook — Plant-Based Cooking, Every Day" },
+      { property: "og:title", content: "Vegan Cook: Plant-Based Cooking, Every Day" },
       {
         property: "og:description",
         content: "Vegan food that isn't boring and isn't just salad.",

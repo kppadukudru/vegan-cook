@@ -19,13 +19,13 @@ import { submitRecipe } from "@/lib/submissions.functions";
 export const Route = createFileRoute("/submit")({
   head: () => ({
     meta: [
-      { title: "Submit a Recipe — Vegan Cook" },
+      { title: "Submit a Recipe | Vegan Cook" },
       {
         name: "description",
         content:
           "Share your own plant-based recipe. Ingredients, method, cookware and allergen details, reviewed before it joins the collection.",
       },
-      { property: "og:title", content: "Submit a Recipe — Vegan Cook" },
+      { property: "og:title", content: "Submit a Recipe | Vegan Cook" },
       {
         property: "og:description",
         content: "Send in your own fully plant-based recipe for review.",
@@ -413,7 +413,7 @@ function SubmitPage() {
       </main>
 
       <footer className="border-t border-steel px-6 md:px-8 py-8 flex flex-col md:flex-row items-start md:items-center justify-between gap-4 text-[10px] uppercase tracking-[0.15em] text-mute">
-        <span>Vegan Cook — plant-based cooking, every day.</span>
+        <span>Vegan Cook. Plant-based cooking, every day.</span>
         <Link to="/" className="hover:text-ink transition-colors">
           ← All recipes
         </Link>

@@ -23,7 +23,7 @@ import {
 import { listPublishedRecipes } from "@/lib/recipes.functions";
 
 const URL = "https://www.vegancook.live/recipes";
-const TITLE = "All Vegan Recipes — Filter by Skill, Cuisine and Allergens";
+const TITLE = "All Vegan Recipes: Filter by Skill, Cuisine and Allergens";
 const DESCRIPTION =
   "The full Vegan Cook collection. Filter every tested plant-based recipe by cooking skill, cuisine, meal, spice level and the allergens you need to avoid.";
 
