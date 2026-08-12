@@ -183,3 +183,73 @@ export async function listActiveSubscribers() {
     unsubscribedCount: all.filter((row) => blocked.has(row.email.toLowerCase())).length,
   };
 }
+
+/**
+ * Enqueue the weekly issue for every active subscriber.
+ *
+ * Idempotency: before enqueuing, a claim row is inserted into email_send_log
+ * with (template_name='weekly-issue', recipient_email, week). A partial unique
+ * index on (template_name, lower(recipient_email), week) where week is not null
+ * makes that insert the atomic lock — a duplicate claim fails, and we skip that
+ * subscriber. Re-running for the same week therefore sends nothing new.
+ */
+export async function enqueueWeeklyIssueToAll(when: Date = new Date()) {
+  const issue = await renderWeeklyIssue(when);
+  if (issue.recipes.length === 0) {
+    return { ok: false as const, reason: "no_recipes" as const, sent: 0 };
+  }
+
+  const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+  const { SITE_URL } = await import("@/lib/newsletter");
+  const { active } = await listActiveSubscribers();
+
+  const templateData = {
+    weekOf: issue.weekOf,
+    siteUrl: SITE_URL,
+    recipes: issue.recipes,
+  };
+
+  let sent = 0;
+  let skipped = 0;
+  let failed = 0;
+
+  for (const subscriber of active) {
+    const email = subscriber.email.toLowerCase();
+
+    const { error: claimError } = await supabaseAdmin.from("email_send_log").insert({
+      message_id: `weekly-${issue.week}-${email}`,
+      template_name: "weekly-issue",
+      recipient_email: email,
+      status: "pending",
+      week: issue.week,
+    });
+
+    if (claimError) {
+      // Unique violation = already claimed for this week.
+      if (claimError.code === "23505") {
+        skipped += 1;
+      } else {
+        console.error("Weekly claim failed", claimError.message, redactEmail(email));
+        failed += 1;
+      }
+      continue;
+    }
+
+    const result = await enqueueTemplateEmail({
+      templateName: "weekly-issue",
+      recipientEmail: email,
+      idempotencyKey: `weekly-${issue.week}-${email}`,
+      templateData,
+    });
+
+    if (result.ok) {
+      sent += 1;
+    } else if (result.reason === "email_suppressed") {
+      skipped += 1;
+    } else {
+      failed += 1;
+    }
+  }
+
+  return { ok: true as const, week: issue.week, sent, skipped, failed };
+}
