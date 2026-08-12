@@ -28,6 +28,7 @@ import { Route as JournalSlugRouteImport } from './routes/journal.$slug'
 import { Route as RecipesIndexRouteImport } from './routes/recipes.index'
 import { Route as RecipesIdRouteImport } from './routes/recipes.$id'
 import { Route as LovableEmailSuppressionRouteImport } from './routes/lovable/email/suppression'
+import { Route as LovableNewsletterSendWeeklyRouteImport } from './routes/lovable/newsletter/send-weekly'
 import { Route as LovableEmailQueueProcessRouteImport } from './routes/lovable/email/queue/process'
 import { Route as LovableEmailTransactionalPreviewRouteImport } from './routes/lovable/email/transactional/preview'
 import { Route as LovableEmailTransactionalSendRouteImport } from './routes/lovable/email/transactional/send'
@@ -126,6 +127,12 @@ const LovableEmailSuppressionRoute = LovableEmailSuppressionRouteImport.update({
   path: '/lovable/email/suppression',
   getParentRoute: () => rootRouteImport,
 } as any)
+const LovableNewsletterSendWeeklyRoute =
+  LovableNewsletterSendWeeklyRouteImport.update({
+    id: '/lovable/newsletter/send-weekly',
+    path: '/lovable/newsletter/send-weekly',
+    getParentRoute: () => rootRouteImport,
+  } as any)
 const LovableEmailQueueProcessRoute =
   LovableEmailQueueProcessRouteImport.update({
     id: '/lovable/email/queue/process',
@@ -164,6 +171,7 @@ export interface FileRoutesByFullPath {
   '/journal/': typeof JournalIndexRoute
   '/recipes/': typeof RecipesIndexRoute
   '/lovable/email/suppression': typeof LovableEmailSuppressionRoute
+  '/lovable/newsletter/send-weekly': typeof LovableNewsletterSendWeeklyRoute
   '/lovable/email/queue/process': typeof LovableEmailQueueProcessRoute
   '/lovable/email/transactional/preview': typeof LovableEmailTransactionalPreviewRoute
   '/lovable/email/transactional/send': typeof LovableEmailTransactionalSendRoute
@@ -186,6 +194,7 @@ export interface FileRoutesByTo {
   '/journal': typeof JournalIndexRoute
   '/recipes': typeof RecipesIndexRoute
   '/lovable/email/suppression': typeof LovableEmailSuppressionRoute
+  '/lovable/newsletter/send-weekly': typeof LovableNewsletterSendWeeklyRoute
   '/lovable/email/queue/process': typeof LovableEmailQueueProcessRoute
   '/lovable/email/transactional/preview': typeof LovableEmailTransactionalPreviewRoute
   '/lovable/email/transactional/send': typeof LovableEmailTransactionalSendRoute
@@ -211,6 +220,7 @@ export interface FileRoutesById {
   '/journal/': typeof JournalIndexRoute
   '/recipes/': typeof RecipesIndexRoute
   '/lovable/email/suppression': typeof LovableEmailSuppressionRoute
+  '/lovable/newsletter/send-weekly': typeof LovableNewsletterSendWeeklyRoute
   '/lovable/email/queue/process': typeof LovableEmailQueueProcessRoute
   '/lovable/email/transactional/preview': typeof LovableEmailTransactionalPreviewRoute
   '/lovable/email/transactional/send': typeof LovableEmailTransactionalSendRoute
@@ -236,6 +246,7 @@ export interface FileRouteTypes {
     | '/journal/'
     | '/recipes/'
     | '/lovable/email/suppression'
+    | '/lovable/newsletter/send-weekly'
     | '/lovable/email/queue/process'
     | '/lovable/email/transactional/preview'
     | '/lovable/email/transactional/send'
@@ -258,6 +269,7 @@ export interface FileRouteTypes {
     | '/journal'
     | '/recipes'
     | '/lovable/email/suppression'
+    | '/lovable/newsletter/send-weekly'
     | '/lovable/email/queue/process'
     | '/lovable/email/transactional/preview'
     | '/lovable/email/transactional/send'
@@ -282,6 +294,7 @@ export interface FileRouteTypes {
     | '/journal/'
     | '/recipes/'
     | '/lovable/email/suppression'
+    | '/lovable/newsletter/send-weekly'
     | '/lovable/email/queue/process'
     | '/lovable/email/transactional/preview'
     | '/lovable/email/transactional/send'
@@ -303,6 +316,7 @@ export interface RootRouteChildren {
   JournalIndexRoute: typeof JournalIndexRoute
   RecipesIndexRoute: typeof RecipesIndexRoute
   LovableEmailSuppressionRoute: typeof LovableEmailSuppressionRoute
+  LovableNewsletterSendWeeklyRoute: typeof LovableNewsletterSendWeeklyRoute
   LovableEmailQueueProcessRoute: typeof LovableEmailQueueProcessRoute
   LovableEmailTransactionalPreviewRoute: typeof LovableEmailTransactionalPreviewRoute
   LovableEmailTransactionalSendRoute: typeof LovableEmailTransactionalSendRoute
@@ -443,6 +457,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof LovableEmailSuppressionRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/lovable/newsletter/send-weekly': {
+      id: '/lovable/newsletter/send-weekly'
+      path: '/lovable/newsletter/send-weekly'
+      fullPath: '/lovable/newsletter/send-weekly'
+      preLoaderRoute: typeof LovableNewsletterSendWeeklyRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/lovable/email/queue/process': {
       id: '/lovable/email/queue/process'
       path: '/lovable/email/queue/process'
@@ -508,6 +529,7 @@ const rootRouteChildren: RootRouteChildren = {
   JournalIndexRoute: JournalIndexRoute,
   RecipesIndexRoute: RecipesIndexRoute,
   LovableEmailSuppressionRoute: LovableEmailSuppressionRoute,
+  LovableNewsletterSendWeeklyRoute: LovableNewsletterSendWeeklyRoute,
   LovableEmailQueueProcessRoute: LovableEmailQueueProcessRoute,
   LovableEmailTransactionalPreviewRoute: LovableEmailTransactionalPreviewRoute,
   LovableEmailTransactionalSendRoute: LovableEmailTransactionalSendRoute,

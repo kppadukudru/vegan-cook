@@ -20,6 +20,18 @@ export const adminWeeklyIssue = createServerFn({ method: "POST" })
     return renderWeeklyIssue(when);
   });
 
+/** Manually enqueue one week's issue to every active subscriber (idempotent per week). */
+export const adminSendWeeklyIssue = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((data: unknown) => weekInput.parse(data))
+  .handler(async ({ data, context }) => {
+    await assertAdmin(context);
+    const { enqueueWeeklyIssueToAll } = await import("@/lib/newsletter.server");
+    const when = new Date();
+    when.setUTCDate(when.getUTCDate() + data.offset * 7);
+    return enqueueWeeklyIssueToAll(when);
+  });
+
 /** Subscriber list for the issue send, minus anyone who unsubscribed or bounced. */
 export const adminListSubscribers = createServerFn({ method: "GET" })
   .middleware([requireSupabaseAuth])
