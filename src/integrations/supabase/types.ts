@@ -24,6 +24,7 @@ export type Database = {
           recipient_email: string
           status: string
           template_name: string
+          week: string | null
         }
         Insert: {
           created_at?: string
@@ -34,6 +35,7 @@ export type Database = {
           recipient_email: string
           status: string
           template_name: string
+          week?: string | null
         }
         Update: {
           created_at?: string
@@ -44,6 +46,7 @@ export type Database = {
           recipient_email?: string
           status?: string
           template_name?: string
+          week?: string | null
         }
         Relationships: []
       }
