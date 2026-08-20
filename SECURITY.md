@@ -1,21 +1,19 @@
 # Security Policy
 
-## Supported Versions
+Vegan Cook is a personal project maintained by a single developer. It is a
+live web application rather than a versioned, distributed package, so there
+are no separate supported versions. The deployed site always runs the latest
+code from the `main` branch.
 
-Use this section to tell people about which versions of your project are
-currently being supported with security updates.
+## Reporting a vulnerability
 
-| Version | Supported          |
-| ------- | ------------------ |
-| 5.1.x   | :white_check_mark: |
-| 5.0.x   | :x:                |
-| 4.0.x   | :white_check_mark: |
-| < 4.0   | :x:                |
+If you find a security issue, please report it privately rather than opening
+a public issue, so it can be looked at before any details become public.
 
-## Reporting a Vulnerability
+You can report a vulnerability by opening a
+[GitHub security advisory](https://github.com/kppadukudru/veg-kitchen-buddy/security/advisories/new)
+on this repository, or by contacting the maintainer directly.
 
-Use this section to tell people how to report a vulnerability.
-
-Tell them where to go, how often they can expect to get an update on a
-reported vulnerability, what to expect if the vulnerability is accepted or
-declined, etc.
+As this is a personal side project, there is no guaranteed response time, but
+genuine reports will be looked at as soon as reasonably possible, and I am
+grateful for any responsible disclosure.
