@@ -320,7 +320,7 @@ function Index() {
       </main>
 
       <footer className="border-t border-steel px-6 md:px-8 py-8 flex flex-col md:flex-row items-start md:items-center justify-between gap-4 text-[10px] uppercase tracking-[0.15em] text-mute">
-        <span>Vegan Cook. Plant-based cooking, every day.</span>
+        <span>Recipes for every day plant based cooking</span>
         <div className="flex gap-6 items-center">
           <span className="tabular-nums">{allRecipes.length} recipes in the collection</span>
           <Link to="/recipes" className="hover:text-ink transition-colors">
