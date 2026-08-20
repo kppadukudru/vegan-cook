@@ -1,29 +1,32 @@
-# Vegan Recipe Hub
+# Vegan Cook
 
-I want to create a web page focused on vegan recipes. 
-It should have a landing page which will show the recipe for the day - show a random one from the catalog of recipes. Categorize the recipes in terms of difficulties or the user's cooking skills - beginner, intermediate, and expert. Also need to consider whether the user has any other allergy and avoid recipes mentioning those ingredients - sulphite, peanut, soy, gluten etc. 
-Then an option to login or create the profile. The authentication mechanism needs to be robust and follow security best practices in terms of salting, enabling 2 factor authentication and social login via google and apple. The password needs to be combination of numbers, alphabets and characters. The logged in user can favorite recipes, get rewards for submitting new recipes - for now only vegacoins and a leaderboard for it, and future premium features which will be coming soon.
-There should also be an option to submit new recipes which the user can use and then will be reviewed by the web admin before publishing it. It should include details such as difficulty level, ingredients, methods, cookware required, allergy information.
+A plant-based recipe website with rigorous, per-recipe allergen labelling,
+built for people who cook vegan for any reason: an allergy, an ethical or
+environmental choice, or cooking for someone they love who is vegan.
 
-This project was built with [Lovable](https://lovable.dev).
+**Live site:** https://vegancook.live
 
-**Live app**: https://veg-kitchen-buddy.lovable.app
+## What it does
 
-## Build with Lovable
+- **A recipe for every day.** The landing page features a rotating recipe of
+  the day, drawn from the full catalogue.
+- **Filter by what you can eat.** Every recipe is tagged by cooking skill
+  (Beginner, Intermediate, Expert), cuisine, meal type, and spice level, and
+  declares which of five tracked allergens it contains: sulphite, peanut, soy,
+  gluten, and tree nuts. You can screen the collection down to exactly what is
+  safe for you.
+- **Recipes written to actually cook from.** Each recipe carries structured
+  ingredients, step-by-step method with technique notes, required cookware,
+  and honest allergen notes for edge cases like shared equipment.
+- **A journal.** Longer essays on eating plant-based: reading labels with a
+  dairy allergy, which cooking oil suits which dish, which rice for which
+  dish, the honest nutritional trade-offs of a vegan diet, and travel notes.
+- **Community submissions.** Visitors can submit their own recipes, which are
+  screened and reviewed by an editor before being published.
+- **A weekly newsletter.** Subscribers receive a weekly issue of recipes,
+  sent through an automated, idempotent email pipeline.
 
-Continue developing this project in the [Lovable editor](https://lovable.dev/projects/922bdfe2-478b-4232-937c-4ffac3fc7e95).
+## How it's built
 
-- **Ship faster**: describe what you want to build and Lovable handles the code.
-- **Stay in sync**: every change made in Lovable is committed straight to this repository.
-- **Full ownership**: this code is yours. Push to `main` on GitHub and your changes sync back into Lovable, ready for your next prompt.
-
-## Development
-
-Prefer working locally? You need Node.js and npm — [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating).
-
-```sh
-git clone <this-repository-url>
-cd <repository-name>
-npm i
-npm run dev
-```
+- **Framework:** TanStack Start (React + TypeScript), server-rendered.
+- **Database & auth:** Supabase (Postgres), with
