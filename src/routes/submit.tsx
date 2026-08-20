@@ -413,7 +413,7 @@ function SubmitPage() {
       </main>
 
       <footer className="border-t border-steel px-6 md:px-8 py-8 flex flex-col md:flex-row items-start md:items-center justify-between gap-4 text-[10px] uppercase tracking-[0.15em] text-mute">
-        <span>Vegan Cook. Plant-based cooking, every day.</span>
+        <span>Vegan Cook - Recipes for every day plant based cooking</span>
         <Link to="/" className="hover:text-ink transition-colors">
           ← All recipes
         </Link>
