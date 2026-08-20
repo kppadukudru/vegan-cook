@@ -11,7 +11,7 @@ If you find a security issue, please report it privately rather than opening
 a public issue, so it can be looked at before any details become public.
 
 You can report a vulnerability by opening a
-[GitHub security advisory](https://github.com/kppadukudru/veg-kitchen-buddy/security/advisories/new)
+[GitHub security advisory](https://github.com/kppadukudru/vegan-cook/security/advisories/new)
 on this repository, or by contacting the maintainer directly.
 
 As this is a personal side project, there is no guaranteed response time, but
