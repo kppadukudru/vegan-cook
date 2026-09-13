@@ -27,7 +27,6 @@ export interface WeeklyIssueRecipe {
 interface Props {
   weekOf?: string;
   siteUrl?: string;
-  unsubscribeUrl?: string;
   recipes?: WeeklyIssueRecipe[];
 }
 
@@ -68,7 +67,6 @@ function timeLabel(minutes: number) {
 const Email = ({
   weekOf = "",
   siteUrl = "https://vegancook.live",
-  unsubscribeUrl = "https://vegancook.live/unsubscribe",
   recipes = [],
 }: Props) => (
   <Html lang="en" dir="ltr">
@@ -117,10 +115,6 @@ const Email = ({
           . Got a recipe worth sharing?{" "}
           <Link href={`${siteUrl}/submit`} style={link}>
             Send it in
-          </Link>
-          . Don't want the weekly email?{" "}
-          <Link href={unsubscribeUrl} style={link}>
-            Unsubscribe
           </Link>
           .
         </Text>

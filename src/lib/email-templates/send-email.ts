@@ -6,7 +6,7 @@ import { TEMPLATES } from './registry'
 // Server-only: reads LOVABLE_API_KEY. Never import from client components.
 
 // Configuration baked in at scaffold time
-const SITE_NAME = "Vegan Recipe Hub"
+const SITE_NAME = "Vegan Cook"
 // SENDER_DOMAIN is the verified sender subdomain FQDN (e.g., "notify.example.com").
 // It MUST match the subdomain delegated to Lovable's nameservers. NEVER use the root domain.
 const SENDER_DOMAIN = "notify.vegancook.live"
@@ -65,6 +65,27 @@ export async function sendTemplateEmail(
       ? template.subject(templateData)
       : template.subject
 
+  const { supabaseAdmin } = await import('@/integrations/supabase/client.server')
+
+  const logOutcome = async (
+    status: 'sent' | 'suppressed' | 'failed',
+    errorMessage?: string,
+  ) => {
+    const { error } = await supabaseAdmin.from('email_send_log').insert({
+      message_id: null,
+      template_name: templateName,
+      recipient_email: recipient.toLowerCase(),
+      status,
+      error_message: errorMessage,
+    })
+    if (error) {
+      console.error('Failed to record email outcome', {
+        code: error.code,
+        message: error.message,
+      })
+    }
+  }
+
   try {
     await sendLovableEmail(
       {
@@ -83,10 +104,13 @@ export async function sendTemplateEmail(
     )
   } catch (error) {
     if (error instanceof EmailAPIError && error.code === 'recipient_suppressed') {
+      await logOutcome('suppressed', 'Recipient suppressed')
       return { sent: false, reason: 'recipient_suppressed' }
     }
+    await logOutcome('failed', error instanceof Error ? error.message : String(error))
     throw error
   }
 
+  await logOutcome('sent')
   return { sent: true }
 }

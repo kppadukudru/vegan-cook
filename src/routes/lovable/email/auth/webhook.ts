@@ -9,7 +9,7 @@ import { EmailChangeEmail } from '@/lib/email-templates/email-change'
 import { ReauthenticationEmail } from '@/lib/email-templates/reauthentication'
 
 // Configuration
-const SITE_NAME = "Vegan Recipe Hub"
+const SITE_NAME = "Vegan Cook"
 const SENDER_DOMAIN = "notify.vegancook.live"
 const ROOT_DOMAIN = "vegancook.live"
 const FROM_DOMAIN = "vegancook.live"
