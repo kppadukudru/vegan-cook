@@ -155,16 +155,41 @@ export async function enqueueWeeklyIssueToAll(when: Date = new Date()) {
       });
 
       if (result.ok) {
+        const { error: updateError } = await supabaseAdmin
+          .from("email_send_log")
+          .update({ status: "sent" })
+          .eq("message_id", `weekly-${issue.week}-${email}`)
+          .eq("week", issue.week);
+        if (updateError) {
+          console.error("Weekly send log update failed", updateError.message, redactEmail(email));
+        }
         sent += 1;
       } else if (result.reason === "email_suppressed") {
+        const { error: updateError } = await supabaseAdmin
+          .from("email_send_log")
+          .update({ status: "suppressed" })
+          .eq("message_id", `weekly-${issue.week}-${email}`)
+          .eq("week", issue.week);
+        if (updateError) {
+          console.error("Weekly send log update failed", updateError.message, redactEmail(email));
+        }
         skipped += 1;
       } else {
         failed += 1;
       }
     } catch (error) {
+      const errorMessage = error instanceof Error ? error.message : String(error);
+      const { error: updateError } = await supabaseAdmin
+        .from("email_send_log")
+        .update({ status: "failed", error_message: errorMessage.slice(0, 1000) })
+        .eq("message_id", `weekly-${issue.week}-${email}`)
+        .eq("week", issue.week);
+      if (updateError) {
+        console.error("Weekly send log update failed", updateError.message, redactEmail(email));
+      }
       console.error(
         "Weekly send failed",
-        error instanceof Error ? error.message : String(error),
+        errorMessage,
         redactEmail(email),
       );
       failed += 1;
