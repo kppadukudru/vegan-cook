@@ -22,13 +22,13 @@ const messageForEvent = {
 async function recordEvent(
   event: {
     event_id: string
-    event_type: keyof typeof statusForEvent
-    data: { recipient: string; message_id?: string }
+    type: keyof typeof statusForEvent
+    data: { recipient: string; message_id: string }
   },
 ) {
   const { supabaseAdmin } = await import('@/integrations/supabase/client.server')
   const email = event.data.recipient.toLowerCase()
-  const reason = reasonForEvent[event.event_type]
+  const reason = reasonForEvent[event.type]
 
   const { error: suppressionError } = await supabaseAdmin
     .from('suppressed_emails')
@@ -42,12 +42,12 @@ async function recordEvent(
     throw new Error('Failed to record email suppression')
   }
 
-  const messageId = event.data.message_id ?? event.event_id
+  const messageId = event.data.message_id
   const { data: existing, error: lookupError } = await supabaseAdmin
     .from('email_send_log')
     .select('id')
     .eq('message_id', messageId)
-    .eq('status', statusForEvent[event.event_type])
+    .eq('status', statusForEvent[event.type])
     .maybeSingle()
   if (lookupError) {
     console.error('Failed to check email event log', {
@@ -63,8 +63,8 @@ async function recordEvent(
     message_id: messageId,
     template_name: 'system',
     recipient_email: email,
-    status: statusForEvent[event.event_type],
-    error_message: messageForEvent[event.event_type],
+    status: statusForEvent[event.type],
+    error_message: messageForEvent[event.type],
     metadata: null,
   })
   if (logError) {
