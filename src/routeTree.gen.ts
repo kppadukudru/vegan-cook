@@ -27,6 +27,7 @@ import { Route as JournalIndexRouteImport } from './routes/journal.index'
 import { Route as JournalSlugRouteImport } from './routes/journal.$slug'
 import { Route as RecipesIndexRouteImport } from './routes/recipes.index'
 import { Route as RecipesIdRouteImport } from './routes/recipes.$id'
+import { Route as LovableEmailEventsRouteImport } from './routes/lovable/email/events'
 import { Route as LovableEmailSuppressionRouteImport } from './routes/lovable/email/suppression'
 import { Route as LovableNewsletterSendWeeklyRouteImport } from './routes/lovable/newsletter/send-weekly'
 import { Route as LovableEmailAuthPreviewRouteImport } from './routes/lovable/email/auth/preview'
@@ -124,6 +125,11 @@ const RecipesIdRoute = RecipesIdRouteImport.update({
   path: '/recipes/$id',
   getParentRoute: () => rootRouteImport,
 } as any)
+const LovableEmailEventsRoute = LovableEmailEventsRouteImport.update({
+  id: '/lovable/email/events',
+  path: '/lovable/email/events',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const LovableEmailSuppressionRoute = LovableEmailSuppressionRouteImport.update({
   id: '/lovable/email/suppression',
   path: '/lovable/email/suppression',
@@ -182,6 +188,7 @@ export interface FileRoutesByFullPath {
   '/auth/': typeof AuthIndexRoute
   '/journal/': typeof JournalIndexRoute
   '/recipes/': typeof RecipesIndexRoute
+  '/lovable/email/events': typeof LovableEmailEventsRoute
   '/lovable/email/suppression': typeof LovableEmailSuppressionRoute
   '/lovable/newsletter/send-weekly': typeof LovableNewsletterSendWeeklyRoute
   '/lovable/email/auth/preview': typeof LovableEmailAuthPreviewRoute
@@ -207,6 +214,7 @@ export interface FileRoutesByTo {
   '/auth': typeof AuthIndexRoute
   '/journal': typeof JournalIndexRoute
   '/recipes': typeof RecipesIndexRoute
+  '/lovable/email/events': typeof LovableEmailEventsRoute
   '/lovable/email/suppression': typeof LovableEmailSuppressionRoute
   '/lovable/newsletter/send-weekly': typeof LovableNewsletterSendWeeklyRoute
   '/lovable/email/auth/preview': typeof LovableEmailAuthPreviewRoute
@@ -235,6 +243,7 @@ export interface FileRoutesById {
   '/auth/': typeof AuthIndexRoute
   '/journal/': typeof JournalIndexRoute
   '/recipes/': typeof RecipesIndexRoute
+  '/lovable/email/events': typeof LovableEmailEventsRoute
   '/lovable/email/suppression': typeof LovableEmailSuppressionRoute
   '/lovable/newsletter/send-weekly': typeof LovableNewsletterSendWeeklyRoute
   '/lovable/email/auth/preview': typeof LovableEmailAuthPreviewRoute
@@ -263,6 +272,7 @@ export interface FileRouteTypes {
     | '/auth/'
     | '/journal/'
     | '/recipes/'
+    | '/lovable/email/events'
     | '/lovable/email/suppression'
     | '/lovable/newsletter/send-weekly'
     | '/lovable/email/auth/preview'
@@ -288,6 +298,7 @@ export interface FileRouteTypes {
     | '/auth'
     | '/journal'
     | '/recipes'
+    | '/lovable/email/events'
     | '/lovable/email/suppression'
     | '/lovable/newsletter/send-weekly'
     | '/lovable/email/auth/preview'
@@ -315,6 +326,7 @@ export interface FileRouteTypes {
     | '/auth/'
     | '/journal/'
     | '/recipes/'
+    | '/lovable/email/events'
     | '/lovable/email/suppression'
     | '/lovable/newsletter/send-weekly'
     | '/lovable/email/auth/preview'
@@ -339,6 +351,7 @@ export interface RootRouteChildren {
   RecipesIdRoute: typeof RecipesIdRoute
   JournalIndexRoute: typeof JournalIndexRoute
   RecipesIndexRoute: typeof RecipesIndexRoute
+  LovableEmailEventsRoute: typeof LovableEmailEventsRoute
   LovableEmailSuppressionRoute: typeof LovableEmailSuppressionRoute
   LovableNewsletterSendWeeklyRoute: typeof LovableNewsletterSendWeeklyRoute
   LovableEmailAuthPreviewRoute: typeof LovableEmailAuthPreviewRoute
@@ -476,6 +489,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof RecipesIdRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/lovable/email/events': {
+      id: '/lovable/email/events'
+      path: '/lovable/email/events'
+      fullPath: '/lovable/email/events'
+      preLoaderRoute: typeof LovableEmailEventsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/lovable/email/suppression': {
       id: '/lovable/email/suppression'
       path: '/lovable/email/suppression'
@@ -568,6 +588,7 @@ const rootRouteChildren: RootRouteChildren = {
   RecipesIdRoute: RecipesIdRoute,
   JournalIndexRoute: JournalIndexRoute,
   RecipesIndexRoute: RecipesIndexRoute,
+  LovableEmailEventsRoute: LovableEmailEventsRoute,
   LovableEmailSuppressionRoute: LovableEmailSuppressionRoute,
   LovableNewsletterSendWeeklyRoute: LovableNewsletterSendWeeklyRoute,
   LovableEmailAuthPreviewRoute: LovableEmailAuthPreviewRoute,
