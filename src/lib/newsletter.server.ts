@@ -1,10 +1,5 @@
-import * as React from "react";
 import { render } from "@react-email/render";
 import { TEMPLATES } from "@/lib/email-templates/registry";
-
-const SITE_NAME = "Vegan Cook";
-const SENDER_DOMAIN = "notify.vegancook.live";
-const FROM_DOMAIN = "vegancook.live";
 
 function redactEmail(email: string) {
   const [local, domain] = email.split("@");
@@ -12,118 +7,26 @@ function redactEmail(email: string) {
   return `${local[0]}***@${domain}`;
 }
 
-function generateToken(): string {
-  const bytes = new Uint8Array(32);
-  crypto.getRandomValues(bytes);
-  return Array.from(bytes)
-    .map((b) => b.toString(16).padStart(2, "0"))
-    .join("");
-}
-
-/** Render one registered template and enqueue it for a single recipient. */
+/** Send one registered template to a single recipient. */
 export async function enqueueTemplateEmail(options: {
   templateName: string;
   recipientEmail: string;
   idempotencyKey?: string;
   templateData?: Record<string, unknown>;
 }): Promise<{ ok: boolean; reason?: string }> {
-  const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
-  const template = TEMPLATES[options.templateName];
-  if (!template) {
-    console.error("Unknown email template", options.templateName);
-    return { ok: false, reason: "unknown_template" };
-  }
-
-  const email = options.recipientEmail.toLowerCase();
-  const messageId = crypto.randomUUID();
-  const templateData = options.templateData ?? {};
-
-  const { data: suppressed, error: suppressionError } = await supabaseAdmin
-    .from("suppressed_emails")
-    .select("id")
-    .eq("email", email)
-    .maybeSingle();
-
-  if (suppressionError) {
-    console.error("Suppression check failed — refusing to send");
-    return { ok: false, reason: "suppression_check_failed" };
-  }
-  if (suppressed) {
-    return { ok: false, reason: "email_suppressed" };
-  }
-
-  const { data: existingToken } = await supabaseAdmin
-    .from("email_unsubscribe_tokens")
-    .select("token, used_at")
-    .eq("email", email)
-    .maybeSingle();
-
-  let unsubscribeToken = existingToken?.token;
-  if (existingToken?.used_at) return { ok: false, reason: "email_suppressed" };
-  if (!unsubscribeToken) {
-    unsubscribeToken = generateToken();
-    await supabaseAdmin
-      .from("email_unsubscribe_tokens")
-      .upsert({ token: unsubscribeToken, email }, { onConflict: "email", ignoreDuplicates: true });
-    const { data: stored } = await supabaseAdmin
-      .from("email_unsubscribe_tokens")
-      .select("token")
-      .eq("email", email)
-      .maybeSingle();
-    if (!stored) return { ok: false, reason: "token_failed" };
-    unsubscribeToken = stored.token;
-  }
-
-  const { SITE_URL: siteUrl } = await import("@/lib/newsletter");
-  const unsubscribeUrl = `${siteUrl}/unsubscribe?token=${unsubscribeToken}`;
-  const element = React.createElement(template.component, { unsubscribeUrl, ...templateData });
-  const html = await render(element);
-  const text = await render(element, { plainText: true });
-  const subject =
-    typeof template.subject === "function" ? template.subject(templateData) : template.subject;
-
-  await supabaseAdmin.from("email_send_log").insert({
-    message_id: messageId,
-    template_name: options.templateName,
-    recipient_email: email,
-    status: "pending",
+  const { sendTemplateEmail } = await import("@/lib/email-templates/send-email");
+  const result = await sendTemplateEmail(options.templateName, options.recipientEmail, {
+    idempotencyKey: options.idempotencyKey,
+    templateData: options.templateData,
   });
-
-  const { error: enqueueError } = await supabaseAdmin.rpc("enqueue_email", {
-    queue_name: "transactional_emails",
-    payload: {
-      message_id: messageId,
-      to: email,
-      from: `${SITE_NAME} <noreply@${FROM_DOMAIN}>`,
-      sender_domain: SENDER_DOMAIN,
-      subject,
-      html,
-      text,
-      purpose: "transactional",
-      label: options.templateName,
-      idempotency_key: options.idempotencyKey ?? messageId,
-      unsubscribe_token: unsubscribeToken,
-      queued_at: new Date().toISOString(),
-    },
-  });
-
-  if (enqueueError) {
-    console.error("Failed to enqueue email", enqueueError.message, redactEmail(email));
-    await supabaseAdmin.from("email_send_log").insert({
-      message_id: messageId,
-      template_name: options.templateName,
-      recipient_email: email,
-      status: "failed",
-      error_message: "Failed to enqueue email",
-    });
-    return { ok: false, reason: "enqueue_failed" };
-  }
-
-  return { ok: true };
+  return result.sent
+    ? { ok: true }
+    : { ok: false, reason: "email_suppressed" };
 }
 
 /** Render the current (or given) weekly issue to HTML for manual sending. */
 export async function renderWeeklyIssue(when: Date) {
+  const React = await import("react");
   const { createPublicClient, rowToRecipe, RECIPE_COLUMNS } = await import(
     "@/lib/recipes.server"
   );
@@ -163,24 +66,32 @@ export async function renderWeeklyIssue(when: Date) {
   return { week: weekKey(when), weekOf, subject, html, text, recipes };
 }
 
-/** Active subscribers = signed up and not suppressed/unsubscribed. */
+/** Active subscribers, using managed unsubscribe state as the source of truth. */
 export async function listActiveSubscribers() {
   const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
-  const [{ data: subs, error }, { data: suppressed }] = await Promise.all([
-    supabaseAdmin.from("subscribers").select("email, created_at").order("created_at", {
-      ascending: false,
-    }),
-    supabaseAdmin.from("suppressed_emails").select("email"),
-  ]);
+  const { data: subs, error } = await supabaseAdmin
+    .from("subscribers")
+    .select("email, created_at")
+    .order("created_at", { ascending: false });
   if (error) throw new Error(error.message);
 
-  const blocked = new Set((suppressed ?? []).map((row) => row.email.toLowerCase()));
   const all = subs ?? [];
+  const apiKey = process.env['LOVABLE_API_KEY'];
+  if (!apiKey) throw new Error('LOVABLE_API_KEY is not configured');
+  const { getEmailUnsubscribe } = await import('@lovable.dev/email-js');
+  const states = await Promise.all(
+    all.map(async (row) => ({
+      row,
+      state: await getEmailUnsubscribe(
+        { recipient: row.email, domain: 'notify.vegancook.live' },
+        { apiKey },
+      ),
+    })),
+  );
+  const active = states.filter(({ state }) => state.subscribed);
   return {
-    active: all
-      .filter((row) => !blocked.has(row.email.toLowerCase()))
-      .map((row) => ({ email: row.email, createdAt: row.created_at })),
-    unsubscribedCount: all.filter((row) => blocked.has(row.email.toLowerCase())).length,
+    active: active.map(({ row }) => ({ email: row.email, createdAt: row.created_at })),
+    unsubscribedCount: states.length - active.length,
   };
 }
 
@@ -235,18 +146,52 @@ export async function enqueueWeeklyIssueToAll(when: Date = new Date()) {
       continue;
     }
 
-    const result = await enqueueTemplateEmail({
-      templateName: "weekly-issue",
-      recipientEmail: email,
-      idempotencyKey: `weekly-${issue.week}-${email}`,
-      templateData,
-    });
+    try {
+      const result = await enqueueTemplateEmail({
+        templateName: "weekly-issue",
+        recipientEmail: email,
+        idempotencyKey: `weekly-${issue.week}-${email}`,
+        templateData,
+      });
 
-    if (result.ok) {
-      sent += 1;
-    } else if (result.reason === "email_suppressed") {
-      skipped += 1;
-    } else {
+      if (result.ok) {
+        const { error: updateError } = await supabaseAdmin
+          .from("email_send_log")
+          .update({ status: "sent" })
+          .eq("message_id", `weekly-${issue.week}-${email}`)
+          .eq("week", issue.week);
+        if (updateError) {
+          console.error("Weekly send log update failed", updateError.message, redactEmail(email));
+        }
+        sent += 1;
+      } else if (result.reason === "email_suppressed") {
+        const { error: updateError } = await supabaseAdmin
+          .from("email_send_log")
+          .update({ status: "suppressed" })
+          .eq("message_id", `weekly-${issue.week}-${email}`)
+          .eq("week", issue.week);
+        if (updateError) {
+          console.error("Weekly send log update failed", updateError.message, redactEmail(email));
+        }
+        skipped += 1;
+      } else {
+        failed += 1;
+      }
+    } catch (error) {
+      const errorMessage = error instanceof Error ? error.message : String(error);
+      const { error: updateError } = await supabaseAdmin
+        .from("email_send_log")
+        .update({ status: "failed", error_message: errorMessage.slice(0, 1000) })
+        .eq("message_id", `weekly-${issue.week}-${email}`)
+        .eq("week", issue.week);
+      if (updateError) {
+        console.error("Weekly send log update failed", updateError.message, redactEmail(email));
+      }
+      console.error(
+        "Weekly send failed",
+        errorMessage,
+        redactEmail(email),
+      );
       failed += 1;
     }
   }

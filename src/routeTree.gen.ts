@@ -16,22 +16,20 @@ import { Route as AuthRouteImport } from './routes/auth'
 import { Route as GlutenFreeVeganRecipesRouteImport } from './routes/gluten-free-vegan-recipes'
 import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
 import { Route as SubmitRouteImport } from './routes/submit'
-import { Route as UnsubscribeRouteImport } from './routes/unsubscribe'
 import { Route as VeganBreakfastIdeasRouteImport } from './routes/vegan-breakfast-ideas'
 import { Route as AuthenticatedAdminRouteImport } from './routes/_authenticated/admin'
 import { Route as AuthIndexRouteImport } from './routes/auth.index'
 import { Route as AuthResetPasswordRouteImport } from './routes/auth.reset-password'
 import { Route as AuthSetupRouteImport } from './routes/auth.setup'
-import { Route as EmailUnsubscribeRouteImport } from './routes/email/unsubscribe'
 import { Route as JournalIndexRouteImport } from './routes/journal.index'
 import { Route as JournalSlugRouteImport } from './routes/journal.$slug'
 import { Route as RecipesIndexRouteImport } from './routes/recipes.index'
 import { Route as RecipesIdRouteImport } from './routes/recipes.$id'
-import { Route as LovableEmailSuppressionRouteImport } from './routes/lovable/email/suppression'
+import { Route as LovableEmailEventsRouteImport } from './routes/lovable/email/events'
 import { Route as LovableNewsletterSendWeeklyRouteImport } from './routes/lovable/newsletter/send-weekly'
-import { Route as LovableEmailQueueProcessRouteImport } from './routes/lovable/email/queue/process'
+import { Route as LovableEmailAuthPreviewRouteImport } from './routes/lovable/email/auth/preview'
+import { Route as LovableEmailAuthWebhookRouteImport } from './routes/lovable/email/auth/webhook'
 import { Route as LovableEmailTransactionalPreviewRouteImport } from './routes/lovable/email/transactional/preview'
-import { Route as LovableEmailTransactionalSendRouteImport } from './routes/lovable/email/transactional/send'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -67,11 +65,6 @@ const SubmitRoute = SubmitRouteImport.update({
   path: '/submit',
   getParentRoute: () => rootRouteImport,
 } as any)
-const UnsubscribeRoute = UnsubscribeRouteImport.update({
-  id: '/unsubscribe',
-  path: '/unsubscribe',
-  getParentRoute: () => rootRouteImport,
-} as any)
 const VeganBreakfastIdeasRoute = VeganBreakfastIdeasRouteImport.update({
   id: '/vegan-breakfast-ideas',
   path: '/vegan-breakfast-ideas',
@@ -97,11 +90,6 @@ const AuthSetupRoute = AuthSetupRouteImport.update({
   path: '/setup',
   getParentRoute: () => AuthRoute,
 } as any)
-const EmailUnsubscribeRoute = EmailUnsubscribeRouteImport.update({
-  id: '/email/unsubscribe',
-  path: '/email/unsubscribe',
-  getParentRoute: () => rootRouteImport,
-} as any)
 const JournalIndexRoute = JournalIndexRouteImport.update({
   id: '/journal/',
   path: '/journal/',
@@ -122,9 +110,9 @@ const RecipesIdRoute = RecipesIdRouteImport.update({
   path: '/recipes/$id',
   getParentRoute: () => rootRouteImport,
 } as any)
-const LovableEmailSuppressionRoute = LovableEmailSuppressionRouteImport.update({
-  id: '/lovable/email/suppression',
-  path: '/lovable/email/suppression',
+const LovableEmailEventsRoute = LovableEmailEventsRouteImport.update({
+  id: '/lovable/email/events',
+  path: '/lovable/email/events',
   getParentRoute: () => rootRouteImport,
 } as any)
 const LovableNewsletterSendWeeklyRoute =
@@ -133,22 +121,20 @@ const LovableNewsletterSendWeeklyRoute =
     path: '/lovable/newsletter/send-weekly',
     getParentRoute: () => rootRouteImport,
   } as any)
-const LovableEmailQueueProcessRoute =
-  LovableEmailQueueProcessRouteImport.update({
-    id: '/lovable/email/queue/process',
-    path: '/lovable/email/queue/process',
-    getParentRoute: () => rootRouteImport,
-  } as any)
+const LovableEmailAuthPreviewRoute = LovableEmailAuthPreviewRouteImport.update({
+  id: '/lovable/email/auth/preview',
+  path: '/lovable/email/auth/preview',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const LovableEmailAuthWebhookRoute = LovableEmailAuthWebhookRouteImport.update({
+  id: '/lovable/email/auth/webhook',
+  path: '/lovable/email/auth/webhook',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const LovableEmailTransactionalPreviewRoute =
   LovableEmailTransactionalPreviewRouteImport.update({
     id: '/lovable/email/transactional/preview',
     path: '/lovable/email/transactional/preview',
-    getParentRoute: () => rootRouteImport,
-  } as any)
-const LovableEmailTransactionalSendRoute =
-  LovableEmailTransactionalSendRouteImport.update({
-    id: '/lovable/email/transactional/send',
-    path: '/lovable/email/transactional/send',
     getParentRoute: () => rootRouteImport,
   } as any)
 
@@ -159,22 +145,20 @@ export interface FileRoutesByFullPath {
   '/gluten-free-vegan-recipes': typeof GlutenFreeVeganRecipesRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/submit': typeof SubmitRoute
-  '/unsubscribe': typeof UnsubscribeRoute
   '/vegan-breakfast-ideas': typeof VeganBreakfastIdeasRoute
   '/admin': typeof AuthenticatedAdminRoute
   '/auth/reset-password': typeof AuthResetPasswordRoute
   '/auth/setup': typeof AuthSetupRoute
-  '/email/unsubscribe': typeof EmailUnsubscribeRoute
   '/journal/$slug': typeof JournalSlugRoute
   '/recipes/$id': typeof RecipesIdRoute
   '/auth/': typeof AuthIndexRoute
   '/journal/': typeof JournalIndexRoute
   '/recipes/': typeof RecipesIndexRoute
-  '/lovable/email/suppression': typeof LovableEmailSuppressionRoute
+  '/lovable/email/events': typeof LovableEmailEventsRoute
   '/lovable/newsletter/send-weekly': typeof LovableNewsletterSendWeeklyRoute
-  '/lovable/email/queue/process': typeof LovableEmailQueueProcessRoute
+  '/lovable/email/auth/preview': typeof LovableEmailAuthPreviewRoute
+  '/lovable/email/auth/webhook': typeof LovableEmailAuthWebhookRoute
   '/lovable/email/transactional/preview': typeof LovableEmailTransactionalPreviewRoute
-  '/lovable/email/transactional/send': typeof LovableEmailTransactionalSendRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -182,22 +166,20 @@ export interface FileRoutesByTo {
   '/gluten-free-vegan-recipes': typeof GlutenFreeVeganRecipesRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/submit': typeof SubmitRoute
-  '/unsubscribe': typeof UnsubscribeRoute
   '/vegan-breakfast-ideas': typeof VeganBreakfastIdeasRoute
   '/admin': typeof AuthenticatedAdminRoute
   '/auth/reset-password': typeof AuthResetPasswordRoute
   '/auth/setup': typeof AuthSetupRoute
-  '/email/unsubscribe': typeof EmailUnsubscribeRoute
   '/journal/$slug': typeof JournalSlugRoute
   '/recipes/$id': typeof RecipesIdRoute
   '/auth': typeof AuthIndexRoute
   '/journal': typeof JournalIndexRoute
   '/recipes': typeof RecipesIndexRoute
-  '/lovable/email/suppression': typeof LovableEmailSuppressionRoute
+  '/lovable/email/events': typeof LovableEmailEventsRoute
   '/lovable/newsletter/send-weekly': typeof LovableNewsletterSendWeeklyRoute
-  '/lovable/email/queue/process': typeof LovableEmailQueueProcessRoute
+  '/lovable/email/auth/preview': typeof LovableEmailAuthPreviewRoute
+  '/lovable/email/auth/webhook': typeof LovableEmailAuthWebhookRoute
   '/lovable/email/transactional/preview': typeof LovableEmailTransactionalPreviewRoute
-  '/lovable/email/transactional/send': typeof LovableEmailTransactionalSendRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -208,22 +190,20 @@ export interface FileRoutesById {
   '/gluten-free-vegan-recipes': typeof GlutenFreeVeganRecipesRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/submit': typeof SubmitRoute
-  '/unsubscribe': typeof UnsubscribeRoute
   '/vegan-breakfast-ideas': typeof VeganBreakfastIdeasRoute
   '/_authenticated/admin': typeof AuthenticatedAdminRoute
   '/auth/reset-password': typeof AuthResetPasswordRoute
   '/auth/setup': typeof AuthSetupRoute
-  '/email/unsubscribe': typeof EmailUnsubscribeRoute
   '/journal/$slug': typeof JournalSlugRoute
   '/recipes/$id': typeof RecipesIdRoute
   '/auth/': typeof AuthIndexRoute
   '/journal/': typeof JournalIndexRoute
   '/recipes/': typeof RecipesIndexRoute
-  '/lovable/email/suppression': typeof LovableEmailSuppressionRoute
+  '/lovable/email/events': typeof LovableEmailEventsRoute
   '/lovable/newsletter/send-weekly': typeof LovableNewsletterSendWeeklyRoute
-  '/lovable/email/queue/process': typeof LovableEmailQueueProcessRoute
+  '/lovable/email/auth/preview': typeof LovableEmailAuthPreviewRoute
+  '/lovable/email/auth/webhook': typeof LovableEmailAuthWebhookRoute
   '/lovable/email/transactional/preview': typeof LovableEmailTransactionalPreviewRoute
-  '/lovable/email/transactional/send': typeof LovableEmailTransactionalSendRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -234,22 +214,20 @@ export interface FileRouteTypes {
     | '/gluten-free-vegan-recipes'
     | '/sitemap.xml'
     | '/submit'
-    | '/unsubscribe'
     | '/vegan-breakfast-ideas'
     | '/admin'
     | '/auth/reset-password'
     | '/auth/setup'
-    | '/email/unsubscribe'
     | '/journal/$slug'
     | '/recipes/$id'
     | '/auth/'
     | '/journal/'
     | '/recipes/'
-    | '/lovable/email/suppression'
+    | '/lovable/email/events'
     | '/lovable/newsletter/send-weekly'
-    | '/lovable/email/queue/process'
+    | '/lovable/email/auth/preview'
+    | '/lovable/email/auth/webhook'
     | '/lovable/email/transactional/preview'
-    | '/lovable/email/transactional/send'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -257,22 +235,20 @@ export interface FileRouteTypes {
     | '/gluten-free-vegan-recipes'
     | '/sitemap.xml'
     | '/submit'
-    | '/unsubscribe'
     | '/vegan-breakfast-ideas'
     | '/admin'
     | '/auth/reset-password'
     | '/auth/setup'
-    | '/email/unsubscribe'
     | '/journal/$slug'
     | '/recipes/$id'
     | '/auth'
     | '/journal'
     | '/recipes'
-    | '/lovable/email/suppression'
+    | '/lovable/email/events'
     | '/lovable/newsletter/send-weekly'
-    | '/lovable/email/queue/process'
+    | '/lovable/email/auth/preview'
+    | '/lovable/email/auth/webhook'
     | '/lovable/email/transactional/preview'
-    | '/lovable/email/transactional/send'
   id:
     | '__root__'
     | '/'
@@ -282,22 +258,20 @@ export interface FileRouteTypes {
     | '/gluten-free-vegan-recipes'
     | '/sitemap.xml'
     | '/submit'
-    | '/unsubscribe'
     | '/vegan-breakfast-ideas'
     | '/_authenticated/admin'
     | '/auth/reset-password'
     | '/auth/setup'
-    | '/email/unsubscribe'
     | '/journal/$slug'
     | '/recipes/$id'
     | '/auth/'
     | '/journal/'
     | '/recipes/'
-    | '/lovable/email/suppression'
+    | '/lovable/email/events'
     | '/lovable/newsletter/send-weekly'
-    | '/lovable/email/queue/process'
+    | '/lovable/email/auth/preview'
+    | '/lovable/email/auth/webhook'
     | '/lovable/email/transactional/preview'
-    | '/lovable/email/transactional/send'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -308,18 +282,16 @@ export interface RootRouteChildren {
   GlutenFreeVeganRecipesRoute: typeof GlutenFreeVeganRecipesRoute
   SitemapDotxmlRoute: typeof SitemapDotxmlRoute
   SubmitRoute: typeof SubmitRoute
-  UnsubscribeRoute: typeof UnsubscribeRoute
   VeganBreakfastIdeasRoute: typeof VeganBreakfastIdeasRoute
-  EmailUnsubscribeRoute: typeof EmailUnsubscribeRoute
   JournalSlugRoute: typeof JournalSlugRoute
   RecipesIdRoute: typeof RecipesIdRoute
   JournalIndexRoute: typeof JournalIndexRoute
   RecipesIndexRoute: typeof RecipesIndexRoute
-  LovableEmailSuppressionRoute: typeof LovableEmailSuppressionRoute
+  LovableEmailEventsRoute: typeof LovableEmailEventsRoute
   LovableNewsletterSendWeeklyRoute: typeof LovableNewsletterSendWeeklyRoute
-  LovableEmailQueueProcessRoute: typeof LovableEmailQueueProcessRoute
+  LovableEmailAuthPreviewRoute: typeof LovableEmailAuthPreviewRoute
+  LovableEmailAuthWebhookRoute: typeof LovableEmailAuthWebhookRoute
   LovableEmailTransactionalPreviewRoute: typeof LovableEmailTransactionalPreviewRoute
-  LovableEmailTransactionalSendRoute: typeof LovableEmailTransactionalSendRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -373,13 +345,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof SubmitRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/unsubscribe': {
-      id: '/unsubscribe'
-      path: '/unsubscribe'
-      fullPath: '/unsubscribe'
-      preLoaderRoute: typeof UnsubscribeRouteImport
-      parentRoute: typeof rootRouteImport
-    }
     '/vegan-breakfast-ideas': {
       id: '/vegan-breakfast-ideas'
       path: '/vegan-breakfast-ideas'
@@ -415,13 +380,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthSetupRouteImport
       parentRoute: typeof AuthRoute
     }
-    '/email/unsubscribe': {
-      id: '/email/unsubscribe'
-      path: '/email/unsubscribe'
-      fullPath: '/email/unsubscribe'
-      preLoaderRoute: typeof EmailUnsubscribeRouteImport
-      parentRoute: typeof rootRouteImport
-    }
     '/journal/': {
       id: '/journal/'
       path: '/journal'
@@ -450,11 +408,11 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof RecipesIdRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/lovable/email/suppression': {
-      id: '/lovable/email/suppression'
-      path: '/lovable/email/suppression'
-      fullPath: '/lovable/email/suppression'
-      preLoaderRoute: typeof LovableEmailSuppressionRouteImport
+    '/lovable/email/events': {
+      id: '/lovable/email/events'
+      path: '/lovable/email/events'
+      fullPath: '/lovable/email/events'
+      preLoaderRoute: typeof LovableEmailEventsRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/lovable/newsletter/send-weekly': {
@@ -464,11 +422,18 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof LovableNewsletterSendWeeklyRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/lovable/email/queue/process': {
-      id: '/lovable/email/queue/process'
-      path: '/lovable/email/queue/process'
-      fullPath: '/lovable/email/queue/process'
-      preLoaderRoute: typeof LovableEmailQueueProcessRouteImport
+    '/lovable/email/auth/preview': {
+      id: '/lovable/email/auth/preview'
+      path: '/lovable/email/auth/preview'
+      fullPath: '/lovable/email/auth/preview'
+      preLoaderRoute: typeof LovableEmailAuthPreviewRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/lovable/email/auth/webhook': {
+      id: '/lovable/email/auth/webhook'
+      path: '/lovable/email/auth/webhook'
+      fullPath: '/lovable/email/auth/webhook'
+      preLoaderRoute: typeof LovableEmailAuthWebhookRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/lovable/email/transactional/preview': {
@@ -476,13 +441,6 @@ declare module '@tanstack/react-router' {
       path: '/lovable/email/transactional/preview'
       fullPath: '/lovable/email/transactional/preview'
       preLoaderRoute: typeof LovableEmailTransactionalPreviewRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/lovable/email/transactional/send': {
-      id: '/lovable/email/transactional/send'
-      path: '/lovable/email/transactional/send'
-      fullPath: '/lovable/email/transactional/send'
-      preLoaderRoute: typeof LovableEmailTransactionalSendRouteImport
       parentRoute: typeof rootRouteImport
     }
   }
@@ -521,18 +479,16 @@ const rootRouteChildren: RootRouteChildren = {
   GlutenFreeVeganRecipesRoute: GlutenFreeVeganRecipesRoute,
   SitemapDotxmlRoute: SitemapDotxmlRoute,
   SubmitRoute: SubmitRoute,
-  UnsubscribeRoute: UnsubscribeRoute,
   VeganBreakfastIdeasRoute: VeganBreakfastIdeasRoute,
-  EmailUnsubscribeRoute: EmailUnsubscribeRoute,
   JournalSlugRoute: JournalSlugRoute,
   RecipesIdRoute: RecipesIdRoute,
   JournalIndexRoute: JournalIndexRoute,
   RecipesIndexRoute: RecipesIndexRoute,
-  LovableEmailSuppressionRoute: LovableEmailSuppressionRoute,
+  LovableEmailEventsRoute: LovableEmailEventsRoute,
   LovableNewsletterSendWeeklyRoute: LovableNewsletterSendWeeklyRoute,
-  LovableEmailQueueProcessRoute: LovableEmailQueueProcessRoute,
+  LovableEmailAuthPreviewRoute: LovableEmailAuthPreviewRoute,
+  LovableEmailAuthWebhookRoute: LovableEmailAuthWebhookRoute,
   LovableEmailTransactionalPreviewRoute: LovableEmailTransactionalPreviewRoute,
-  LovableEmailTransactionalSendRoute: LovableEmailTransactionalSendRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
