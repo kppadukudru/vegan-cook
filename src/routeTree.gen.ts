@@ -16,7 +16,6 @@ import { Route as AuthRouteImport } from './routes/auth'
 import { Route as GlutenFreeVeganRecipesRouteImport } from './routes/gluten-free-vegan-recipes'
 import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
 import { Route as SubmitRouteImport } from './routes/submit'
-import { Route as UnsubscribeRouteImport } from './routes/unsubscribe'
 import { Route as VeganBreakfastIdeasRouteImport } from './routes/vegan-breakfast-ideas'
 import { Route as AuthenticatedAdminRouteImport } from './routes/_authenticated/admin'
 import { Route as AuthIndexRouteImport } from './routes/auth.index'
@@ -64,11 +63,6 @@ const SitemapDotxmlRoute = SitemapDotxmlRouteImport.update({
 const SubmitRoute = SubmitRouteImport.update({
   id: '/submit',
   path: '/submit',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const UnsubscribeRoute = UnsubscribeRouteImport.update({
-  id: '/unsubscribe',
-  path: '/unsubscribe',
   getParentRoute: () => rootRouteImport,
 } as any)
 const VeganBreakfastIdeasRoute = VeganBreakfastIdeasRouteImport.update({
@@ -151,7 +145,6 @@ export interface FileRoutesByFullPath {
   '/gluten-free-vegan-recipes': typeof GlutenFreeVeganRecipesRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/submit': typeof SubmitRoute
-  '/unsubscribe': typeof UnsubscribeRoute
   '/vegan-breakfast-ideas': typeof VeganBreakfastIdeasRoute
   '/admin': typeof AuthenticatedAdminRoute
   '/auth/reset-password': typeof AuthResetPasswordRoute
@@ -173,7 +166,6 @@ export interface FileRoutesByTo {
   '/gluten-free-vegan-recipes': typeof GlutenFreeVeganRecipesRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/submit': typeof SubmitRoute
-  '/unsubscribe': typeof UnsubscribeRoute
   '/vegan-breakfast-ideas': typeof VeganBreakfastIdeasRoute
   '/admin': typeof AuthenticatedAdminRoute
   '/auth/reset-password': typeof AuthResetPasswordRoute
@@ -198,7 +190,6 @@ export interface FileRoutesById {
   '/gluten-free-vegan-recipes': typeof GlutenFreeVeganRecipesRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/submit': typeof SubmitRoute
-  '/unsubscribe': typeof UnsubscribeRoute
   '/vegan-breakfast-ideas': typeof VeganBreakfastIdeasRoute
   '/_authenticated/admin': typeof AuthenticatedAdminRoute
   '/auth/reset-password': typeof AuthResetPasswordRoute
@@ -223,7 +214,6 @@ export interface FileRouteTypes {
     | '/gluten-free-vegan-recipes'
     | '/sitemap.xml'
     | '/submit'
-    | '/unsubscribe'
     | '/vegan-breakfast-ideas'
     | '/admin'
     | '/auth/reset-password'
@@ -245,7 +235,6 @@ export interface FileRouteTypes {
     | '/gluten-free-vegan-recipes'
     | '/sitemap.xml'
     | '/submit'
-    | '/unsubscribe'
     | '/vegan-breakfast-ideas'
     | '/admin'
     | '/auth/reset-password'
@@ -269,7 +258,6 @@ export interface FileRouteTypes {
     | '/gluten-free-vegan-recipes'
     | '/sitemap.xml'
     | '/submit'
-    | '/unsubscribe'
     | '/vegan-breakfast-ideas'
     | '/_authenticated/admin'
     | '/auth/reset-password'
@@ -294,7 +282,6 @@ export interface RootRouteChildren {
   GlutenFreeVeganRecipesRoute: typeof GlutenFreeVeganRecipesRoute
   SitemapDotxmlRoute: typeof SitemapDotxmlRoute
   SubmitRoute: typeof SubmitRoute
-  UnsubscribeRoute: typeof UnsubscribeRoute
   VeganBreakfastIdeasRoute: typeof VeganBreakfastIdeasRoute
   JournalSlugRoute: typeof JournalSlugRoute
   RecipesIdRoute: typeof RecipesIdRoute
@@ -356,13 +343,6 @@ declare module '@tanstack/react-router' {
       path: '/submit'
       fullPath: '/submit'
       preLoaderRoute: typeof SubmitRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/unsubscribe': {
-      id: '/unsubscribe'
-      path: '/unsubscribe'
-      fullPath: '/unsubscribe'
-      preLoaderRoute: typeof UnsubscribeRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/vegan-breakfast-ideas': {
@@ -499,7 +479,6 @@ const rootRouteChildren: RootRouteChildren = {
   GlutenFreeVeganRecipesRoute: GlutenFreeVeganRecipesRoute,
   SitemapDotxmlRoute: SitemapDotxmlRoute,
   SubmitRoute: SubmitRoute,
-  UnsubscribeRoute: UnsubscribeRoute,
   VeganBreakfastIdeasRoute: VeganBreakfastIdeasRoute,
   JournalSlugRoute: JournalSlugRoute,
   RecipesIdRoute: RecipesIdRoute,
