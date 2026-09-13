@@ -29,6 +29,8 @@ import { Route as RecipesIndexRouteImport } from './routes/recipes.index'
 import { Route as RecipesIdRouteImport } from './routes/recipes.$id'
 import { Route as LovableEmailSuppressionRouteImport } from './routes/lovable/email/suppression'
 import { Route as LovableNewsletterSendWeeklyRouteImport } from './routes/lovable/newsletter/send-weekly'
+import { Route as LovableEmailAuthPreviewRouteImport } from './routes/lovable/email/auth/preview'
+import { Route as LovableEmailAuthWebhookRouteImport } from './routes/lovable/email/auth/webhook'
 import { Route as LovableEmailQueueProcessRouteImport } from './routes/lovable/email/queue/process'
 import { Route as LovableEmailTransactionalPreviewRouteImport } from './routes/lovable/email/transactional/preview'
 import { Route as LovableEmailTransactionalSendRouteImport } from './routes/lovable/email/transactional/send'
@@ -133,6 +135,16 @@ const LovableNewsletterSendWeeklyRoute =
     path: '/lovable/newsletter/send-weekly',
     getParentRoute: () => rootRouteImport,
   } as any)
+const LovableEmailAuthPreviewRoute = LovableEmailAuthPreviewRouteImport.update({
+  id: '/lovable/email/auth/preview',
+  path: '/lovable/email/auth/preview',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const LovableEmailAuthWebhookRoute = LovableEmailAuthWebhookRouteImport.update({
+  id: '/lovable/email/auth/webhook',
+  path: '/lovable/email/auth/webhook',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const LovableEmailQueueProcessRoute =
   LovableEmailQueueProcessRouteImport.update({
     id: '/lovable/email/queue/process',
@@ -172,6 +184,8 @@ export interface FileRoutesByFullPath {
   '/recipes/': typeof RecipesIndexRoute
   '/lovable/email/suppression': typeof LovableEmailSuppressionRoute
   '/lovable/newsletter/send-weekly': typeof LovableNewsletterSendWeeklyRoute
+  '/lovable/email/auth/preview': typeof LovableEmailAuthPreviewRoute
+  '/lovable/email/auth/webhook': typeof LovableEmailAuthWebhookRoute
   '/lovable/email/queue/process': typeof LovableEmailQueueProcessRoute
   '/lovable/email/transactional/preview': typeof LovableEmailTransactionalPreviewRoute
   '/lovable/email/transactional/send': typeof LovableEmailTransactionalSendRoute
@@ -195,6 +209,8 @@ export interface FileRoutesByTo {
   '/recipes': typeof RecipesIndexRoute
   '/lovable/email/suppression': typeof LovableEmailSuppressionRoute
   '/lovable/newsletter/send-weekly': typeof LovableNewsletterSendWeeklyRoute
+  '/lovable/email/auth/preview': typeof LovableEmailAuthPreviewRoute
+  '/lovable/email/auth/webhook': typeof LovableEmailAuthWebhookRoute
   '/lovable/email/queue/process': typeof LovableEmailQueueProcessRoute
   '/lovable/email/transactional/preview': typeof LovableEmailTransactionalPreviewRoute
   '/lovable/email/transactional/send': typeof LovableEmailTransactionalSendRoute
@@ -221,6 +237,8 @@ export interface FileRoutesById {
   '/recipes/': typeof RecipesIndexRoute
   '/lovable/email/suppression': typeof LovableEmailSuppressionRoute
   '/lovable/newsletter/send-weekly': typeof LovableNewsletterSendWeeklyRoute
+  '/lovable/email/auth/preview': typeof LovableEmailAuthPreviewRoute
+  '/lovable/email/auth/webhook': typeof LovableEmailAuthWebhookRoute
   '/lovable/email/queue/process': typeof LovableEmailQueueProcessRoute
   '/lovable/email/transactional/preview': typeof LovableEmailTransactionalPreviewRoute
   '/lovable/email/transactional/send': typeof LovableEmailTransactionalSendRoute
@@ -247,6 +265,8 @@ export interface FileRouteTypes {
     | '/recipes/'
     | '/lovable/email/suppression'
     | '/lovable/newsletter/send-weekly'
+    | '/lovable/email/auth/preview'
+    | '/lovable/email/auth/webhook'
     | '/lovable/email/queue/process'
     | '/lovable/email/transactional/preview'
     | '/lovable/email/transactional/send'
@@ -270,6 +290,8 @@ export interface FileRouteTypes {
     | '/recipes'
     | '/lovable/email/suppression'
     | '/lovable/newsletter/send-weekly'
+    | '/lovable/email/auth/preview'
+    | '/lovable/email/auth/webhook'
     | '/lovable/email/queue/process'
     | '/lovable/email/transactional/preview'
     | '/lovable/email/transactional/send'
@@ -295,6 +317,8 @@ export interface FileRouteTypes {
     | '/recipes/'
     | '/lovable/email/suppression'
     | '/lovable/newsletter/send-weekly'
+    | '/lovable/email/auth/preview'
+    | '/lovable/email/auth/webhook'
     | '/lovable/email/queue/process'
     | '/lovable/email/transactional/preview'
     | '/lovable/email/transactional/send'
@@ -317,6 +341,8 @@ export interface RootRouteChildren {
   RecipesIndexRoute: typeof RecipesIndexRoute
   LovableEmailSuppressionRoute: typeof LovableEmailSuppressionRoute
   LovableNewsletterSendWeeklyRoute: typeof LovableNewsletterSendWeeklyRoute
+  LovableEmailAuthPreviewRoute: typeof LovableEmailAuthPreviewRoute
+  LovableEmailAuthWebhookRoute: typeof LovableEmailAuthWebhookRoute
   LovableEmailQueueProcessRoute: typeof LovableEmailQueueProcessRoute
   LovableEmailTransactionalPreviewRoute: typeof LovableEmailTransactionalPreviewRoute
   LovableEmailTransactionalSendRoute: typeof LovableEmailTransactionalSendRoute
@@ -464,6 +490,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof LovableNewsletterSendWeeklyRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/lovable/email/auth/preview': {
+      id: '/lovable/email/auth/preview'
+      path: '/lovable/email/auth/preview'
+      fullPath: '/lovable/email/auth/preview'
+      preLoaderRoute: typeof LovableEmailAuthPreviewRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/lovable/email/auth/webhook': {
+      id: '/lovable/email/auth/webhook'
+      path: '/lovable/email/auth/webhook'
+      fullPath: '/lovable/email/auth/webhook'
+      preLoaderRoute: typeof LovableEmailAuthWebhookRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/lovable/email/queue/process': {
       id: '/lovable/email/queue/process'
       path: '/lovable/email/queue/process'
@@ -530,6 +570,8 @@ const rootRouteChildren: RootRouteChildren = {
   RecipesIndexRoute: RecipesIndexRoute,
   LovableEmailSuppressionRoute: LovableEmailSuppressionRoute,
   LovableNewsletterSendWeeklyRoute: LovableNewsletterSendWeeklyRoute,
+  LovableEmailAuthPreviewRoute: LovableEmailAuthPreviewRoute,
+  LovableEmailAuthWebhookRoute: LovableEmailAuthWebhookRoute,
   LovableEmailQueueProcessRoute: LovableEmailQueueProcessRoute,
   LovableEmailTransactionalPreviewRoute: LovableEmailTransactionalPreviewRoute,
   LovableEmailTransactionalSendRoute: LovableEmailTransactionalSendRoute,
