@@ -66,7 +66,7 @@ export async function renderWeeklyIssue(when: Date) {
   return { week: weekKey(when), weekOf, subject, html, text, recipes };
 }
 
-/** Subscribers are passed to managed delivery, which enforces suppression. */
+/** Active subscribers, using managed unsubscribe state as the source of truth. */
 export async function listActiveSubscribers() {
   const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
   const { data: subs, error } = await supabaseAdmin
@@ -76,9 +76,22 @@ export async function listActiveSubscribers() {
   if (error) throw new Error(error.message);
 
   const all = subs ?? [];
+  const apiKey = process.env['LOVABLE_API_KEY'];
+  if (!apiKey) throw new Error('LOVABLE_API_KEY is not configured');
+  const { getEmailUnsubscribe } = await import('@lovable.dev/email-js');
+  const states = await Promise.all(
+    all.map(async (row) => ({
+      row,
+      state: await getEmailUnsubscribe(
+        { recipient: row.email, domain: 'notify.vegancook.live' },
+        { apiKey },
+      ),
+    })),
+  );
+  const active = states.filter(({ state }) => state.subscribed);
   return {
-    active: all.map((row) => ({ email: row.email, createdAt: row.created_at })),
-    unsubscribedCount: 0,
+    active: active.map(({ row }) => ({ email: row.email, createdAt: row.created_at })),
+    unsubscribedCount: states.length - active.length,
   };
 }
 
@@ -133,18 +146,27 @@ export async function enqueueWeeklyIssueToAll(when: Date = new Date()) {
       continue;
     }
 
-    const result = await enqueueTemplateEmail({
-      templateName: "weekly-issue",
-      recipientEmail: email,
-      idempotencyKey: `weekly-${issue.week}-${email}`,
-      templateData,
-    });
+    try {
+      const result = await enqueueTemplateEmail({
+        templateName: "weekly-issue",
+        recipientEmail: email,
+        idempotencyKey: `weekly-${issue.week}-${email}`,
+        templateData,
+      });
 
-    if (result.ok) {
-      sent += 1;
-    } else if (result.reason === "email_suppressed") {
-      skipped += 1;
-    } else {
+      if (result.ok) {
+        sent += 1;
+      } else if (result.reason === "email_suppressed") {
+        skipped += 1;
+      } else {
+        failed += 1;
+      }
+    } catch (error) {
+      console.error(
+        "Weekly send failed",
+        error instanceof Error ? error.message : String(error),
+        redactEmail(email),
+      );
       failed += 1;
     }
   }
