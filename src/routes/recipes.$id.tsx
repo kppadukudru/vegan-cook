@@ -86,7 +86,7 @@ export const Route = createFileRoute("/recipes/$id")({
     <div className="bg-paper text-ink min-h-dvh flex items-center justify-center px-6">
       <div className="max-w-md text-center space-y-4">
         <p className="text-[10px] uppercase tracking-[0.15em] text-mute">Error</p>
-        <h1 className="font-serif text-3xl">{error.message}</h1>
+        <h1 className="font-serif text-3xl">{error instanceof Error ? error.message : String(error)}</h1>
         <button
           onClick={reset}
           className="bg-ink text-paper px-4 py-2 text-xs uppercase tracking-[0.15em]"
