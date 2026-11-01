@@ -1,0 +1,13 @@
+{
+  "version": "7",
+  "dialect": "postgresql",
+  "entries": [
+    {
+      "idx": 0,
+      "version": "7",
+      "when": 1793555703507,
+      "tag": "0000_side_meal_type_and_serve_with",
+      "breakpoints": true
+    }
+  ]
+}
