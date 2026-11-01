@@ -73,7 +73,7 @@ export const Route = createFileRoute("/recipes/$id")({
             ),
             recipeInstructions: recipe.method.map((step) => ({
               "@type": "HowToStep",
-              name: step.title,
+              ...(step.title?.trim() ? { name: step.title.trim() } : {}),
               text: step.body,
             })),
           }),
@@ -254,7 +254,9 @@ function RecipePage() {
                   {String(i + 1).padStart(2, "0")}
                 </span>
                 <div className="space-y-3">
-                  <h3 className="font-serif text-xl leading-tight">{step.title}</h3>
+                  {step.title?.trim() ? (
+                    <h3 className="font-serif text-xl leading-tight">{step.title}</h3>
+                  ) : null}
                   <p className="text-sm text-mute leading-relaxed text-pretty">{step.body}</p>
                 </div>
               </li>

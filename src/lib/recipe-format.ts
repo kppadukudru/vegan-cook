@@ -68,9 +68,18 @@ export function parseList(text: string): string[] {
     .slice(0, 30);
 }
 
+const TITLED_RE = /^([^:]{3,60}):\s*(.+)$/s;
+
+function looksTitled(block: string): boolean {
+  const m = block.match(TITLED_RE);
+  return !!(m && m[1] && m[2] && !/\d\s*(?:g|ml|min)\b/i.test(m[1]));
+}
+
 /**
- * Free text -> titled method steps. Recognises "Title: body"; otherwise the
- * paragraph becomes a body under a generated "Step n" heading.
+ * Free text -> method steps. Recognises "Title: body"; otherwise the line
+ * becomes an untitled step (title ""). A line starting with ": " is an
+ * explicitly untitled body, used by methodToText to protect bodies that
+ * would otherwise look titled.
  */
 export function parseMethod(text: string): MethodStep[] {
   const blocks = text
@@ -78,13 +87,16 @@ export function parseMethod(text: string): MethodStep[] {
     .map(cleanLine)
     .filter(Boolean);
 
-  return blocks.map((block, i) => {
-    const m = block.match(/^([^:]{3,60}):\s*(.+)$/s);
-    if (m && m[1] && m[2] && !/\d\s*(?:g|ml|min)\b/i.test(m[1])) {
+  return blocks.map((block) => {
+    if (block.startsWith(":")) {
+      return { title: "", body: block.slice(1).trim() };
+    }
+    const m = block.match(TITLED_RE);
+    if (m && m[1] && m[2] && looksTitled(block)) {
       return { title: m[1].trim(), body: m[2].trim() };
     }
-    return { title: `Step ${i + 1}`, body: block };
-  });
+    return { title: "", body: block };
+  }).filter((s) => s.body.length > 0);
 }
 
 /** Only allergens the site declares, so filters keep working. */
@@ -99,7 +111,14 @@ export function ingredientsToText(list: Ingredient[]): string {
 }
 
 export function methodToText(steps: MethodStep[]): string {
-  return steps.map((s) => `${s.title}: ${s.body}`).join("\n\n");
+  return steps
+    .map((s) => {
+      const title = s.title.trim();
+      const body = s.body.trim();
+      if (title) return `${title}: ${body}`;
+      return looksTitled(body) || body.startsWith(":") ? `: ${body}` : body;
+    })
+    .join("\n\n");
 }
 
 export function listToText(list: string[]): string {

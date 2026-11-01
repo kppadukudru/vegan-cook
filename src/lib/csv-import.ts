@@ -66,8 +66,14 @@ export function templateCsv(): string {
   return `${CSV_COLUMNS.join(",")}\n${CSV_COLUMNS.map((c) => escape(example[c] ?? "")).join(",")}\n`;
 }
 
-function textBlock(value: string): string {
-  const withBreaks = value.replace(/\\n/g, "\n").replace(/\s*;\s*/g, "\n");
+/**
+ * Cell -> one item per line. Lists (ingredients, cookware) also accept ";" as a
+ * separator; method text splits only on real line breaks or a literal "\n",
+ * so punctuation inside a step can never split it.
+ */
+function textBlock(value: string, semicolonSplits = true): string {
+  let withBreaks = value.replace(/\\n/g, "\n");
+  if (semicolonSplits) withBreaks = withBreaks.replace(/\s*;\s*/g, "\n");
   return withBreaks
     .split(/\r?\n/)
     .map((l) => l.trim())
@@ -141,7 +147,7 @@ export function normalizeCsvRow(raw: Record<string, string>, line: number): Pars
     contains,
     ingredientsText: textBlock(get("ingredients")),
     cookwareText: textBlock(get("cookware")),
-    methodText: textBlock(get("method")),
+    methodText: textBlock(get("method"), false),
     allergenNotes: get("allergen_notes"),
     author: get("author") || "Vegan Cook",
     publishedAt,
