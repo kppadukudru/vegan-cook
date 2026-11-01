@@ -1,13 +1,14 @@
 import { createFileRoute, Link, notFound } from "@tanstack/react-router";
 import { SiteHeader } from "@/components/SiteChrome";
 import { ALL_ALLERGENS, formatDate, formatTime, type Recipe } from "@/data/recipes";
-import { getPublishedRecipe } from "@/lib/recipes.functions";
+import { getPublishedRecipe, getServeWith, type ServeWithLink } from "@/lib/recipes.functions";
 
 export const Route = createFileRoute("/recipes/$id")({
   loader: async ({ params }) => {
     const recipe = await getPublishedRecipe({ data: { id: params.id } });
     if (!recipe) throw notFound();
-    return { recipe };
+    const serveWith = await getServeWith({ data: { id: recipe.id, forward: recipe.serveWith ?? [] } });
+    return { recipe, serveWith };
   },
 
   head: ({ params, loaderData }) => {
@@ -117,7 +118,7 @@ function NotFoundRecipe() {
 }
 
 function RecipePage() {
-  const { recipe } = Route.useLoaderData() as { recipe: Recipe };
+  const { recipe, serveWith } = Route.useLoaderData() as { recipe: Recipe; serveWith: ServeWithLink[] };
   const free = ALL_ALLERGENS.filter((a) => !recipe.contains.includes(a));
 
   return (
@@ -260,6 +261,27 @@ function RecipePage() {
             ))}
           </ol>
         </section>
+
+        {serveWith.length > 0 && (
+          <section className="px-6 md:px-8 py-16 grid grid-cols-1 lg:grid-cols-12 gap-12 border-b border-steel">
+            <div className="lg:col-span-3">
+              <h2 className="font-serif text-2xl tracking-tight">Serve with</h2>
+            </div>
+            <ul className="lg:col-span-9 flex flex-wrap gap-2">
+              {serveWith.map((s) => (
+                <li key={s.id}>
+                  <Link
+                    to="/recipes/$id"
+                    params={{ id: s.id }}
+                    className="inline-block px-4 py-2 text-sm border border-steel hover:border-ink hover:text-leaf transition-colors"
+                  >
+                    {s.title}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </section>
+        )}
 
         {/* Allergen profile */}
         <section className="px-6 md:px-8 py-16 grid grid-cols-1 lg:grid-cols-12 gap-12">
