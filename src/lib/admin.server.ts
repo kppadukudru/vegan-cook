@@ -12,6 +12,21 @@ import type { ImportRowResult } from "@/lib/csv-import";
 
 type Result = { ok: boolean; message: string; id?: string };
 
+/** Dedupes, drops self-links, and reports ids that match no recipe (or batch row). */
+async function cleanServeWith(
+  ids: string[] | undefined,
+  selfId: string,
+  alsoKnown: Set<string> = new Set(),
+): Promise<{ ids: string[]; unknown: string[] }> {
+  const wanted = [...new Set((ids ?? []).map((s) => s.trim().toLowerCase()).filter(Boolean))].filter(
+    (s) => s !== selfId,
+  );
+  if (wanted.length === 0) return { ids: [], unknown: [] };
+  const { data } = await supabaseAdmin.from("recipes").select("id").in("id", wanted);
+  const found = new Set([...(data ?? []).map((r) => r.id), ...alsoKnown]);
+  return { ids: wanted.filter((w) => found.has(w)), unknown: wanted.filter((w) => !found.has(w)) };
+}
+
 export async function saveRecipe(data: RecipeInput): Promise<Result> {
   const hits = findNonVeganTerms([
     ...data.ingredientsText.split("\n"),
@@ -22,6 +37,11 @@ export async function saveRecipe(data: RecipeInput): Promise<Result> {
 
   const id = data.id?.trim() || slugify(data.title);
   if (!id) return { ok: false, message: "Could not derive an address from that title." };
+
+  const serve = await cleanServeWith(data.serveWith, id);
+  if (serve.unknown.length > 0) {
+    return { ok: false, message: `"Serve with" names recipes that don't exist: ${serve.unknown.join(", ")}.` };
+  }
 
   const { error } = await supabaseAdmin.from("recipes").upsert(
     {
@@ -46,6 +66,7 @@ export async function saveRecipe(data: RecipeInput): Promise<Result> {
       image_url: data.imageUrl || null,
       image_alt: data.imageAlt || null,
       image_caption: data.imageCaption || null,
+      serve_with: serve.ids,
     },
     { onConflict: "id" },
   );
@@ -233,6 +254,12 @@ export async function importRecipes(
       continue;
     }
 
+    const serve = await cleanServeWith(data.serveWith, id, new Set(ids));
+    if (serve.unknown.length > 0) {
+      results.push({ id, title: data.title, outcome: "skipped", message: `"serve_with" names unknown recipes: ${serve.unknown.join(", ")}.` });
+      continue;
+    }
+
     payloads.push({
       id,
       title: data.title,
@@ -255,6 +282,7 @@ export async function importRecipes(
       image_url: data.imageUrl || null,
       image_alt: data.imageAlt || null,
       image_caption: data.imageCaption || null,
+      serve_with: serve.ids,
     });
     results.push({
       id,
