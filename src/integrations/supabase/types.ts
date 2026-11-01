@@ -256,6 +256,7 @@ export type Database = {
           meal_types: Database["public"]["Enums"]["meal_type"][]
           method: Json
           published_at: string
+          serve_with: string[]
           servings: number
           skill: Database["public"]["Enums"]["recipe_skill"]
           source_submission_id: string | null
@@ -282,6 +283,7 @@ export type Database = {
           meal_types?: Database["public"]["Enums"]["meal_type"][]
           method?: Json
           published_at?: string
+          serve_with?: string[]
           servings: number
           skill: Database["public"]["Enums"]["recipe_skill"]
           source_submission_id?: string | null
@@ -308,6 +310,7 @@ export type Database = {
           meal_types?: Database["public"]["Enums"]["meal_type"][]
           method?: Json
           published_at?: string
+          serve_with?: string[]
           servings?: number
           skill?: Database["public"]["Enums"]["recipe_skill"]
           source_submission_id?: string | null
@@ -452,7 +455,7 @@ export type Database = {
     Enums: {
       app_role: "admin" | "user"
       journal_tag: "Travel" | "Allergies" | "Alternatives" | "Essay"
-      meal_type: "Breakfast" | "Lunch" | "Dinner" | "Snack" | "Dessert"
+      meal_type: "Breakfast" | "Lunch" | "Dinner" | "Snack" | "Dessert" | "Side"
       recipe_cuisine:
         | "Indian"
         | "Middle Eastern"
@@ -597,7 +600,7 @@ export const Constants = {
     Enums: {
       app_role: ["admin", "user"],
       journal_tag: ["Travel", "Allergies", "Alternatives", "Essay"],
-      meal_type: ["Breakfast", "Lunch", "Dinner", "Snack", "Dessert"],
+      meal_type: ["Breakfast", "Lunch", "Dinner", "Snack", "Dessert", "Side"],
       recipe_cuisine: [
         "Indian",
         "Middle Eastern",

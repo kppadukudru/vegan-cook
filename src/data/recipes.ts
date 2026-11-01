@@ -13,7 +13,7 @@ export type Cuisine =
   | "American"
   | "Other";
 export type SpiceLevel = "None" | "Mild" | "Medium" | "Spicy" | "Fiery";
-export type MealType = "Breakfast" | "Lunch" | "Dinner" | "Snack" | "Dessert";
+export type MealType = "Breakfast" | "Lunch" | "Dinner" | "Snack" | "Dessert" | "Side";
 
 export interface Ingredient {
   qty: string;
@@ -44,6 +44,8 @@ export interface Recipe {
   spiceLevel?: SpiceLevel;
   mealTypes: MealType[];
   calories?: number;
+  /** Ids of recipes this is served with (forward links only). */
+  serveWith?: string[];
   /** Optional hero photo. Recipes render fine without one. */
   imageUrl?: string;
   imageAlt?: string;
@@ -82,7 +84,13 @@ export const ALL_MEAL_TYPES: MealType[] = [
   "Dinner",
   "Snack",
   "Dessert",
+  "Side",
 ];
+
+/** Accompaniments (sambar, chutney…) are never featured as the main dish. */
+export function isSide(r: Pick<Recipe, "mealTypes">): boolean {
+  return r.mealTypes.includes("Side");
+}
 
 
 /** Stable per-UTC-day index so SSR and client agree and the feature rotates daily. */
@@ -92,8 +100,10 @@ export function dayIndex(now: number = Date.now()): number {
 
 /** Rotates across the whole catalogue, one recipe per day. */
 export function pickRecipeOfTheDay(pool: Recipe[], now?: number): Recipe | undefined {
-  if (pool.length === 0) return undefined;
-  return pool[dayIndex(now) % pool.length];
+  const mains = pool.filter((r) => !isSide(r));
+  const list = mains.length > 0 ? mains : pool;
+  if (list.length === 0) return undefined;
+  return list[dayIndex(now) % list.length];
 }
 
 export function formatDate(iso: string): string {

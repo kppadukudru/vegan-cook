@@ -1,4 +1,5 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
+import { ServeWithPicker } from "@/components/admin/ServeWithPicker";
 import { useServerFn } from "@tanstack/react-start";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
@@ -83,6 +84,7 @@ interface FormState {
   imageUrl: string;
   imageAlt: string;
   imageCaption: string;
+  serveWith: string[];
 }
 
 const emptyForm = (): FormState => ({
@@ -108,6 +110,7 @@ const emptyForm = (): FormState => ({
   imageUrl: "",
   imageAlt: "",
   imageCaption: "",
+  serveWith: [],
 });
 
 const formFromRecipe = (r: Recipe): FormState => ({
@@ -133,6 +136,7 @@ const formFromRecipe = (r: Recipe): FormState => ({
   imageUrl: r.imageUrl ?? "",
   imageAlt: r.imageAlt ?? "",
   imageCaption: r.imageCaption ?? "",
+  serveWith: r.serveWith ?? [],
 });
 
 
@@ -249,6 +253,7 @@ function AdminPage() {
       imageUrl: form.imageUrl.trim(),
       imageAlt: form.imageAlt.trim(),
       imageCaption: form.imageCaption.trim(),
+      serveWith: form.serveWith,
     };
     await runAction(async () => {
       const result = await saveRecipe({ data: payload });
@@ -364,6 +369,7 @@ function AdminPage() {
                 onSubmit={onSave}
                 onCancel={() => setForm(null)}
                 busy={busy}
+                recipes={recipes}
               />
             )}
 
@@ -568,12 +574,14 @@ function RecipeForm({
   onSubmit,
   onCancel,
   busy,
+  recipes,
 }: {
   form: FormState;
   setForm: (f: FormState) => void;
   onSubmit: (e: React.FormEvent) => void;
   onCancel: () => void;
   busy: boolean;
+  recipes: Recipe[];
 }) {
   const set = <K extends keyof FormState>(key: K, value: FormState[K]) =>
     setForm({ ...form, [key]: value });
@@ -754,6 +762,18 @@ function RecipeForm({
             );
           })}
         </div>
+      </Field>
+
+      <Field
+        label="Serve with"
+        hint="Optional. Recipes eaten alongside this one. Links show on both recipes; drafts stay hidden until published."
+      >
+        <ServeWithPicker
+          value={form.serveWith}
+          onChange={(ids) => set("serveWith", ids)}
+          recipes={recipes}
+          selfId={form.originalId || form.id}
+        />
       </Field>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">

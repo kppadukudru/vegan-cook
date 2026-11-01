@@ -18,7 +18,7 @@ const submissionSchema = z.object({
   allergenNotes: z.string().trim().max(1000).default(""),
   cuisine: cuisineEnum.nullish(),
   spiceLevel: spiceEnum.nullish(),
-  mealTypes: z.array(mealTypeEnum).max(5).default([]),
+  mealTypes: z.array(mealTypeEnum).max(mealTypeEnum.options.length).default([]),
   calories: z.coerce.number().int().min(0).max(10000).nullish(),
 });
 

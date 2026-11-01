@@ -14,7 +14,7 @@ export const cuisineEnum = z.enum([
   "Other",
 ]);
 export const spiceEnum = z.enum(["None", "Mild", "Medium", "Spicy", "Fiery"]);
-export const mealTypeEnum = z.enum(["Breakfast", "Lunch", "Dinner", "Snack", "Dessert"]);
+export const mealTypeEnum = z.enum(["Breakfast", "Lunch", "Dinner", "Snack", "Dessert", "Side"]);
 
 export const recipeInput = z.object({
   id: z.string().trim().max(80).optional(),
@@ -33,7 +33,8 @@ export const recipeInput = z.object({
   status: z.enum(["published", "draft"]),
   cuisine: cuisineEnum.nullish(),
   spiceLevel: spiceEnum.nullish(),
-  mealTypes: z.array(mealTypeEnum).max(5).default([]),
+  mealTypes: z.array(mealTypeEnum).max(mealTypeEnum.options.length).default([]),
+  serveWith: z.array(z.string().trim().toLowerCase().min(1).max(80)).max(8).default([]),
   calories: z.coerce.number().int().min(0).max(10000).nullish(),
   imageUrl: z
     .string()
