@@ -38,7 +38,8 @@ export function pickWeeklyRecipes(
   date: Date = new Date(),
   count = 5,
 ): Recipe[] {
-  const pool = [...recipes].sort((a, b) => a.id.localeCompare(b.id));
+  const mains = recipes.filter((r) => !r.mealTypes.includes("Side"));
+  const pool = [...(mains.length > 0 ? mains : recipes)].sort((a, b) => a.id.localeCompare(b.id));
   if (pool.length === 0) return [];
   const take = Math.min(count, pool.length);
   const start = (weekIndex(date) * take) % pool.length;

@@ -28,6 +28,7 @@ export const CSV_OPTIONAL = [
   "image_url",
   "image_alt",
   "image_caption",
+  "serve_with",
 ] as const;
 
 export const CSV_COLUMNS = [...CSV_REQUIRED, ...CSV_OPTIONAL];
@@ -59,6 +60,7 @@ export function templateCsv(): string {
     image_url: "https://example.com/photos/smoky-chickpea-stew.jpg",
     image_alt: "A bowl of smoky chickpea stew with flatbread",
     image_caption: "",
+    serve_with: "",
   };
   const escape = (v: string) => `"${v.replace(/"/g, '""')}"`;
   return `${CSV_COLUMNS.join(",")}\n${CSV_COLUMNS.map((c) => escape(example[c] ?? "")).join(",")}\n`;
@@ -151,6 +153,7 @@ export function normalizeCsvRow(raw: Record<string, string>, line: number): Pars
     imageUrl: get("image_url"),
     imageAlt: get("image_alt"),
     imageCaption: get("image_caption"),
+    serveWith: commaList(get("serve_with")).map((s) => s.toLowerCase()),
   };
 
   const parsed = recipeInput.safeParse(candidate);
